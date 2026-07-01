@@ -1,0 +1,92 @@
+
+**AGENT PROMPT — MSME Financial Health Scoring Platform: MVP Implementation Plan**
+
+You are tasked with synthesizing all provided documentation and generating a detailed, comprehensive markdown implementation plan for an MVP-phase MSME financial health scoring platform, to be built during a hackathon. This implementation plan will itself serve as the primary source document for development agents to build from. Be thorough, structured, and precise.
+
+## How to Use These Notes
+
+These notes are intended to guide both the research and implementation phases of the project.
+
+**Start with research.** Use the notes and supporting material in this directory (brainstorming\hackathons\idbi-innovate-2026\hackathon-resources) as the initial knowledge base. Expand, validate, and refine them through additional research, prioritizing authoritative and practical sources. Challenge assumptions where necessary, identify gaps, and document new findings as they emerge.
+
+Do **not** begin solution design until the research is sufficiently complete.
+
+Once the research has converged, produce one or more design documents that translate the findings into a concrete solution. The design should define the system architecture, data sources, feature engineering strategy, data synthesis approach, scoring methodology, and implementation roadmap.
+
+Implementation should follow the approved design documents. Every major design and implementation decision should be traceable back to the research findings documented during the first phase.
+
+
+---
+
+**CONTEXT & OBJECTIVE**
+
+Banks need a reliable way to assess MSMEs—both for new customer acquisition and for lending decisions on existing customers. This platform uses machine learning and alternative data sources to generate a multidimensional financial health scorecard for MSMEs in India. The MVP must be a fully deployable, impressive, working demo.
+
+---
+
+**YOUR INPUTS — SYNTHESIZE ALL OF THE FOLLOWING**
+
+Refer to docs directory
+- All provided documentation on alternative data sources and the insights extractable from them
+- Data ingestion pipeline design and output specifications already documented
+- GST data reference headers and columns — treat these as indicative reference, not exhaustive or mandatory
+- White papers on alternative data, MSME financial risk, and ML approaches in this domain — use as domain context and methodology grounding, nothing rigid
+- MSME distribution data for India, particularly turnover splits if already documented; research if not available. Go beyond just turnover — identify other relevant MSME characteristics and distributions to inform realistic synthetic data generation
+
+---
+
+**WHAT TO BUILD — PLATFORM OVERVIEW**
+
+A single-repo, multi-module Python application deployable as a single container on Google Cloud Run at lowest cost. Internally structured as separate modules — frontend, backend, ML modules — but shipped as one deployable unit.
+
+**Frontend**
+- Intuitive, animated UI that is self-explanatory to a non-technical audience
+- User selects an MSME from the synthetic dataset
+- From that point the UI visually walks through the entire pipeline as it executes — data ingestion, processing, clustering visualization forming, ML analyses running, outputs generating — all animated so the audience sees exactly what is happening at each stage
+- Final output: a multidimensional financial scorecard with component scores and an overall summary score
+- The UI is the demo experience — it must be impressive, clear, and make the audience feel the sophistication of what is happening
+
+**Backend & ML Modules**
+- Structured into clear internal modules within the single repo
+- ML module must be robust — this is where the platform's credibility lives. Do not cut corners here
+- Use standard, well-established ML libraries — no unconventional choices
+- Implement clustering, relevant financial risk ML analyses, and a multidimensional scoring engine
+- Scorecard dimensions should include at minimum: creditworthiness, growth trajectory, repayment capacity, and risk profile — all meaningful to banks. Output individual dimension scores plus an overall summary score
+- Structure the ML problem properly within the module
+
+**Synthetic Data**
+- Generate realistic synthetic MSME alternate data matching documented schemas and domain knowledge
+- Distributions should reflect real MSME characteristics in India — use documented turnover distribution data if available, research if not, and identify other relevant distribution parameters beyond just turnover
+- Volume and variety should be sufficient for a convincing demo
+
+** Also structure the repo with READMEs and other things. Be mindful to name, format the files in a way that it does not look agent built when we submit the repo. I am talking about subtle things. instead of AGENTS.md antoher name say START_HERE.md and then in it we say this guide is for a human/agent for understanding etc.
+
+---
+
+**SPRINT PLAN**
+
+Break the implementation into 3–4 sprints. Each sprint must deliver sizable, complete, end-to-end testable features. Do not defer integration or testing to the end. Typical agile — working software at the end of every sprint, not just components. Define clearly what is delivered and testable at the end of each sprint.
+
+---
+
+**DEPLOYMENT**
+
+- Single container deployment to Google Cloud Run
+- Optimize for lowest cost
+- Clean internal repo structure: frontend module, backend module, ML modules — single repo, multiple modules, one deployable
+
+---
+
+**OUTPUT REQUIRED**
+
+A detailed markdown implementation plan covering:
+1. Synthesized understanding of the domain, data sources, and ML approach drawn from all provided docs and white papers
+2. Repo and module structure
+3. Synthetic data generation plan including MSME distribution research findings
+4. ML architecture and model design
+5. Frontend design and animation flow specification
+6. Sprint-by-sprint breakdown with deliverables and test criteria for each
+7. Deployment architecture for Cloud Run
+8. Any risks or open questions the development agents should be aware of
+
+This document will be used directly by development agents to build the platform. Leave nothing ambiguous.

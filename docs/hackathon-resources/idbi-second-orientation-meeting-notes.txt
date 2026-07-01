@@ -1,0 +1,292 @@
+Here's a cleaner version as a **working research notebook** rather than a prompt. It separates **research notes**, **implementation ideas**, and **action items**, which makes it easier to iterate on during the hackathon.
+
+# IDBI Hackathon – Research & Implementation Notes
+
+## Overall Understanding
+
+The orientation emphasized that **GST, UPI, EPFO, bank transactions, etc. are only the starting point**. The evaluation is likely to reward teams that can identify and justify additional **electronic data sources** that enrich business profiling, fraud detection, and credit/risk assessment.
+
+The challenge is not to name as many datasets as possible, but to demonstrate:
+
+* Awareness of the broader digital footprint of businesses.
+* Understanding of what data actually exists electronically.
+* Practicality of obtaining or integrating that data.
+* Ability to synthesize multiple data sources into stronger signals.
+
+---
+
+# Research Notes
+
+## Research Objective
+
+Research electronic data sources beyond the obvious datasets.
+
+For every candidate source, determine:
+
+* Does it exist electronically?
+* Who owns or generates it?
+* Is it realistically accessible?
+* How frequently is it updated?
+* What business or risk signals does it provide?
+* Is it already used by banks, regulators, insurers, or government agencies?
+* Can it realistically be incorporated into a production solution?
+
+Avoid "interesting but impractical" ideas.
+
+---
+
+## Think From First Principles
+
+Every legitimate business leaves digital traces.
+
+If GST or banking data is sparse, ask:
+
+> What other systems must this business interact with in order to operate?
+
+Possible areas include:
+
+* Utilities
+* Telecommunications
+* Municipal services
+* Property
+* Logistics
+* Licensing
+* Insurance
+* Government interactions
+* Digital commerce
+* Employment
+* Taxation
+* Regulatory compliance
+
+---
+
+## Candidate Research Areas
+
+Research and evaluate:
+
+* Electricity
+
+* Water
+
+* Gas
+
+* Commercial LPG
+
+* Fuel cards / fuel purchases
+
+* Telecom
+
+  * Mobile
+  * Broadband
+  * Fiber
+
+* Property tax
+
+* Municipal records
+
+* Lease registrations
+
+* FASTag
+
+* Commercial vehicle data
+
+* Fleet information
+
+* E-way bills
+
+* Banking data beyond UPI
+
+* EPFO
+
+* ESIC
+
+* MCA records
+
+* Directors
+
+* Beneficial ownership
+
+* DGFT
+
+* Customs
+
+* Import/export
+
+* FSSAI
+
+* Factory licence
+
+* Pollution Board
+
+* Shops & Establishment
+
+* Insurance
+
+* POS
+
+* QR
+
+* Marketplace presence
+
+* Court records
+
+* Insolvency
+
+* Government procurement
+
+* Satellite imagery / geospatial (only if practical)
+
+---
+
+## Research Deliverable
+
+For every source, capture:
+
+* Description
+* Data owner
+* Electronic availability
+* Access model
+* Update frequency
+* Practical availability
+* Cost/complexity
+* Fraud indicators
+* Credit indicators
+* Limitations
+* Confidence level
+
+---
+
+# Implementation Notes
+
+The implementation should **not** treat every dataset independently.
+
+The value comes from **combining multiple electronic sources** to produce richer business intelligence.
+
+The focus should be on feature engineering and signal synthesis.
+
+---
+
+## Examples
+
+Electricity + GST
+
+→ Energy intensity
+
+---
+
+Electricity + EPFO + Factory licence
+
+→ Estimated production capacity
+
+---
+
+FASTag + Fuel + Fleet
+
+→ Logistics activity score
+
+---
+
+Property Tax + Utility Bills + GST Address
+
+→ Premises verification
+
+---
+
+Telecom + Banking + UPI
+
+→ Business continuity
+
+---
+
+Utility Payments + Payroll
+
+→ Operational stability
+
+---
+
+Import Data + GST + Logistics
+
+→ Supply chain consistency
+
+---
+
+# Implementation Tasks
+
+## Data Source Layer
+
+Create a catalog of all supported data sources.
+
+Each source should define:
+
+* Owner
+* Data type
+* Refresh frequency
+* Reliability
+* Availability
+* Integration method
+
+---
+
+## Feature Engineering
+
+Identify features that can be derived from individual datasets.
+
+Examples:
+
+* Payment regularity
+* Consumption trends
+* Seasonal variation
+* Workforce stability
+* Logistics activity
+* Infrastructure utilization
+* Digital presence
+* Regulatory compliance
+
+---
+
+## Cross-Source Feature Synthesis
+
+Design composite features using multiple datasets.
+
+Potential examples:
+
+* Business Activity Score
+* Infrastructure Utilization Index
+* Operational Stability Score
+* Logistics Consistency Score
+* Premises Authenticity Score
+* Business Continuity Score
+* Compliance Health Score
+* Digital Trust Score
+
+These composite signals are likely to provide more predictive value than any single dataset alone.
+
+---
+
+## Prioritization
+
+Prioritize sources that are:
+
+* Electronically available today
+* Realistically obtainable
+* Frequently updated
+* Difficult to manipulate
+* Strong predictors of business activity
+* Useful across multiple industries
+
+---
+
+# Note to Self
+
+Don't optimize for the **number of data sources**.
+
+Optimize for:
+
+* Practicality
+* Electronic availability
+* Justified inclusion
+* Strong research backing
+* Meaningful feature engineering
+* Intelligent synthesis across multiple datasets
+
+A small set of well-justified, complementary data sources that produce robust composite indicators is likely to be more compelling than a long list of disconnected datasets.

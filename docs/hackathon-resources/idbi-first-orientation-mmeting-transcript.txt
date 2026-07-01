@@ -1,0 +1,315 @@
+========================================================================
+IDBI INNOVATE 2026 — ORIENTATION SESSION
+Verbatim Transcript
+
+Speakers:
+  Sherry    — Host
+  Prashant  — Deputy General Manager, Digital Banking Department, IDBI Bank
+  Shailvi   — Hack2Skill
+========================================================================
+
+
+------------------------------------------------------------------------
+INTRODUCTION & WELCOME
+------------------------------------------------------------------------
+
+Sherry: Hello. Hi, everyone. Hope you all are doing well. So, a very warm welcome to the official orientation session for IDBI Innovate 2026. My name is Sherry and I will be your host for the day. We are incredibly excited to have so many talented developers, fintech enthusiasts, and innovators joining us today from across the country. Over the next few weeks, you will be pushing the boundaries of what's possible in modern banking. Today, we are going to break down exactly what this journey looks like, how you can leverage our sandbox infrastructure, and what it takes to build a winning blueprint. So, let's dive right in.
+
+Sherry: Before we unpack the technical details, let's look at the bigger picture. IDBI Innovate 2026 isn't just a competition. It's a launchpad designed to bring external brilliance into institutional banking structures. Whether you are a solo developer, your mission here is to challenge conventional engineering. Quick bit of housekeeping, we have a dedicated time at the end for a live Q&A sessions where you can ask all your queries. So, as we go through the slides, please drop your questions directly into the live chat framework, and our moderation team will pull them up for the final segment. Now, I would like to introduce our guest speaker today, Prashant sir, who is a deputy general manager, digital banking department at IDBI Bank. Hi Prashant sir.
+
+Prashant: Yeah, hi.
+
+Sherry: How are you?
+
+Prashant: Hi Sherry. Yeah, good. How are you?
+
+Sherry: All good. All good. So, Prashant sir, stage is all yours. We can start up with the session now.
+
+
+------------------------------------------------------------------------
+OPENING REMARKS & SESSION AGENDA
+------------------------------------------------------------------------
+
+Prashant: Yeah, thank you, Sherry. Uh good afternoon, everyone. We are here to discuss on the uh agenda that we we today for the hackathon that IDBI has just launched. We would welcome warmly all the participants, the fintech startups, and individual professionals whoever would be willing to participate here. And thank you for registering for this hackathon event today.
+
+Prashant: Uh we would go about this session in the order wherein we would first like to give you an introduction of our bank. Then we'll go to the brief details of this hackathon event. The details would contain overall agenda of the hackathon. And then post that we would like to respond to few of the queries which you might be having. And not keeping you waiting, we would just go about this orientation session so that you can plan accordingly and start your work with regards to preparing solutions for the problem statements that we have just posted on this hackathon.
+
+
+------------------------------------------------------------------------
+ABOUT IDBI BANK
+------------------------------------------------------------------------
+
+Prashant: Yeah, to give you a brief about our bank. See, our bank IDBI is one of the leading premier commercial banks in India. And we are trying to consistently push the boundaries on the digital front as well, both in the retail and corporate banking side. Right? And this being a very traditional bank since long, and we have been part of the DFI era of India wherein we had supported the institution building atmosphere of the country. Now, as part of its revised uh uh profile of the bank as a commercial banking segment partner, we are into purely retail and commercial banking, and we are driving the digital initiatives in the banking sector as well.
+
+Prashant: So, this is a big paradigm shift for the banking as well and for us as a bank. And now the goal that we are looking at to achieve through this hackathon would be to co-create with developers like you, fintechs, and startups to build some interesting and innovative products in the banking segment for overall banking segment as well and for IDBI's overall digital development.
+
+
+------------------------------------------------------------------------
+HACKATHON BACKGROUND & APPROACH
+------------------------------------------------------------------------
+
+Prashant: Right, so going ahead with this agenda, what we thought was as part of the bank's innovation journey, we had done few of the internal exercises where we have collected few of the problem statements which are internal departments and business teams have been facing. Right, and now we have come forward with those problem statements in front of you to seek your co-creation abilities and your skill sets to build solutions which would be feasible to be deployed at a large scale in the bank and has a scalable architecture and the productions the prototypes should be production ready. That is what is our motive to put forward these problem statements.
+
+Prashant: While we'll be doing it, the technology that we'll be using would be the latest in the industry, latest in banking industry. For that, we would be providing some enablers for you to work and those enablers would be in the form of APIs and our sandbox environment. If at all the solution, the prototype is acceptable in the initial stages, we'll go about providing the sandbox environment to test the feasibility of the solution, right?
+
+Prashant: So, moving ahead, that was the background of what we intend to do in this hackathon. Moving ahead, we would just give you a brief of what problem statements we have showcased in this hackathon for you to start working on them and help us co-create and build some suitable solutions for it.
+
+
+------------------------------------------------------------------------
+PROBLEM STATEMENTS
+------------------------------------------------------------------------
+
+=== Problem Statement 1 — Digital Wealth Management Application ===
+
+Prashant: The first problem statement that we have is for creating a digital wealth management application. What we are looking for is a comprehensive solution that can be provided to the customers of our bank, our retail and liability customers, or say the liability customers of the bank, wherein we can have an overall 360° view of their savings, investments, and all their spending patterns. Using this data and using the power of AI, we would like to like you to help us in building a solution, avatar-based wealth management app, that would be helpful in providing advisory services at bank scale to our customers. Right? And if the solution is feasible, I guess the industry adoption would definitely be there. So, this is the first problem statement that we have.
+
+
+=== Problem Statement 2 — Identifying Prospective Customers (Lead Generation) ===
+
+Prashant: Going ahead and going through the second problem statement, that is something where we would like you to help us in building a solution to identify prospective customers for us from our pool of customers. Initially, we would be interested in selecting the customers which are already there with us on the liability side. We would like to understand what their personal needs would be. Maybe if someone would be looking out for home loans or auto loan or consumer durable loans or something like that, wherein we can identify the need, we can match it with our products based on the features of the products and the requirement initial scrutiny requirements of the product. And we would start pitching it to them so that in a manner to attract their attention and also to serve their purpose.
+
+Prashant: Right. Uh, so this would be initially for our existing customers and then maybe we can look for customers who are not there with us, but we can look for onboarding them. So, that is the second problem statement that we have.
+
+
+=== Problem Statement 3 — MSME Business Loan Identification ===
+
+Prashant: And the third problem statement that we have is specifically designed specifically to target our MSME customers. Wherein today what we face is in the banking industry there is a huge unserved segment. Unserved and underserved segment in the MSME segment, which is the backbone of Indian economy. Right. So, using AIML tools and the data that is there at our disposable disposal, which is freely available or say you do not have to get the consent of the borrowers or the customers prospective borrowers initially. Like the GST details, initial GST details or using account aggregator details we can get their liability account details from other banks and all. Consolidating all these details we can formulate a solution wherein we can look for customers needs, customers business needs which can be met by providing them some kind of business loan.
+
+Prashant: Right. So, using this tools using these tools and our technical expertise we would want to co-create a product wherein we can identify the business needs of the MSME segment which is a large segment and it is mostly underserved and unserved.
+
+
+=== Problem Statement 4 — Predictive Default / Financial Health Scorecard ===
+
+Prashant: Right. And the fourth problem statement that we have is once we extend the loans, once we extend the credit facilities, we also want to keep a tab on the overall utilization of the credit facility and also to see whether how well this credit facility is being utilized and if there are any inherent weaknesses in the overall business. So, we would like to identify those weaknesses pretty in advance so that we can take corrective measures, we can advise our customers to improve and wherever there are scope there is scope for improvement, we would try to request the customer and improve it or we can start arresting those lackness wherever it is identifiable.
+
+Prashant: As of now, bank is already working on this by utilizing the model that bank has initially developed internally by the help of our existing vendors and our existing team. But what we realized it, we are not getting the level of accuracy that we are expecting. So, we want to improve our accuracy levels and also to see if we can build a predictive model which can in advance of 12 months help us in predicting defaults in the accounts in mostly in MSME loans as of now. Slowly and slowly we'll try to see where we can strengthen and how we can refine this offering.
+
+Prashant: So, this product or this application what we are looking at is the inputs would be in the form of both structured and unstructured data. So, using these data points you would like to build a solution around it. Right.
+
+
+=== Track 5 — Novel Innovation (Open Track) ===
+
+Prashant: Uh and apart from these problem statements, the last track that we have, which is the track track five, is of novel innovation. This track we thought it should be open, wherein we can explore uh problem statements or we can explore solutions to problem statements which we were not able to identify, but which development developers, co-creators, or FinTechs startups like you might have already identified and you might have worked on it. You already would have some kind of solution with you. You can propose, you can submit your ideas, you have solutions to us. We will evaluate, our team internally would evaluate. The top management in IDBI, the senior management would go through your proposals. We'll see if that is acceptable to our bank. And if so, we can try to see how to adopt it if at all it is feasible and the possibility is there, and then take it forward and try to see how well we can utilize it.
+
+Prashant: Right. So, this is an open track wherein you can provide us some innovative solutions that you might think that would be helpful to the bank and the banking segment as a whole. Right. So, these are the few problem statements and the novel idea track that we have.
+
+
+------------------------------------------------------------------------
+PARTNERS
+------------------------------------------------------------------------
+
+Prashant: In this initiative, we are partnered with AWS, that is Amazon Web Services, which is providing us support on the cloud infrastructure, and they would also be our knowledge partner in this whole initiative while providing guidance on various aspects of the hackathon.
+
+Prashant: And Hack2Skill is our partner in managing and providing us these kind of platforms where we interact with you, where we get in touch with uh co-creators, developers, startups, and fintechs like you. And with their support, we are trying to build these solutions.
+
+Prashant: The last partner that we have in this initiative is our technology partner, which is ACC, Applied Cloud Computing, who are providing this uh sandbox support to us. And they would be coming in at the second stage of the evaluation round once uh the idea is initially scrutinized and found to be uh acceptable. Uh the prototype is acceptable, then while we move to the sandboxing stage, ACC would be providing required support to us. Right. So, this is about the partners.
+
+
+------------------------------------------------------------------------
+PRIZE POOL
+------------------------------------------------------------------------
+
+Prashant: And now we come to the most exciting part of this uh hackathon, which you would be most interested in. This is the prize pool that we have. Phew. [cough and clears throat] It's about 15 lakhs that we have, the overall prize pool. While we would be providing you the sandbox access in the second stage of the hackathon. And then we would also like to explore the opportunities of deployment of pilot just to see the acceptability and the feasibility of the application going forward.
+
+
+------------------------------------------------------------------------
+TIMELINE & MILESTONES
+------------------------------------------------------------------------
+
+Prashant: Right. So, with this, we would like to also just reiterate uh of course, the details are there on the portal, the microsite that we have hosted for this hackathon. This is being an orientation session, we would be providing you the brief. We have provided you a brief of what we intend to do, what is the vision of the bank, how we would be going about conducting this hackathon.
+
+Prashant: Uh the second session that we have an interaction with you would be on June 30th, wherein we would be specifically taking a deep dive in the problem statement-wise details and discussions. On July 9th, which is the last date for submission of registration and submission of your proposals. So, July 9th would be the next milestone. And subsequently during July and August, we would be carrying out the evaluation stages.
+
+Prashant: So, those details anyways are there on our microsite. You can visit there. But, this is just a reiteration and a reminder to you that please do all your submissions by July 9th. And please submit the most innovative ideas for us to start building for these problem statements. Start building solutions for these problem statements. I hope I have provided a comprehensive idea of the whole hackathon initiative. Yeah, Shailvi, over to you. I guess these are the people
+
+
+------------------------------------------------------------------------
+PLATFORM WALKTHROUGH
+------------------------------------------------------------------------
+
+Shailvi: Yeah, thank you so much, Prashant sir. Thank you for this. Now, I would like to share my screen so I can explain the our participants that where they can submit and everything, okay? So, I hope my screen is visible. Yes, it is. So, once you search for IDBI Innovate Hackathon, the page looks like this. You need to go to the team dashboard.
+
+Shailvi: Here is our roadmap. So, currently we are live with registration, team formation, prototype submission. So, the these things they are closing on 9th of July. Now, that we have then a dedicated AMA session. So, where the participants can interact and ask all their queries. It's on 30th June. Shortlisting will be done on 21st June uh for 21st July 2026. Then there will be a refined prototype submissions. So, basically here what you need to do is whatever prototype you have built and it is shortlisted, then you need to refine it for the for the finale and everything. So, it will start from 22nd July and go till 31st of July. Then the finalist announcement will be made on 13th August 2026 and the demo day and winner announcement will be on 21st of August.
+
+Shailvi: Now for the for those who are making a team, so here the team size is up to maximum up to four members. So, what you need to do is go to team management, click on create a team, click on I understand. You can write any unique team name or anything over here. Give a team description like why your in which way your team is capable or something like that and then you can put even a cool logo of your team over here. And you just need to click on create. After that, you need you can send a request to your fellow colleagues or anyone who you want to join their team and you can even accept their request as well.
+
+Shailvi: Now for the submissions, go to the submission tab. Here it is prototype submission written over here. Click here. So, we have given a PPT template. You need to exactly see you need to exactly use this template only the number of slides which is mentioned over here and everything should be same. You cannot change this template. Then you need to select uh these are the problem statement. You need to select any one problem statement on which you are working. Here should be the deployment link and the prototype PPT and the GitHub repo link. You have to paste it over here and click on submit. Okay?
+
+Shailvi: Now, moving ahead in the interactions tab, if you have missed today's session, you can go to click on watch over here and you can see the sessions for the recordings. If you need any need to know something about any particular problem statement, you can watch from this session. Now, in the challenges section, there are five all the problem statement mentioned and a brief about each problem statement is also given over here. So, you can even see it from here. So, I hope all the things are clear to everyone. So, now moving ahead, uh we can go for the Q&A part as well.
+
+
+------------------------------------------------------------------------
+Q&A
+------------------------------------------------------------------------
+
+Q: Can team members be from different companies or cities?
+
+Shailvi: Okay. So, can team members can be from different companies or cities? Yes, they can be from uh different companies and cities, but the team size should be four members, maximum four members.
+
+
+Q: Is this lead generation tool (Problem Statement 2) meant for existing IDBI customers only, or can it pull in completely new prospects who have never banked with IDBI?
+
+Shailvi: Question. So, one question is there uh from problem statement two, is this lead generation tool meant for existing IDBI customers only or can it pull in completely new prospects who have never banked with IDBI?
+
+Prashant: Yeah, I would like to take it uh Shaili. Uh we would be looking initially at uh the lead generation from our existing customers right now. And maybe once the uh solution is stabilized and refined products are there, we would like to extend it to uh non-IDBI customers as well. But, initially it would be for existing customers of the bank. Uh I don't think there would be much change in the solution even if it is for an ETB or an NTB, the solution would be the same. But bank would be looking at existing customers initially.
+
+Shailvi: Okay. So, I hope Karthik got your answer.
+
+
+Q: Does IDBI already use any AI/ML in its lending currently, or would this be the first major deployment?
+
+Shailvi: So, next question is, does IDBI already use any AI/ML in its lending currently or would this be the first major deployment?
+
+Prashant: Uh right. So, IDBI is using AI and ML tools in its lending journeys, but not to a great extent. But we would we are in the process of scaling it up. So, this is one of the initiatives where we would like to build solutions and start using it more prolifically.
+
+Shailvi: Okay, great.
+
+
+Q: What's IDBI's current NTC/NTB rejection rate, and what's the #1 reason for rejection when it happens?
+
+Shailvi: So, for next question, what's IDBI current NTC NTB rejection rate and what's the #1 reason for rejection when it happens?
+
+Prashant: Uh But NTC, what do you mean by NTC? If someone NTB, I understand it's new to bank customers, right? So, current rejection rate, see, generally what we are doing is today most of the banking in our retail segment is being done in a traditional manner or same manner. But the online journeys or STP journeys which are being built in a digital platform are mostly for our existing customers. So, the NTB journey rate of rejection and NTC would be in the form of generally uh uh the manual form or traditional banking journeys that we are doing. So, it is as per the market standards for banking industry norms that we are following. Yeah.
+
+Shailvi: Okay.
+
+
+Q: If a BFSI professional with 4.5 years in wealth management and banking is participating solo, am I still eligible for submission of my prototype?
+
+Shailvi: So, next question is if a BFSI professional with 4.5 years professional in wealth management and banking, I'm participating solo. Am I still eligible for submission of my prototype?
+
+Prashant: Yes, you are. Because yes, you are eligible. You are eligible, Vikas. We would just like to evaluate your solution during the initial stage. If found suitable, we'll try to take it to the next level as well. But we would also like to understand how you would provide us a digital solution on this front. So, uh the tech part would also be evaluated while we are evaluating your solution.
+
+Shailvi: Okay.
+
+
+Q: Can fresh graduate students participate in this hackathon?
+
+Prashant: Yeah, this question is regarding fresh graduate students can participate in this hackathon. Right now, we are looking at scalable solutions that can be deployed across the bank. So, and this being a hackathon which we are looking for solutions with the fintech partners, startups as well, and professionals with some experience and expertise in the mentioned domains. So, in case students or graduates who are there, if they can provide us suitable options or suitable solutions, we'll definitely accept, but solutions or products which would help us solve our problem statements right now.
+
+Shailvi: Okay.
+
+
+Q: At what stage do most of the MSME applications get rejected?
+
+Shailvi: So, next question is at what stage do most of the MSME applications get rejected?
+
+Prashant: See, right now, while we are looking at digital journeys, while we get the information immediately and with ample amount of data available through APIs, we can run the BREs and the BRE execution doesn't take much time, based on which we can come to a conclusion whether we can move ahead with this application or not. So, it would be at the initial stage once the borrower is willing to share the respective or related data points with us, we'll be in a position to immediately inform whether we are moving ahead or we need to reject this application. So, it doesn't take much time. It would be initial, but first stage, I guess, in the application review process.
+
+
+Q: Can a team participate in multiple tracks?
+
+Shailvi: Okay. So, the next question is, can a team participate in multiple tracks? No. You Each team needs to uh
+
+Prashant: No, right. Each team is to submit one particular problem statement, solution to one particular problem.
+
+Shailvi: Yes.
+
+
+Q: How do you currently identify an MSME that is growing rapidly?
+
+Shailvi: How do you currently identify an MSME that is growing rapidly?
+
+Prashant: See, identification of an MSME which is growing rapidly, it is purely based on the traditional methods of going through their balance sheets, their turnover which is increasing year on year and all. So, I don't know. And then, we would What we traditionally do is we identify a cluster of MSMEs, start screening those MSME units which are operating there, and start studying their balance sheets, start going through their banking records. This is the traditional process. That is what we would be deploying in the digital world as well. And you people should help us in identifying them if there are any digital tools available and if we can fasten this process. Yeah.
+
+
+Q: If a person is currently a student but also works as a freelancer, are they eligible to participate under the freelancer category?
+
+Shailvi: So, next question is if a person is currently a student but also works as a freelancer, so are they eligible to participate under the freelancer category?
+
+Prashant: Yeah, like I have responded previously in terms of category where students are willing to participate, we are actually looking at scaling up the solutions and taking it to deployment if at all it is acceptable to the bank. So, while we do it, we want a long-term association with any of the participants, right? If at all it is selected. So, it should help us if there are FinTechs and startups which are already having some solution which can be refined to meet our requirements. While students can participate, but they need to also provide us the digital solutions. They need to build confidence in the banking bank's management that the solution is feasible and it can be scalable. If that is there, then we can further evaluate and look to see how we can take forward the association.
+
+
+Q: Is the hackathon open only to registered startups and FinTech companies, or can any independent professional also apply?
+
+Shailvi: Okay. [clears throat] So, next question is is the hackathon open only to registered startups and FinTech companies or can any independent professional also apply?
+
+Prashant: Yeah, as of now it is open for professionals as well, which is very clearly mentioned. So, they can apply. It would be evaluated in the same manner that we would be evaluating the solution submitted by any other participant in this.
+
+Shailvi: Okay.
+
+
+Q: In the first prototype session, do we have to create the prototype or only the PPT, since we would not have access to synthetic data sets and sandbox APIs at this stage?
+
+Shailvi: So, next question is in the first prototype session, do we have to create the prototype or only the PPT? Since we would not have the access to synthetic data sets and sandbox APIs at this stage. So, you need to submit a working prototype for the for the first stage. Like the deployment link and the GitHub link, everything with the PPT also.
+
+Shailvi: So, it's idea only in PPT for the for the 9th July prototype should be our own data and will be shortlisted based on that.
+
+Prashant: Uh see, while you are submitting the PPTs and brief idea of how the solution should be, I don't think we'll be looking at anything with regards to the synthetic data point of view, but in case if you have a ready-made prototype you and if it is feasible for you to submit the prototype with some synthetic data, it is welcome. But, initially we are looking at the solution and idea of how the solution can be built, what tools you would be using to build it, so that we can also check the acceptability within the banking atmosphere, and then the evaluation would take place.
+
+
+Q: What is the minimum size of the team?
+
+Shailvi: Okay. So, next question is what is the minimum size of the team? So, you can participate as a solo member and the maximum team size is four. So, it's one to four.
+
+
+Q: Track four targets moving accuracy from 16–22% to 90% on an imbalanced default portfolio; raw accuracy can be misleading. Could you clarify the intended target metric?
+
+Shailvi: Track four target moving accuracy from 16 to 22% to 90% on an imbalance default portfolio raw accuracy can [clears throat] be misleading. Could you clarify the intended target metric?
+
+Prashant: Uh see, we want to improve the accuracy. The accuracy levels right now that we have is very less as per our understanding. We wanted to improve that and also apart from the accuracy levels, we also want to try and build a solution which can predict it well in advance. As of now, what we are working is the data is providing us some solution which is predicting it maybe 3 months in advance. That is not enough time to start acting on it and start working out on rectifying measures, taking the corrective measures. So, there are two aspects. One to improve on the accuracy levels and to also improve on the time in advance, how much time can we start predicting the defaults. So, considering that, you can select whichever target metrics you want to follow and you can build the solution to suit our results and requirement.
+
+
+Q: Will IDBI be providing the external data for the financial health scorecard track?
+
+Shailvi: Okay. So, next question is will IDBI be providing the external data for financial health scorecard track?
+
+Prashant: The external data points or the internal data points, it would all be mock data that would be providing And that would be the data sets which would be made available during the sandboxing stage. So, it all depends on what kind of data points we require, and then we'll see how we can generate the synthetic data. Yes, of course the external data points whichever are relevant for the solution to be developed, we'll try and make it available.
+
+
+Q: What exactly qualifies as a novel idea? Does it need to be completely unrelated to all four defined problem statements?
+
+Shailvi: Okay. So, next question is, what exactly qualifies as a noble idea? Does it need to be completely unrelated to all four defined problem statements?
+
+Prashant: Yes, it should be unrelated to the four problem statements, and it can be related to any of the segments in the banking industry. And yeah, it shouldn't be related to any of the problem statements.
+
+Shailvi: Okay.
+
+
+Q: How does IDBI's current MSME loan approval timeline compare to NBFC competitors like FlexiLoans or Lendingkart?
+
+Shailvi: Next question is, how does IDBI's current MSME MSME loan approval timeline compared to NBFC competitors like FlexiLoans or Lendingkart?
+
+Prashant: See, the target segment that is being targeted by NBFCs and banks are completely different. So, I guess there shouldn't be any comparison on that part as well. But right now, what we are doing is we are trying to build digital solutions to improve upon that TAT that is there, and try to achieve the TAT which is there in the market. So, of course the difference is there, but the gap is closing.
+
+
+Q: Do we need a working prototype or MVP at the time of registration?
+
+Shailvi: So, do we need a working prototype or MVP at the time of registration?
+
+Prashant: Yes. We would need that.
+
+
+Q: What kind of synthetic data is available — transactions, UPI patterns, MSME financials?
+
+Shailvi: What kind of synthetic data is available? Transactions, UPI patterns, MSME financials.
+
+Prashant: What data is available? Trans- Yes, synthetic data would be whatever is absolutely essential for the solution to be built. We'll try to provide that. So, once the solutions are shortlisted in the first evaluation stage, we'll have a detailed understanding of what kind of data sets we required for these solutions to be built and accordingly we'll start working on that.
+
+
+Q: To connect customers for loans, how much of it's automated? Do you manually call via call center? If yes, what percentage?
+
+Shailvi: So, to connect customers for loans, how much of it's automated? Do you manually call via call center? If yes, what percentage?
+
+Prashant: For loans, how much of it is automated? Yes, see, [snorts] traditional methods follow all the processes. It is manually we generally call the customers and we automate it a bit. So, we are looking at improving the processes that are there. Right? And
+
+Prashant: I would like to add that any problem statement specific discussions or clarifications, we would again be holding a session on 30th. Maybe we can have a discussion during that time as well. So, in case if there are any other queries related to the process that is there in the hackathon that we need to follow, maybe we can focus on that. Or else also we are open. Maybe you can send your queries to Hack to Skill and we'll try to respond to that.
+
+Shailvi: Okay. So, if you have any other queries or any doubts, you can reach out to us at support@hacktoskill.com.
+
+
+------------------------------------------------------------------------
+CLOSING REMARKS
+------------------------------------------------------------------------
+
+Shailvi: So. Thank you so much Prashant sir for this session. Thank you so much for the
+
+Prashant: Yes, the session was very interactive and thank you so much everyone for joining this session. See you soon.
+
+Prashant: Thank you participants. You would like to go through the solutions you would be submitting. Thank you hacktoskill team.
+
+Shailvi: Thank you. Keep building guys.
+
+========================================================================
+END OF TRANSCRIPT
+========================================================================
