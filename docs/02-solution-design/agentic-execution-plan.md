@@ -3,6 +3,8 @@
 **Status:** Phase 2 build plan · **Date:** 28 Jun 2026 · **Owner:** Lambdac
 **Reads with:** [`solution-design.md`](solution-design.md) (the spec), [`../00-screening/feasibility-deep-dive.md`](../00-screening/feasibility-deep-dive.md) (§7 operating model)
 
+> **Superseded (01 Jul 2026):** §3's day-by-day schedule assumed a 28 Jun start; zero code existed as of 01 Jul, so it is replaced by the sprint plan in [`implementation-plan.md`](implementation-plan.md) §7, recomputed against the actual ~8 remaining working days (01–09 Jul). §1 (operating model), §4 (toolchain — updated: GCP Cloud Run replaces AWS, Streamlit replaces Next.js/React), §5 (stage-2 plan), §6 (risk controls) and §7 (definition of done) below remain valid.
+
 This is the concrete answer to "can pure agentic R&D get us there": **agent-led, human-gated.** The agent does the implementation; humans own the judgment at heavy gates. Target: a **working prototype (deploy link + public GitHub + PPT) by 9 Jul** on our own synthetic data.
 
 ---
