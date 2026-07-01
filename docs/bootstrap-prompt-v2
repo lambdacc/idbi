@@ -1,5 +1,11 @@
 # AGENT PROMPT — MSME Financial Health Scoring Platform: MVP Implementation Plan
 
+Hackathon track:
+Bank’s MSME credit evaluation relies on traditional financial documents, which many New-to-Credit (NTC) and New-to- Bank (NTB) enterprises lack or maintain inadequately. Despite availability of rich alternate data (GST, UPI, AA, EPFO, etc.), absence of a unified assessment framework leads to high rejection rates, missed viable borrowers, limited portfolio diversification, and slower financial inclusion progress.
+Expected Outcome (as per hackathon doc)
+Participants should design an AI/ML- driven MSME Financial Health Card that aggregates alternate data (GST, UPI, AA, EPFO, etc.), computes a multidimensional financial health score, visualizes strengths and risks, integrates with ULI/OCEN/AA ecosystems, enables near real-time credit assessment, and expands onboarding of credit-invisible MSMEs while improving portfolio quality.
+
+
 You are tasked with synthesizing all provided documentation and generating a detailed, comprehensive markdown implementation plan for an MVP-phase MSME financial health scoring platform, to be built during a hackathon. This implementation plan will itself serve as the primary source document for development agents to build from. Be thorough, structured, and precise.
 
 ---
