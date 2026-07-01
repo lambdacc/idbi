@@ -258,7 +258,7 @@ This replaces only `agentic-execution-plan.md` §3's day-by-day table; its §1 o
 
 | Risk / open question | Status | Handling |
 |---|---|---|
-| Founder go/no-go (`docs/01-decision/DECISION-pending.md`) is still marked **PENDING** | Open | This plan proceeds on a "go" assumption for scheduling purposes; surfaced here rather than silently assumed — confirm before Sprint 1 work is treated as committed. |
+| Founder go/no-go | **Resolved — GO, confirmed 01 Jul 2026** (`docs/01-decision/DECISION-pending.md`) | Sprint 1 work is now treated as committed, not provisional. |
 | Repo hygiene: `docs/bootstrap-prompt*`, `docs/00-screening/*`, `docs/01-decision/*` read as internal strategy artifacts and will be visible in the public submission repo (the user chose to build the app inside this same repo) | Open | Needs an explicit human decision before Jul 9: relocate under an `internal/` prefix, exclude via a dedicated submission branch, or accept as-is. Not resolved by this plan — flagged for a Sprint 4 decision. |
 | EPFO is not live on Account Aggregator rails | Known, handled | Must stay framed as mocked/roadmap in the pitch and demo narration — never presented as a live integration. Already the established posture in `data-and-intel-sourcing-guide.md`; this plan does not change it. |
 | Synthetic-data ceiling — no real-default backtesting is possible pre-pilot | Known, handled | State this honestly in the eval report and PPT (per `agentic-execution-plan.md`'s existing honesty-gate principle); real-default recalibration is explicitly the post-hackathon productionization step, not a stage-1 claim. |
