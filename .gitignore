@@ -1,0 +1,13 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Generated synthetic data (rebuilt via `make data-gen`)
+app/data/*.csv
+
+# IDE
+.idea/
+.vscode/

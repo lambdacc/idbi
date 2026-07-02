@@ -1,0 +1,37 @@
+# CreditPulse feature configuration — the human-owned "which features and why".
+# Maps engineered features to pillars and records their expected directional
+# monotonicity (used by the Sprint-2 monotonic checks and reason-code signs).
+#
+# direction: +1  => higher feature value should RAISE health score
+#            -1  => higher feature value should LOWER health score
+# Each entry: {source, direction, rationale}
+
+cash_flow_health:
+  bank_avg_balance:        { source: bank, direction: 1,  rationale: "Higher average balance = more liquidity buffer" }
+  bank_balance_volatility: { source: bank, direction: -1, rationale: "Volatile balances signal cash-flow instability" }
+  bank_low_balance_freq:   { source: bank, direction: -1, rationale: "Frequent low/negative balances signal stress" }
+  bank_net_flow_trend:     { source: bank, direction: 1,  rationale: "Improving net inflow trend is healthy" }
+  gst_itc_to_tax_paid:     { source: gst,  direction: -1, rationale: "Abnormally high ITC/tax-paid = thin margins / working-capital drag (CAG DORF-II ratio)" }
+
+revenue_quality:
+  gst_turnover_level:      { source: gst,  direction: 1,  rationale: "Higher declared turnover = larger, more established business" }
+  gst_turnover_trend:      { source: gst,  direction: 1,  rationale: "Positive YoY turnover trend = growth" }
+  gst_filing_regularity:   { source: gst,  direction: 1,  rationale: "On-time GST filing = discipline/going-concern" }
+  gst_customer_concentration: { source: gst, direction: -1, rationale: "High customer concentration = revenue fragility" }
+  gst_credit_note_ratio:   { source: gst,  direction: -1, rationale: "High credit-notes/turnover = returns/channel-stuffing (CAG DORF-II ratio)" }
+
+obligations_leverage:
+  bureau_delinquency:      { source: bureau, direction: -1, rationale: "Past DPD/delinquency lowers creditworthiness" }
+  bank_bounce_frequency:   { source: bank,   direction: -1, rationale: "NACH/cheque bounces = repayment stress" }
+  dscr:                    { source: bank,   direction: 1,  rationale: "Higher debt-service-coverage = safer (target >=1.25)" }
+  foir:                    { source: bank,   direction: -1, rationale: "Higher fixed-obligation-to-income = overleveraged (target <=55%)" }
+
+consistency_integrity:
+  turnover_authenticity_score: { source: composite, direction: 1,  rationale: "Higher GST<->bank<->e-way-bill<->TDS agreement = more authentic turnover" }
+  energy_intensity_flag:       { source: composite, direction: -1, rationale: "Turnover inconsistent with metered electricity = red flag" }
+  premises_authenticity:       { source: composite, direction: 1,  rationale: "Premises corroborated across independent civic records" }
+
+stability_vintage:
+  business_age_years:      { source: udyam, direction: 1,  rationale: "Older business = proven going-concern" }
+  banking_relationship_months: { source: bank, direction: 1, rationale: "Longer banking relationship = stability" }
+  epfo_workforce_stability: { source: epfo, direction: 1, rationale: "Stable/growing PF-contributing workforce = going-concern" }

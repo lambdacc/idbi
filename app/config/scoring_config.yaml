@@ -1,0 +1,52 @@
+# CreditPulse scoring configuration
+# The human-owned "which pillars, what weights, what bands" artifact.
+# solution-design.md §4/§5, implementation-plan.md §5.3.
+#
+# Engineering pillar names are kept internal here; the brief-facing Health Card
+# labels are applied once in backend/schemas (implementation-plan.md §5.3).
+
+pillars:
+  # engineering_name: {label (brief vocabulary), weight in composite}
+  cash_flow_health:
+    label: "Repayment Capacity"
+    weight: 0.25
+  revenue_quality:
+    label: "Growth Trajectory"
+    weight: 0.20
+  obligations_leverage:
+    label: "Creditworthiness"
+    weight: 0.25
+  consistency_integrity:
+    label: "Risk Profile"
+    weight: 0.20
+  stability_vintage:
+    label: "Stability & Vintage"
+    weight: 0.10
+
+# Composite Financial Health Score is 0-100 (higher = healthier).
+# 1-10 CMR-style grade (1 = healthiest), plus onboarding bands.
+grade_bands:
+  # grade: [min_score_inclusive, max_score_inclusive]
+  1: [90, 100]
+  2: [82, 89]
+  3: [74, 81]
+  4: [66, 73]
+  5: [58, 65]
+  6: [50, 57]
+  7: [42, 49]
+  8: [34, 41]
+  9: [26, 33]
+  10: [0, 25]
+
+onboarding_bands:
+  fast_track:   { grades: [1, 2, 3], recommendation: "Approve" }
+  review:       { grades: [4, 5, 6], recommendation: "Approve-with-conditions" }
+  decline:      { grades: [7, 8, 9, 10], recommendation: "Decline" }
+
+# Indicative limit heuristic (stage-1 demo): fraction of annual GST turnover,
+# scaled by grade. Deliberately simple + documented, not a real credit policy.
+indicative_limit:
+  turnover_fraction_by_band:
+    fast_track: 0.20
+    review: 0.10
+    decline: 0.0
