@@ -62,7 +62,17 @@ def build_archetype(key: str, seed: int) -> MSMEProfile:
         raise KeyError(f"Unknown archetype '{key}'. Options: {ARCHETYPE_KEYS}")
     rng = np.random.default_rng(seed)
     ov = dict(ARCHETYPES[key])
-    return sample_profile(rng, entity_id=key.upper(), seed=seed, overrides=ov)
+    p = sample_profile(rng, entity_id=key.upper(), seed=seed, overrides=ov)
+    # Archetypes are narrative demo exemplars: pin their ground-truth outcome
+    # deterministically by health so the demo tells a coherent story every run
+    # (distressed defaults; healthy/stressed do not). The 400-entity random
+    # cohort keeps stochastic labels for realistic model training.
+    p.label_default = 1 if p.true_health == "distressed" else 0
+    # Pin the inflated showcase to a STRONG, deterministic gap so the flagship
+    # Turnover-Authenticity check flags it reliably every run (not a random draw).
+    if p.true_honesty == "inflated":
+        p.declared_turnover = round(p.true_scale_turnover * 2.2, 2)
+    return p
 
 
 def build_random(seed: int, entity_id: Optional[str] = None) -> MSMEProfile:

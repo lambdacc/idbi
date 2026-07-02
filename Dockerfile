@@ -7,6 +7,10 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /srv
 
+# LightGBM needs the OpenMP runtime (libgomp1) on slim Debian images.
+RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Dependencies first for layer caching.
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
