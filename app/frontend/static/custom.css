@@ -1,0 +1,192 @@
+/* CreditPulse — banking-grade styling (implementation-plan §6.3, demo-architecture.md).
+   White background, light-gray panels, deep-blue accent; green/amber/red reserved
+   for risk semantics only. No default Streamlit look. */
+
+:root {
+  --cp-bg: #ffffff;
+  --cp-panel: #f4f6fa;
+  --cp-panel-2: #eef2f8;
+  --cp-border: #dbe2ec;
+  --cp-navy: #0b3d75;
+  --cp-navy-deep: #072a52;
+  --cp-blue: #1466b8;
+  --cp-ink: #1b2733;
+  --cp-muted: #647587;
+  --cp-green: #178a54;
+  --cp-green-bg: #e6f5ec;
+  --cp-amber: #b7791f;
+  --cp-amber-bg: #fdf3e0;
+  --cp-red: #c0392b;
+  --cp-red-bg: #fbecea;
+  --cp-radius: 14px;
+  --cp-shadow: 0 1px 3px rgba(11, 61, 117, 0.08), 0 4px 16px rgba(11, 61, 117, 0.06);
+}
+
+/* Base surface + typography */
+.stApp { background: var(--cp-bg); }
+html, body, [class*="css"] {
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--cp-ink);
+}
+.block-container { padding-top: 2.2rem; max-width: 1200px; }
+
+/* Kill the default Streamlit chrome for a product feel */
+#MainMenu, header[data-testid="stHeader"], footer { visibility: hidden; }
+[data-testid="stToolbar"] { display: none; }
+
+/* Sidebar */
+[data-testid="stSidebar"] {
+  background: linear-gradient(180deg, var(--cp-navy-deep), var(--cp-navy));
+}
+[data-testid="stSidebar"] * { color: #eaf1fb !important; }
+[data-testid="stSidebar"] .cp-brand {
+  font-size: 1.35rem; font-weight: 800; letter-spacing: .3px;
+  padding: .3rem 0 0 0;
+}
+[data-testid="stSidebar"] .cp-brand-sub { font-size: .78rem; opacity: .8; }
+
+/* Headings */
+h1 { font-weight: 800; letter-spacing: -.4px; color: var(--cp-navy-deep); }
+h2, h3 { font-weight: 700; color: var(--cp-navy-deep); }
+
+/* Generic panel / card */
+.cp-card {
+  background: var(--cp-bg);
+  border: 1px solid var(--cp-border);
+  border-radius: var(--cp-radius);
+  box-shadow: var(--cp-shadow);
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+.cp-card h4 { margin: 0 0 .5rem 0; font-size: .95rem; color: var(--cp-muted);
+  text-transform: uppercase; letter-spacing: .6px; font-weight: 700; }
+
+/* KPI metric card */
+.cp-kpi {
+  background: var(--cp-bg);
+  border: 1px solid var(--cp-border);
+  border-left: 4px solid var(--cp-blue);
+  border-radius: 12px;
+  box-shadow: var(--cp-shadow);
+  padding: .9rem 1.05rem;
+  height: 100%;
+}
+.cp-kpi .lbl { font-size: .74rem; color: var(--cp-muted); text-transform: uppercase;
+  letter-spacing: .5px; font-weight: 700; }
+.cp-kpi .val { font-size: 1.8rem; font-weight: 800; color: var(--cp-navy-deep); line-height: 1.15; }
+.cp-kpi .sub { font-size: .78rem; color: var(--cp-muted); }
+.cp-kpi.good { border-left-color: var(--cp-green); }
+.cp-kpi.warn { border-left-color: var(--cp-amber); }
+.cp-kpi.risk { border-left-color: var(--cp-red); }
+
+/* Badges / pills */
+.cp-badge {
+  display: inline-block; padding: .22rem .7rem; border-radius: 999px;
+  font-size: .78rem; font-weight: 700; letter-spacing: .2px;
+}
+.cp-badge.good { background: var(--cp-green-bg); color: var(--cp-green); }
+.cp-badge.warn { background: var(--cp-amber-bg); color: var(--cp-amber); }
+.cp-badge.risk { background: var(--cp-red-bg); color: var(--cp-red); }
+.cp-badge.info { background: var(--cp-panel-2); color: var(--cp-navy); }
+
+/* Pipeline stage row */
+.cp-stage {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .55rem .8rem; border-radius: 10px; margin-bottom: .4rem;
+  border: 1px solid var(--cp-border); background: var(--cp-bg);
+  transition: all .25s ease;
+}
+.cp-stage .idx {
+  width: 26px; height: 26px; border-radius: 50%; flex: 0 0 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .8rem; font-weight: 700; background: var(--cp-panel-2); color: var(--cp-muted);
+}
+.cp-stage .ttl { font-weight: 600; font-size: .9rem; }
+.cp-stage.waiting { opacity: .55; }
+.cp-stage.running {
+  border-color: var(--cp-blue); background: #f2f8ff;
+  box-shadow: 0 0 0 3px rgba(20, 102, 184, .12);
+}
+.cp-stage.running .idx { background: var(--cp-blue); color: #fff; }
+.cp-stage.done { border-color: var(--cp-green); }
+.cp-stage.done .idx { background: var(--cp-green); color: #fff; }
+.cp-stage .status { margin-left: auto; font-size: .74rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px; color: var(--cp-muted); }
+.cp-stage.running .status { color: var(--cp-blue); }
+.cp-stage.done .status { color: var(--cp-green); }
+
+/* Execution console */
+.cp-console {
+  background: #0c1320; color: #cfe3ff; border-radius: 12px;
+  padding: .9rem 1rem; font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: .8rem; line-height: 1.55; height: 340px; overflow-y: auto;
+  border: 1px solid #1b2b45; white-space: pre-wrap;
+}
+.cp-console .ln { display: block; }
+.cp-console .ok { color: #6ee7a8; }
+.cp-console .bad { color: #ff9d8a; }
+.cp-console .dim { color: #7f97b8; }
+
+/* Source ingestion grid */
+.cp-src {
+  border: 1px solid var(--cp-border); border-radius: 10px; padding: .5rem .6rem;
+  background: var(--cp-panel); text-align: center; margin-bottom: .5rem; min-height: 62px;
+}
+.cp-src.on { background: var(--cp-green-bg); border-color: #bfe6cf; }
+.cp-src .nm { font-size: .78rem; font-weight: 700; color: var(--cp-navy-deep); }
+.cp-src .rc { font-size: .72rem; color: var(--cp-muted); }
+.cp-src.on .rc { color: var(--cp-green); font-weight: 600; }
+
+/* Composite card */
+.cp-comp {
+  border: 1px solid var(--cp-border); border-left: 4px solid var(--cp-blue);
+  border-radius: 10px; padding: .7rem .85rem; background: var(--cp-bg);
+  margin-bottom: .6rem; box-shadow: var(--cp-shadow);
+}
+.cp-comp.flagship { border-left-color: var(--cp-navy); background: #f7faff; }
+.cp-comp .hd { display: flex; justify-content: space-between; align-items: baseline; }
+.cp-comp .nm { font-weight: 700; color: var(--cp-navy-deep); font-size: .92rem; }
+.cp-comp .vl { font-weight: 800; color: var(--cp-blue); font-size: 1rem; }
+.cp-comp .rt { font-size: .8rem; color: var(--cp-muted); margin-top: .35rem; line-height: 1.4; }
+.cp-comp .sr { font-size: .72rem; color: var(--cp-blue); margin-top: .3rem; }
+
+/* Reason code rows */
+.cp-reason {
+  display: flex; gap: .6rem; align-items: flex-start; padding: .55rem .75rem;
+  border-radius: 10px; margin-bottom: .45rem; border: 1px solid var(--cp-border);
+}
+.cp-reason.pos { background: var(--cp-green-bg); border-color: #bfe6cf; }
+.cp-reason.neg { background: var(--cp-red-bg); border-color: #f0cdc8; }
+.cp-reason .mk { font-weight: 800; font-size: 1.05rem; }
+.cp-reason.pos .mk { color: var(--cp-green); }
+.cp-reason.neg .mk { color: var(--cp-red); }
+.cp-reason .tx { font-size: .86rem; color: var(--cp-ink); }
+
+/* Big score hero */
+.cp-hero {
+  display: flex; gap: 1.4rem; align-items: center;
+  background: linear-gradient(135deg, var(--cp-navy-deep), var(--cp-navy));
+  color: #fff; border-radius: var(--cp-radius); padding: 1.4rem 1.6rem; margin-bottom: 1rem;
+}
+.cp-hero .score { font-size: 3.2rem; font-weight: 800; line-height: 1; }
+.cp-hero .score small { font-size: 1.1rem; opacity: .7; font-weight: 600; }
+.cp-hero .meta { flex: 1; }
+.cp-hero .name { font-size: 1.35rem; font-weight: 800; }
+.cp-hero .subtle { opacity: .82; font-size: .9rem; }
+
+/* Recommendation banner */
+.cp-rec { border-radius: 12px; padding: 1rem 1.2rem; font-weight: 600; }
+.cp-rec.good { background: var(--cp-green-bg); color: var(--cp-green); border: 1px solid #bfe6cf; }
+.cp-rec.warn { background: var(--cp-amber-bg); color: var(--cp-amber); border: 1px solid #f2ddb0; }
+.cp-rec.risk { background: var(--cp-red-bg); color: var(--cp-red); border: 1px solid #f0cdc8; }
+
+/* Buttons */
+.stButton > button {
+  background: var(--cp-navy); color: #fff; border: none; border-radius: 10px;
+  font-weight: 700; padding: .55rem 1.1rem; transition: background .2s ease;
+}
+.stButton > button:hover { background: var(--cp-blue); color: #fff; }
+
+/* Scenario tiles (radio -> cards handled inline) */
+.cp-scn { font-size: .82rem; color: var(--cp-muted); }
+hr { border-color: var(--cp-border); }

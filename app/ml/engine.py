@@ -105,6 +105,7 @@ class ScoringEngine:
         pillar_mat = pd.DataFrame(
             {eid: self.pillars.pillar_scores(fm.loc[eid].to_dict()) for eid in fm.index}).T
         self._pillar_cols = list(pillar_mat.columns)
+        self._pillar_mat = pillar_mat
         self.segmenter.fit(pillar_mat)
 
         # Confidence weights from IV per source. Exclude derived composites — they
@@ -115,6 +116,13 @@ class ScoringEngine:
         return self
 
     # --------------------------------------------------------------- scoring
+    def cohort_scatter(self) -> List[dict]:
+        """Cohort peer-group scatter (descriptive only) for the clustering stage."""
+        master = self.tables["msme_master"].set_index("entity_id")
+        names = {eid: (master.loc[eid].get("name", eid) if eid in master.index else eid)
+                 for eid in self.segmenter.index_}
+        return self.segmenter.cohort_scatter(names)
+
     def _present_sources(self, feats: Dict[str, float]) -> Dict[str, bool]:
         return {s: bool(pred(feats)) for s, pred in PRESENCE_FLAGS.items()}
 
@@ -159,6 +167,8 @@ class ScoringEngine:
             "entity_id": entity_id,
             "name": self.tables["msme_master"].set_index("entity_id").loc[entity_id].get("name", entity_id),
             "pillar_scores": pillar_scores,
+            "peer_segment_id": seg_id,
+            "peer_coord": self.segmenter.project(pillar_row),
             "composite_score": round(composite, 1),
             "grade": grade,
             "onboarding_band": band,
