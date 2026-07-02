@@ -18,3 +18,9 @@ def tables(profiles):
 @pytest.fixture(scope="session")
 def feature_matrix(tables):
     return build_feature_matrix(tables)
+
+
+@pytest.fixture(scope="session")
+def engine(tables):
+    from app.ml.engine import ScoringEngine
+    return ScoringEngine().fit(tables)

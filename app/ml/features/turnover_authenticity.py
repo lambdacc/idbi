@@ -1,15 +1,18 @@
 """Turnover-Authenticity Score — the flagship cross-source integrity check.
 
 intel-cag-gst-feature-analysis.md §6 / Appendix A §5 #1. Reconciles declared GST
-turnover against three independently-governed evidence trails:
+turnover against independently-governed TURNOVER evidence trails — turnover-vs-
+turnover only, so genuine low-margin businesses are NOT mistaken for fraud:
   * AA bank settled inflows      (a regulated bank of record)
   * E-way-bill goods movement    (GSTN cross-validates 3B vs EWB)
-  * ITR-reported income          (CBDT, scaled to a turnover-equivalent band)
+
+(ITR-reported income is deliberately excluded here: income/turnover conflates
+profitability with authenticity — it belongs in a separate profitability signal.)
 
 Each available check yields an agreement ratio in [0, 1] (1 = perfect match);
 the score is their tolerance-banded mean * 100. An 'inflated' entity declares
-turnover far above its true settled/moved/reported evidence, so the ratios drop
-and the score falls — catching exactly the fraud the demo showcases.
+turnover far above its true settled/moved evidence, so the ratios drop and the
+score falls — catching exactly the fraud the demo showcases.
 
 Robustness (intel §7 caution): ratios are clipped and tolerance-banded so dirty
 single-source outliers cannot dominate.
@@ -19,9 +22,7 @@ from __future__ import annotations
 from typing import Dict, List, Tuple
 
 # Within this tolerance the two figures are treated as a full match (ratio 1.0).
-_TOLERANCE = 0.15
-# A services entity moves no goods; ITR income maps to turnover via a typical margin.
-_TYPICAL_MARGIN = 0.10
+_TOLERANCE = 0.20
 
 
 def _agreement(declared: float, evidence: float) -> float:
@@ -52,11 +53,6 @@ def compute_turnover_authenticity(feats: Dict[str, float], master_row: dict) -> 
         if not is_services and feats.get("ewb_present", 0.0):
             r = _agreement(declared, feats.get("ewb_total_value", 0.0))
             checks.append(("gst_ewb", r)); ta_detail["ta_gst_ewb_ratio"] = r
-        # GST vs ITR-reported income (mapped through typical margin)
-        income = feats.get("itr_reported_income", 0.0)
-        if income > 0:
-            r = _agreement(declared, income / _TYPICAL_MARGIN)
-            checks.append(("gst_itr", r)); ta_detail["ta_gst_itr_ratio"] = r
 
     if checks:
         score = 100.0 * sum(r for _, r in checks) / len(checks)

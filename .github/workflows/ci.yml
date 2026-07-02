@@ -28,5 +28,8 @@ jobs:
       - name: Run eval harness
         run: python -m app.ml.eval.runner
 
+      - name: Archetype demo scorecard
+        run: python -m app.ml.train
+
       - name: Build Docker image
         run: docker build -t creditpulse:ci .

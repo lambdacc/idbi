@@ -9,12 +9,12 @@ from __future__ import annotations
 
 from typing import Dict, List
 
-import numpy as np
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
 
 from ..features.base import load_tables, build_feature_matrix
+from ..models.pillars import PillarScorer
+from ..models.scorecard import WOEScorecard
+from ..models.gbm import MonotonicGBM
 from . import metrics
 from .holdout import split
 from .psi import psi_report
@@ -30,35 +30,36 @@ def run_eval(n_report_features: int = 12, seed: int = 42) -> Dict:
     tables = load_tables()
     fm = build_feature_matrix(tables)
     train, test = split(fm, label_col="label_default", seed=seed)
-
     feats = _feature_cols(fm)
-    scaler = StandardScaler().fit(train[feats])
-    Xtr, Xte = scaler.transform(train[feats]), scaler.transform(test[feats])
+    Xtr, ytr = train[feats], train["label_default"].to_numpy()
+    Xte, yte = test[feats], test["label_default"]
 
-    model = LogisticRegression(max_iter=1000, class_weight="balanced")
-    model.fit(Xtr, train["label_default"])
-    proba = model.predict_proba(Xte)[:, 1]
+    # The actual Sprint-2 models, fit on train, scored on the holdout.
+    scorecard = WOEScorecard().fit(Xtr, ytr)
+    gbm = MonotonicGBM().fit(Xtr, ytr)
+    pillars = PillarScorer().fit(train)
 
-    default_metrics = metrics.summary(test["label_default"], proba)
+    sc_metrics = metrics.summary(yte, scorecard.predict_pd(Xte))
+    gbm_metrics = metrics.summary(yte, gbm.predict_pd(Xte))
+    # Deterministic composite as a protective score: risk = 100 - health.
+    composite = pd.Series(
+        [100.0 - pillars.composite(pillars.pillar_scores(row.to_dict())) for _, row in Xte.iterrows()],
+        index=Xte.index)
+    comp_metrics = metrics.summary(yte, composite)
 
-    # Fraud discrimination: the flagship authenticity score alone (lower = worse),
-    # so a higher predicted fraud risk = (100 - authenticity).
-    fraud_score = 100.0 - test["turnover_authenticity_score"]
-    fraud_metrics = metrics.summary(test["label_fraud"], fraud_score)
+    # Fraud discrimination: flagship authenticity score alone (lower = more fraud).
+    fraud_metrics = metrics.summary(test["label_fraud"], 100.0 - test["turnover_authenticity_score"])
 
-    # PSI on the highest-|coef| features.
-    top = list(pd.Series(np.abs(model.coef_[0]), index=feats).sort_values(ascending=False).head(n_report_features).index)
+    top = list(scorecard.top_iv(n_report_features).keys())
     psi = psi_report(train, test, top)
 
-    report = {
+    return {
         "n_entities": int(len(fm)), "n_features": len(feats),
         "n_train": int(len(train)), "n_test": int(len(test)),
-        "default_model": default_metrics,
+        "scorecard": sc_metrics, "gbm": gbm_metrics, "composite": comp_metrics,
         "fraud_authenticity": fraud_metrics,
-        "psi_top_features": psi,
-        "psi_max": max(psi.values()) if psi else 0.0,
+        "psi_top_features": psi, "psi_max": max(psi.values()) if psi else 0.0,
     }
-    return report
 
 
 def print_scorecard(report: Dict) -> None:
@@ -67,14 +68,15 @@ def print_scorecard(report: Dict) -> None:
     print("=" * 62)
     print(f" entities={report['n_entities']}  features={report['n_features']}  "
           f"train={report['n_train']}  test={report['n_test']}")
-    d = report["default_model"]
-    print(f"\n Default model (baseline logistic):")
-    print(f"   AUC={d['auc']:.3f}  Gini={d['gini']:.3f}  KS={d['ks']:.3f}  "
-          f"(n={d['n']}, positives={d['positives']})")
+    print(f"\n Default discrimination (synthetic holdout):")
+    for name, key in [("WOE/IV scorecard", "scorecard"), ("Monotonic LightGBM", "gbm"),
+                      ("Deterministic composite", "composite")]:
+        m = report[key]
+        print(f"   {name:24s} AUC={m['auc']:.3f}  Gini={m['gini']:.3f}  KS={m['ks']:.3f}")
     f = report["fraud_authenticity"]
-    print(f" Fraud detection (Turnover-Authenticity score alone):")
-    print(f"   AUC={f['auc']:.3f}  Gini={f['gini']:.3f}  KS={f['ks']:.3f}  "
-          f"(n={f['n']}, positives={f['positives']})")
+    print(f" Fraud detection (Turnover-Authenticity alone):")
+    print(f"   {'':24s} AUC={f['auc']:.3f}  Gini={f['gini']:.3f}  KS={f['ks']:.3f}  "
+          f"(positives={f['positives']})")
     print(f"\n Stability: max PSI (train vs holdout) = {report['psi_max']:.4f} "
           f"({'stable' if report['psi_max'] < 0.1 else 'shift'})")
     print("\n Honesty note: metrics are on SYNTHETIC data calibrated to the")

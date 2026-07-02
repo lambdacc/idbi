@@ -4,13 +4,14 @@ PIP ?= .venv/bin/pip
 PORT ?= 8080
 N ?= 400
 
-.PHONY: help venv install data-gen test eval demo docker-build docker-run clean
+.PHONY: help venv install data-gen test eval train demo docker-build docker-run clean
 
 help:
 	@echo "make install     - create venv and install pinned deps"
 	@echo "make data-gen    - generate synthetic cohort into app/data/ (N=$(N))"
 	@echo "make test        - run the unit-test suite"
 	@echo "make eval        - run the eval harness scorecard"
+	@echo "make train       - fit models + print the 6-archetype demo scorecard"
 	@echo "make demo        - launch the Streamlit app on PORT=$(PORT)"
 	@echo "make docker-build / docker-run - container build + local run"
 
@@ -29,6 +30,9 @@ test:
 
 eval:
 	$(PY) -m app.ml.eval.runner
+
+train:
+	$(PY) -m app.ml.train
 
 demo:
 	$(PY) -m streamlit run app/frontend/Home.py --server.port=$(PORT) --server.address=0.0.0.0
