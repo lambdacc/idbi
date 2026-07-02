@@ -12,3 +12,6 @@ app/data/*.pkl
 # IDE
 .idea/
 .vscode/
+
+# Local UI-review evidence (screenshots; regenerate via internal/ui-review/capture_screenshots.py)
+/ui-review/
