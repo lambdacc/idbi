@@ -1,11 +1,10 @@
 # Implementation Plan — MSME Financial Health Scoring Platform (CreditPulse MVP)
 
-**Status:** Phase 2 implementation plan · **Date:** 01 Jul 2026 · **Owner:** Lambdac
+**Status:** Implementation plan · **Date:** 01 Jul 2026 · **Owner:** Lambdac
 **Target:** IDBI Innovate 2026, PS3 — Financial Health Score · **Submission:** 09 Jul 2026 (stage-1 working prototype)
-**Executes:** [`../bootstrap-prompt-v3`](../bootstrap-prompt-v3) · **Produced via:** [`execution-plan.md`](execution-plan.md)
-**Reads with:** [`solution-design.md`](solution-design.md) (the locked pillars/scoring spec this plan builds on), [`appendix-a-data-source-catalog.md`](appendix-a-data-source-catalog.md), [`appendix-b-synthetic-data-plan.md`](appendix-b-synthetic-data-plan.md), [`intel-cag-gst-feature-analysis.md`](intel-cag-gst-feature-analysis.md), [`data-and-intel-sourcing-guide.md`](data-and-intel-sourcing-guide.md), [`agentic-execution-plan.md`](agentic-execution-plan.md) (§1,4-7 still valid), [`../notes/product-framework-notes`](../notes/product-framework-notes), [`../notes/demo-architecture.md`](../notes/demo-architecture.md)
+**Reads with:** [`solution-design.md`](solution-design.md) (the pillars/scoring spec this plan builds on), [`appendix-a-data-source-catalog.md`](appendix-a-data-source-catalog.md), [`appendix-b-synthetic-data-plan.md`](appendix-b-synthetic-data-plan.md), [`cag-gst-feature-analysis.md`](cag-gst-feature-analysis.md), [`deployment-runbook.md`](deployment-runbook.md)
 
-**This document, together with its two appendices, is the direct build spec for development agents.** Nothing in Sprints 1-4 (§7) should require re-deriving a decision already made here.
+**This document, together with its two appendices, is the direct build spec.** Nothing in Sprints 1-4 (§7) should require re-deriving a decision already made here.
 
 ---
 
@@ -19,24 +18,24 @@ The second IDBI orientation session made one thing explicit that the first did n
 
 ### 1.2 What already exists and what this plan adds
 
-`solution-design.md` (28 Jun) already locked five scoring pillars — Cash-flow health, Revenue quality & GST discipline, Consistency & integrity, Obligations & leverage, Stability & vintage — a WOE/IV-scorecard-first model philosophy, an explainability contract (reason codes, SHAP), and a Financial Health Card UI concept. `intel-cag-gst-feature-analysis.md` independently mined two CAG (Comptroller & Auditor General of India) audit reports on GST department oversight (Report No. 7/2024 "DORF Phase I", Report No. 25/2025 "DORF Phase II", covering FY2017-21) and produced a vetted, *borrower-health-reframed* feature backlog — critically, one that also flags which of those signals GSTN has since automated away (Rule 36(4) ITC capping, GSTR-2B auto-draft, §16(5) retro-legalisation, sequential filing, e-invoicing expansion), so this plan does not resurrect indicators that no longer discriminate. `data-and-intel-sourcing-guide.md` established the honest access-reality map for the four obvious rails (AA carries bank-deposit + GST + NPS live; **EPF is not live on AA**, UPI has no FI type of its own and must be parsed from bank narration or modelled as a separate PG-style feed).
+`solution-design.md` (28 Jun) already locked five scoring pillars — Cash-flow health, Revenue quality & GST discipline, Consistency & integrity, Obligations & leverage, Stability & vintage — a WOE/IV-scorecard-first model philosophy, an explainability contract (reason codes, SHAP), and a Financial Health Card UI concept. `cag-gst-feature-analysis.md` independently mined two CAG (Comptroller & Auditor General of India) audit reports on GST department oversight (Report No. 7/2024 "DORF Phase I", Report No. 25/2025 "DORF Phase II", covering FY2017-21) and produced a vetted, *borrower-health-reframed* feature backlog — critically, one that also flags which of those signals GSTN has since automated away (Rule 36(4) ITC capping, GSTR-2B auto-draft, §16(5) retro-legalisation, sequential filing, e-invoicing expansion), so this plan does not resurrect indicators that no longer discriminate. Earlier sourcing research established the honest access-reality map for the four obvious rails (AA carries bank-deposit + GST + NPS live; **EPF is not live on AA**, UPI has no FI type of its own and must be parsed from bank narration or modelled as a separate PG-style feed).
 
 This plan's job is to (a) widen the source catalog per the orientation steer (§2 / Appendix A), (b) design the cross-source composite layer that synthesis actually requires (§2, §5), (c) turn all of it into a concrete, buildable architecture, sprint plan, and demo experience the remaining ~8 days can execute (§3, §5-8), and (d) say plainly what's uncertain (§9).
 
 ### 1.3 Source attribution for domain/ML grounding
 
-- **Credit-scoring methodology**: World Bank *Credit Scoring Approaches Guidelines* (general scorecard/WOE-IV framework, fair-lending practice) — `docs/intel/general/CREDITSCORINGAPPROACHESGUIDELINES-world-bank.pdf`.
-- **Transaction-level MSME scoring precedent**: *A Credit Scoring System Using Transaction-Level Behavioral Data for MSMEs* — `docs/intel/general/`.
-- **GST-specific borrower-health signal mining**: CAG DORF I & II reports, reframed via `intel-cag-gst-feature-analysis.md` (own analysis, sourced from `docs/intel/gst/`).
-- **AA/UPI/EPFO access reality**: ReBIT AA specifications (`docs/intel/aa/`), Sahamati AA impact reports (adoption/volume stats), EPFO ECR v2 structure doc (`docs/intel/epfo/`) — synthesized in `data-and-intel-sourcing-guide.md`.
+- **Credit-scoring methodology**: World Bank, *Credit Scoring Approaches Guidelines* (scorecard/WOE-IV framework, fair-lending practice).
+- **Transaction-level MSME scoring precedent**: *A Credit Scoring System Using Transaction-Level Behavioral Data for MSMEs* (published research).
+- **GST-specific borrower-health signal mining**: CAG Report No. 7 of 2024 and Report No. 25 of 2025 (public audit reports, cag.gov.in), reframed via `cag-gst-feature-analysis.md` (own analysis).
+- **AA/UPI/EPFO access reality**: ReBIT AA specifications (specifications.rebit.org.in), Sahamati AA impact reports (adoption/volume stats), EPFO ECR v2 structure documentation (epfindia.gov.in).
 - **Widened data-source catalog and MSME distribution stats**: Appendix A and Appendix B respectively, each individually citation-tagged `(sourced: ...)` / `(assumed: ...)`.
-- **Product framing (confidence score, graph/GNN, descriptive-vs-predictive model split)**: `docs/notes/product-framework-notes` (internal brainstorm, treated as a design idea, not an external citation).
+- **Product framing (confidence score, graph/GNN, descriptive-vs-predictive model split)**: internal product-framing notes, treated as design ideas, not external citations.
 
 ---
 
 ## 2. Data-source catalog & composite indicators — summary (full detail: Appendix A)
 
-Appendix A applies the `idbi-hackathon` SKILL rubric to **34 candidates** — the 5 already-covered sources (GST, UPI, AA bank/deposit, EPFO, Bureau) plus a widened 29-candidate sweep across statutory, trade/logistics, utilities/premises, licensing, commerce, and risk/legal areas (see `execution-plan.md` for the seed list) — each scored on all 12 rubric fields. The result: **8 Retain-core, 18 Retain-enrichment, 8 Reject**, with every reject carrying a documented reason and eight tier assignments overridden from the seed list's first-pass guesses once web research confirmed the real 2026 access picture (most notably: ONDC downgraded Core→Reject as still pilot-stage with only ~9 network participants and 3 lenders live; MCA21, DISCOM electricity, and DGFT/ICEGATE downgraded Core→Enrichment as real-but-access-constrained; telecom, ESIC, and commercial LPG downgraded to Reject as having no viable third-party access model today). It closes with a **13-entry composite-indicator catalog** (the flagship pre-existing Turnover-Authenticity Score, plus Energy Intensity, Estimated Production Capacity, Logistics-Activity Index, Premises Authenticity, Business Continuity, Operational Stability, Supply-Chain Consistency, B2G Credibility, Export Orientation, Legal-Risk Overlay, Formal-Identity Integrity, and Credit-Exposure Cross-Check) — each entry naming its constituent sources, the fused signal, and exactly which independently-governed systems a fraudster would need to compromise simultaneously to fake it. One notable finding worth carrying into the pitch: **IDBI Bank is already a live lending partner on GeM Sahay**, so the B2G-Credibility composite extends an integration IDBI already has, not a hypothetical.
+Appendix A applies a fixed 12-field source-evaluation rubric to **34 candidates** — the 5 already-covered sources (GST, UPI, AA bank/deposit, EPFO, Bureau) plus a widened 29-candidate sweep across statutory, trade/logistics, utilities/premises, licensing, commerce, and risk/legal areas. The result: **8 Retain-core, 18 Retain-enrichment, 8 Reject**, with every reject carrying a documented reason and eight tier assignments overridden from the initial screening tiers once access-reality research confirmed the real 2026 picture (most notably: ONDC downgraded Core→Reject as still pilot-stage with only ~9 network participants and 3 lenders live; MCA21, DISCOM electricity, and DGFT/ICEGATE downgraded Core→Enrichment as real-but-access-constrained; telecom, ESIC, and commercial LPG downgraded to Reject as having no viable third-party access model today). It closes with a **13-entry composite-indicator catalog** (the flagship pre-existing Turnover-Authenticity Score, plus Energy Intensity, Estimated Production Capacity, Logistics-Activity Index, Premises Authenticity, Business Continuity, Operational Stability, Supply-Chain Consistency, B2G Credibility, Export Orientation, Legal-Risk Overlay, Formal-Identity Integrity, and Credit-Exposure Cross-Check) — each entry naming its constituent sources, the fused signal, and exactly which independently-governed systems a fraudster would need to compromise simultaneously to fake it. One notable finding worth carrying into the pitch: **IDBI Bank is already a live lending partner on GeM Sahay**, so the B2G-Credibility composite extends an integration IDBI already has, not a hypothetical.
 
 **This plan's synthetic-data generator (Appendix B) and feature-engineering layer (§5.2) implement every Retain-tier source from Appendix A — not just the original four.** Where Appendix A tiers a candidate Reject, it is excluded from the build entirely (not silently modeled) — the point of the rubric is that omission is a documented judgment, not an oversight.
 
@@ -72,7 +71,7 @@ app/
       composite_features.py    the cross-source synthesis layer (§5.2) — consumes per-source features,
         emits composite indicators from Appendix A's composite catalog
       turnover_authenticity.py  the differentiator sub-module (GST↔bank, GSTR-1↔3B, GSTR-3B↔e-way-bill,
-        GSTR-3B↔TDS/TCS), per intel-cag-gst-feature-analysis.md §6
+        GSTR-3B↔TDS/TCS), per cag-gst-feature-analysis.md §6
     models/
       scorecard.py             WOE/IV logistic scorecard
       gbm.py                   monotonic-constrained LightGBM
@@ -97,11 +96,9 @@ app/
 
 Dockerfile                    single-stage Python image; CMD streamlit run app/frontend/Home.py
                               --server.port=$PORT --server.address=0.0.0.0
-requirements.txt              pinned versions (guards the hallucinated-package risk noted in
-                              agentic-execution-plan.md §1.5)
+requirements.txt              pinned versions (supply-chain hygiene)
 Makefile                      make demo / make test / make data-gen
-START_HERE.md                 root — orientation doc "for a human or agent reading this repo for the
-                              first time" (replaces the AGENTS.md pattern; see §9 repo-hygiene note)
+START_HERE.md                 root — orientation doc for anyone reading this repo for the first time
 README.md                     root — the public-facing submission README
 .github/workflows/ci.yml       lint + unit tests + build the Docker image on every push
 ```
@@ -114,7 +111,7 @@ README.md                     root — the public-facing submission README
 
 Appendix B specifies, for **every Retain-tier source in Appendix A** (not only GST/UPI/AA/EPFO): a generator design, the distributional parameters it samples from (each tagged sourced/assumed against the MSME Distribution Profile for India), and a short "pitch narrative" paragraph arguing the source's real-world production accessibility — because although the integration itself is synthetic for the hackathon, the catalog's credibility depends on every retained source being realistically obtainable in a real deployment, not just plausible in a demo.
 
-Cross-source consistency is enforced at generation time via `data_gen/profiles.py`: a given synthetic MSME's electricity, EPFO, and factory-licence records are drawn from the *same* underlying "true" production-capacity latent variable (not independently randomized), so the composite indicators in §2/Appendix A are meaningful rather than coincidental — this is what makes the Pipeline's cross-source-synthesis stage (§6) demonstrate a real signal instead of a scripted illusion. Six named archetypes (Textile Manufacturer, Retail Kirana Store, Restaurant, IT Services Company, Auto Components Supplier, Logistics Business — per `demo-architecture.md`) anchor the demo, plus a randomizable generator for variety across repeated demo runs.
+Cross-source consistency is enforced at generation time via `data_gen/profiles.py`: a given synthetic MSME's electricity, EPFO, and factory-licence records are drawn from the *same* underlying "true" production-capacity latent variable (not independently randomized), so the composite indicators in §2/Appendix A are meaningful rather than coincidental — this is what makes the Pipeline's cross-source-synthesis stage (§6) demonstrate a real signal instead of a scripted illusion. Six named archetypes (Textile Manufacturer, Retail Kirana Store, Restaurant, IT Services Company, Auto Components Supplier, Logistics Business) anchor the demo, plus a randomizable generator for variety across repeated demo runs.
 
 ---
 
@@ -149,7 +146,7 @@ Peer-segment label    Pillar scores (0-100) + composite score + 1-10 grade + con
 
 `ml/features/composite_features.py` implements every composite from Appendix A's synthesis pass as a pure function of already-computed per-source features — never re-reading raw source data directly, so the layer stays testable in isolation. Each composite function returns both a **value** and a **manipulation-resistance rationale string** (surfaced later in reason codes: e.g. "Energy intensity consistent with declared GST turnover — a fraudulent turnover claim would require also faking metered electricity consumption"). This is the mechanism that answers the brief's "combine sources into signals more predictive/harder-to-fake than any single source" requirement directly in code, not just in the pitch deck.
 
-The pre-existing **Turnover-Authenticity Score** (`turnover_authenticity.py`, from `intel-cag-gst-feature-analysis.md` §6: GST↔bank, GSTR-1↔3B, GSTR-3B↔e-way-bill, GSTR-3B↔TDS/TCS) is the headline composite and stays a dedicated module given its differentiation weight; the newer composites (premises-authenticity, business-continuity) feed into the same Pillar 3 bucket as secondary sub-signals rather than becoming a 6th pillar — keeps the pillar count stable and matches solution-design.md.
+The pre-existing **Turnover-Authenticity Score** (`turnover_authenticity.py`, from `cag-gst-feature-analysis.md` §6: GST↔bank, GSTR-1↔3B, GSTR-3B↔e-way-bill, GSTR-3B↔TDS/TCS) is the headline composite and stays a dedicated module given its differentiation weight; the newer composites (premises-authenticity, business-continuity) feed into the same Pillar 3 bucket as secondary sub-signals rather than becoming a 6th pillar — keeps the pillar count stable and matches solution-design.md.
 
 ### 5.3 Dimension naming — reconciling solution-design.md's pillars with the brief's mandated vocabulary
 
@@ -172,15 +169,15 @@ The Financial Health Card therefore ships **5 dimension scores using this labeli
 | Pillar/composite scorecard | **WOE/IV logistic regression** (per bin-transformed features) | Interpretable-by-construction backbone; every point contribution is natively explainable — no post-hoc approximation needed for the primary decision path |
 | Lift model | **Monotonic-constrained LightGBM** (preferred over XGBoost for faster iteration in the remaining days; monotonic constraints keep it bank-defensible — e.g. score must not *improve* as bounce frequency increases) | Optional ensemble on top of the scorecard for ranking lift; SHAP explains it when active |
 | Segmentation | **K-Means** (k=3-5, chosen via silhouette score), optional **Gaussian Mixture** for soft cluster membership | Descriptive peer-grouping / archetype narrative for the UI's "who is this business like" moment — explicitly *not* part of the credit decision path, to avoid conflating descriptive and predictive outputs |
-| Data-completeness confidence score | New: `ml/models/confidence_score.py` — weighted by (source coverage present for this MSME) × (that source's per-feature information value) | Directly implements the `product-framework-notes` idea: states *how thin the file is*, so a thin-file MSME gets a hedged score instead of an auto-reject. Ships as a 6th first-class output alongside the 5 pillar scores and composite score — not folded into any pillar, so it can be surfaced on the Health Card independently ("Score: 78/100, Confidence: Medium — 6 of 9 available sources connected") |
-| Cross-source synthesis | Deterministic ratio/consistency functions (pandas/Polars) — **not** a graph neural network | `product-framework-notes`' graph/GNN linkage-layer idea is real but explicitly deferred to stage-2/future-work: it needs credible synthetic entity-linkage data (promoters/suppliers/buyers) this timeline can't build and validate defensibly in 8 days |
-| Authenticity/verification signal (required by brief) | Turnover-Authenticity Score (§5.2) | Confirmed sufficient on its own to satisfy the brief's "at least one authenticity/verification signal" requirement; it is the single most differentiated piece of this build and should never be cut under schedule pressure (carried over from `agentic-execution-plan.md`'s protected list) |
+| Data-completeness confidence score | New: `ml/models/confidence_score.py` — weighted by (source coverage present for this MSME) × (that source's per-feature information value) | States *how thin the file is*, so a thin-file MSME gets a hedged score instead of an auto-reject. Ships as a 6th first-class output alongside the 5 pillar scores and composite score — not folded into any pillar, so it can be surfaced on the Health Card independently ("Score: 78/100, Confidence: Medium — 6 of 9 available sources connected") |
+| Cross-source synthesis | Deterministic ratio/consistency functions (pandas/Polars) — **not** a graph neural network | A graph/GNN entity-linkage layer is a real future direction but explicitly deferred to stage-2/future-work: it needs credible synthetic entity-linkage data (promoters/suppliers/buyers) this timeline can't build and validate defensibly in 8 days |
+| Authenticity/verification signal (required by brief) | Turnover-Authenticity Score (§5.2) | Sufficient on its own to satisfy the brief's "at least one authenticity/verification signal" requirement; it is the single most differentiated piece of this build and is protected scope — never cut under schedule pressure |
 
 **Output contract** (the Financial Health Card payload): 5 dimension scores (0-100, labeled per §5.3 — Repayment Capacity, Growth Trajectory, Creditworthiness, Risk Profile, Stability & Vintage) + composite Financial Health Score + 1-10 CMR-style grade (1=healthiest, per solution-design.md's existing banding) + data-completeness confidence score + peer-segment label (from clustering, descriptive only) + top reason codes (positive and negative) + recommendation (Approve / Approve-with-conditions / Request-more-info / Escalate / Decline, with indicative limit/tenure/band).
 
 ### 5.5 Explainability & evaluation
 
-Unchanged from `solution-design.md` §6 and §9 — SHAP for the GBM path, native point-contributions for the scorecard, reason-code stability tested across recalibration, and a leakage-resistant human-designed holdout with AUC/Gini/KS/PSI as the eval harness's ground truth (built early, per `agentic-execution-plan.md`'s non-negotiable #2 — never last).
+Unchanged from `solution-design.md` §6 and §9 — SHAP for the GBM path, native point-contributions for the scorecard, reason-code stability tested across recalibration, and a leakage-resistant holdout with AUC/Gini/KS/PSI as the eval harness's ground truth (built early in Sprint 1, never last).
 
 ---
 
@@ -190,7 +187,7 @@ Unchanged from `solution-design.md` §6 and §9 — SHAP for the GBM path, nativ
 
 ### 6.1 Demo flow (top level)
 
-1. User opens the app → scenario picker (6 named archetypes + "Randomize" per `demo-architecture.md`).
+1. User opens the app → scenario picker (6 named archetypes + "Randomize").
 2. User clicks **Run Assessment**.
 3. The staged pipeline (6.2) plays automatically, each stage auto-advancing.
 4. Financial Health Card renders (6.2, stage 9), then stays static for review/export.
@@ -213,13 +210,13 @@ Total staged runtime: **~25-30 seconds** end-to-end — long enough to read as a
 
 ### 6.3 Visual style
 
-Per `demo-architecture.md` (retained): white background, light-gray panels, deep-blue accent, green for positive, amber for warnings, red reserved for high-risk-only, rounded cards, consistent spacing, professional typography, responsive layout, custom CSS throughout (no default Streamlit look).
+Banking-grade: white background, light-gray panels, deep-blue accent, green for positive, amber for warnings, red reserved for high-risk-only, rounded cards, consistent spacing, professional typography, responsive layout, custom CSS throughout (no default Streamlit look).
 
 ---
 
 ## 7. Sprint-by-sprint breakdown (recomputed against 01-09 Jul 2026, ~8 working days)
 
-This replaces only `agentic-execution-plan.md` §3's day-by-day table; its §1 operating model, §4 toolchain (amend: GCP Cloud Run replaces AWS, Streamlit replaces Next.js/React), §5 stage-2 plan, §6 risk controls, and §7 definition-of-done remain valid and are referenced here, not restated.
+Four sprints against the remaining runway, each ending in working, testable software — integration and testing are never deferred to the end. Definition of done for stage-1: deploy link live, public GitHub with a clean README and reproducible demo, eval scorecard green (with the synthetic-data caveat stated), Health Card rendering score + dimensions + reasons + recommendation, and the submission deck + demo recording in before 9 Jul.
 
 ### Sprint 1 — Foundations (Jul 1-3)
 **Deliverables**: repo/module scaffold (§3) + Dockerfile skeleton that builds and serves a placeholder Streamlit page on Cloud Run; synthetic-data generators for every Retain-tier source in Appendix A (not just the original four); the 5-pillar + composite feature-engineering layer (§5.2); the eval harness (AUC/Gini/KS/PSI, leakage-resistant holdout) built and wired to synthetic labels.
@@ -231,13 +228,13 @@ This replaces only `agentic-execution-plan.md` §3's day-by-day table; its §1 o
 
 ### Sprint 3 — Demo experience (Jul 6-7)
 **Deliverables**: full Streamlit staged-reveal UI (§6) wired end-to-end to the backend/ML layers; Financial Health Card final screen; mock AA/ULI/OCEN adapter **only if time remains after the above** (first candidate to drop under schedule pressure, per the protected cut-list below).
-**Acceptance/test criteria**: (a) a documented manual demo script covering the full 9-stage animation flow (§6.2) with expected on-screen content at each stage, run by a second person unfamiliar with the internals — the "does a credit officer get it in 30 seconds" UX gate from `agentic-execution-plan.md` G4; (b) an automated smoke test that exercises the Streamlit app's callable pipeline-orchestrator functions (not the UI itself) end-to-end for at least 2 archetypes without exceptions.
+**Acceptance/test criteria**: (a) a documented manual demo script covering the full 9-stage animation flow (§6.2) with expected on-screen content at each stage, run by a second person unfamiliar with the internals — the "does a credit officer get it in 30 seconds" UX review; (b) an automated smoke test that exercises the Streamlit app's callable pipeline-orchestrator functions (not the UI itself) end-to-end for at least 2 archetypes without exceptions.
 
 ### Sprint 4 — Deploy & submit (Jul 8-9)
-**Deliverables**: Cloud Run deployment (public URL live); security/secrets review (no keys in repo, pinned dependencies); repo-hygiene pass (§9); `START_HERE.md` + public `README.md`; submission PPT (fixed template) + demo recording; final dry run.
-**Acceptance/test criteria**: (a) the deploy link is reachable and completes a full assessment run for at least one archetype, checked manually right before submission; (b) `git secrets`/manual grep confirms no credentials committed; (c) CI (`ci.yml`) is green on the final commit; (d) submission checklist from `docs/05-deliverables/submission-checklist.md` is fully ticked.
+**Deliverables**: Cloud Run deployment (public URL live, per [`deployment-runbook.md`](deployment-runbook.md)); security/secrets review (no keys in repo, pinned dependencies); repo-hygiene pass; `START_HERE.md` + public `README.md`; submission deck (fixed template) + demo recording; final dry run.
+**Acceptance/test criteria**: (a) the deploy link is reachable and completes a full assessment run for at least one archetype, checked manually right before submission; (b) `git secrets`/manual grep confirms no credentials committed; (c) CI (`ci.yml`) is green on the final commit; (d) the submission checklist is fully ticked.
 
-**Protected under schedule pressure** (never cut, carried over from `agentic-execution-plan.md`'s original list): the eval harness, the reason codes, the GST-vs-bank Turnover-Authenticity feature. **First to cut if squeezed further**: the mock AA/ULI/OCEN adapter, then the monotonic-LightGBM lift model (scorecard alone still satisfies the brief), then the 300-900 bureau-style score analogue (the 1-10 grade alone is sufficient).
+**Protected under schedule pressure** (never cut): the eval harness, the reason codes, the GST-vs-bank Turnover-Authenticity feature. **First to cut if squeezed further**: the mock AA/ULI/OCEN adapter, then the monotonic-LightGBM lift model (scorecard alone still satisfies the brief), then the 300-900 bureau-style score analogue (the 1-10 grade alone is sufficient).
 
 ---
 
@@ -258,12 +255,10 @@ This replaces only `agentic-execution-plan.md` §3's day-by-day table; its §1 o
 
 | Risk / open question | Status | Handling |
 |---|---|---|
-| Founder go/no-go | **Resolved — GO, confirmed 01 Jul 2026** (`docs/01-decision/DECISION-pending.md`) | Sprint 1 work is now treated as committed, not provisional. |
-| Repo hygiene: `docs/bootstrap-prompt*`, `docs/00-screening/*`, `docs/01-decision/*` read as internal strategy artifacts and will be visible in the public submission repo (the user chose to build the app inside this same repo) | Open | Needs an explicit human decision before Jul 9: relocate under an `internal/` prefix, exclude via a dedicated submission branch, or accept as-is. Not resolved by this plan — flagged for a Sprint 4 decision. |
-| EPFO is not live on Account Aggregator rails | Known, handled | Must stay framed as mocked/roadmap in the pitch and demo narration — never presented as a live integration. Already the established posture in `data-and-intel-sourcing-guide.md`; this plan does not change it. |
-| Synthetic-data ceiling — no real-default backtesting is possible pre-pilot | Known, handled | State this honestly in the eval report and PPT (per `agentic-execution-plan.md`'s existing honesty-gate principle); real-default recalibration is explicitly the post-hackathon productionization step, not a stage-1 claim. |
-| Cloud Run + Streamlit WebSocket behavior (session affinity, cold starts, request timeout) | Needs verification | Confirm against current GCP docs in Sprint 1 before committing to the deployment config in §8 as final. |
-| Widened data sources are *catalogued and modeled synthetically*, not really integrated | By design (explicit brief instruction) | The "synthetic data only" out-of-scope constraint governs integration, not catalog breadth — Appendix A's pitch-narrative field for each retained source is what argues real-world obtainability; this is intentional, not a shortcut. |
-| Schedule compression (G2+G3 merged into 2 days in Sprint 2) | Real risk | Flagged explicitly in §7; the protected/cut-list ordering in §7 exists precisely to absorb this risk without touching the differentiators. |
+| EPFO is not live on Account Aggregator rails | Known, handled | Must stay framed as mocked/roadmap in the pitch and demo narration — never presented as a live integration. |
+| Synthetic-data ceiling — no real-default backtesting is possible pre-pilot | Known, handled | Stated honestly in the eval report and deck; real-default recalibration is explicitly the post-hackathon productionization step, not a stage-1 claim. |
+| Cloud Run + Streamlit WebSocket behavior (session affinity, cold starts, request timeout) | Needs verification | Confirm against current GCP docs during deployment (see `deployment-runbook.md`) before treating §8's config as final. |
+| Widened data sources are *catalogued and modeled synthetically*, not really integrated | By design (explicit brief instruction) | The "synthetic data only" out-of-scope constraint governs integration, not catalog breadth — Appendix A's accessibility narrative for each retained source is what argues real-world obtainability; this is intentional, not a shortcut. |
+| Schedule compression (model + explainability work lands in the 2-day Sprint 2) | Real risk | Flagged explicitly in §7; the protected/cut-list ordering in §7 exists precisely to absorb this risk without touching the differentiators. |
 | Real bank/core-banking integration, production-grade auth/multi-tenancy, real GST/AA API integration, HA infra | Explicitly out of scope per the brief | Not built; if any later prove necessary to reach a core objective, that would be a new open question requiring a human decision — none identified as necessary so far. |
-| Graph/GNN cross-entity linkage (from `product-framework-notes`) | Deferred, not built | No credible synthetic entity-linkage data achievable in 8 days with enough rigor to defend under judge questioning; noted in §5.3 as a stage-2/future-work item, not silently dropped. |
+| Graph/GNN cross-entity linkage | Deferred, not built | No credible synthetic entity-linkage data achievable in the runway with enough rigor to defend under judge questioning; noted in §5.4 as a stage-2/future-work item, not silently dropped. |

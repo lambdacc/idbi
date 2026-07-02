@@ -1,7 +1,7 @@
 # Appendix A — Prioritized Data-Source Catalog & Composite Indicators
 
 **Status:** Phase 1 research deliverable · **Date:** 01 Jul 2026 · **Owner:** Lambdac
-**Reads with:** [`solution-design.md`](solution-design.md) (existing 4-source spec — GST, Bank/UPI, AA, EPFO, Bureau), [`data-and-intel-sourcing-guide.md`](data-and-intel-sourcing-guide.md) (access-reality detail for GST/AA/UPI/EPFO), [`implementation-plan.md`](implementation-plan.md) (consumes this catalog for the build), [`appendix-b-synthetic-data-plan.md`](appendix-b-synthetic-data-plan.md) (per-source generator spec for every Retain-tier source below), [`../../.claude/skills/idbi-hackathon/SKILL.md`](../../.claude/skills/idbi-hackathon/SKILL.md) (the rubric this catalog follows)
+**Reads with:** [`solution-design.md`](solution-design.md) (existing 4-source spec — GST, Bank/UPI, AA, EPFO, Bureau), [`implementation-plan.md`](implementation-plan.md) (consumes this catalog for the build), [`appendix-b-synthetic-data-plan.md`](appendix-b-synthetic-data-plan.md) (per-source generator spec for every Retain-tier source below)
 
 ---
 
@@ -9,19 +9,19 @@
 
 IDBI Innovate 2026's second orientation session was explicit: **GST, UPI, Account Aggregator (AA), and EPFO are the starting point, not the answer.** A strong PS3 submission has to (a) name additional electronic data sources beyond the obvious four, (b) be honest about which of them are *actually* obtainable today versus merely plausible-sounding, and (c) show how combining sources produces signals that are harder to manipulate than any single input.
 
-This appendix answers that bar directly. It evaluates **34 candidate data sources** — the 5 already-established core sources (GST, UPI, AA bank/deposit, EPFO, Credit Bureau) plus a widened 29-candidate sweep across statutory, trade/logistics, utilities/premises, licensing, commerce, and risk/legal domains — against the `idbi-hackathon` SKILL's fixed 12-field rubric, tiers every one of them into **Retain (core)** / **Retain (enrichment)** / **Reject** (with a documented reason for every reject), and closes with a **composite-indicator catalog**: 13 cross-source signals, each naming its constituent sources, the fused signal it produces, and — the crux of the "harder to manipulate" argument — exactly which independently-governed systems a fraudster would have to compromise *simultaneously* to fake it.
+This appendix answers that bar directly. It evaluates **34 candidate data sources** — the 5 already-established core sources (GST, UPI, AA bank/deposit, EPFO, Credit Bureau) plus a widened 29-candidate sweep across statutory, trade/logistics, utilities/premises, licensing, commerce, and risk/legal domains — against a fixed 12-field evaluation rubric, tiers every one of them into **Retain (core)** / **Retain (enrichment)** / **Reject** (with a documented reason for every reject), and closes with a **composite-indicator catalog**: 13 cross-source signals, each naming its constituent sources, the fused signal it produces, and — the crux of the "harder to manipulate" argument — exactly which independently-governed systems a fraudster would have to compromise *simultaneously* to fake it.
 
-**Research method.** For the 12 candidates flagged as needing verification (MCA21, ESIC, ITR/AIS/26AS, e-way bill, FASTag/IHMCL, DGFT/ICEGATE, DISCOM electricity, property tax, telecom, ONDC, GeM, e-commerce marketplaces), findings below are grounded in web research as of mid-2026, with citations collected in §7. The remaining 22 candidates are assessed from domain knowledge, per the skill's discipline of stating "unknown" rather than leaving a field blank — none required that here, but confidence is marked accordingly per source.
+**Research method.** For the 12 candidates flagged as needing verification (MCA21, ESIC, ITR/AIS/26AS, e-way bill, FASTag/IHMCL, DGFT/ICEGATE, DISCOM electricity, property tax, telecom, ONDC, GeM, e-commerce marketplaces), findings below are grounded in web research as of mid-2026, with citations collected in §7. The remaining 22 candidates are assessed from domain knowledge, with the discipline of stating "unknown" rather than leaving a rubric field blank — none required that here, but confidence is marked accordingly per source.
 
-**Honesty discipline.** Where the user's first-pass tier guess and this appendix's research disagree, the appendix overrides the guess and says why (§1). Where a source is rejected, one documented reason is given, not a silent drop (§4). Where a mandated composite's named constituent (e.g., telecom in "business continuity") turns out not to clear this catalog's access bar, that gap is stated plainly rather than papered over (§5).
+**Honesty discipline.** Where the initial screening tier and this appendix's research disagree, the research wins and the override is recorded with its reason (§1). Where a source is rejected, one documented reason is given, not a silent drop (§4). Where a planned composite's named constituent (e.g., telecom in "business continuity") turns out not to clear this catalog's access bar, that gap is stated plainly rather than papered over (§5).
 
 ---
 
-## 1. Tier overrides from the first-pass guesses
+## 1. Tier overrides from the initial screening
 
-Eight candidates land in a different tier than the seed list's first-pass guess, all driven by the web research in §7:
+Eight candidates land in a different tier than their initial screening placement, all driven by the access-reality research in §7:
 
-| Source | First-pass guess | This appendix's tier | Why the override |
+| Source | Initial screening tier | Final tier | Why the override |
 |---|---|---|---|
 | MCA21 | Core | **Enrichment** | Only covers registered companies/LLPs — the majority-proprietorship MSME base is entirely outside its scope — and access is via paid commercial resellers (Probe42, Tofler, Zauba Corp), not an official lender-facing API. |
 | Electricity (DISCOM) | Core | **Enrichment** | Today's access is fragmented across 40+ DISCOMs with no unified API; no electricity/utility FI type exists on the AA framework; BBPS gives bill-due-amount only, not consumption history. Still central to two composite indicators (§5), so retained prominently — just not "core" by the access-reality bar. |
@@ -32,7 +32,7 @@ Eight candidates land in a different tier than the seed list's first-pass guess,
 | ESIC contributions | Enrichment | **Reject** | No API or consent path exists — weaker access than its close cousin EPFO — and where a contribution figure is obtainable at all (via self-shared challans) it is redundant with EPFO's workforce signal for the segment where both apply. |
 | E-way bill | Core | Core *(confirmed, no override)* | A genuine, real-time, GSP-mediated API with proven consent-sharing lending products (Vayana Network, CredAvenue/Yubi) already exist on top of it — the strongest logistics-side confirmation of GST turnover available today. |
 
-All other first-pass guesses held up under research or reasoning and are retained as originally tagged.
+All other initial placements held up under research or reasoning and are retained as originally tagged.
 
 ---
 
@@ -676,7 +676,7 @@ Single sources are inputs; these fused signals are the product — and the direc
 
 ## 6. Summary
 
-Of 34 candidates evaluated against the `idbi-hackathon` SKILL's 12-field rubric, **8 are retained as core**, **18 as enrichment**, and **8 are rejected** with a documented reason each. Eight tier assignments diverge from the seed list's first-pass guesses, all driven by 2026 access-reality research: MCA21, DISCOM electricity, and DGFT/ICEGATE move from Core to Enrichment (real but access-constrained); ONDC moves from Core straight to Reject (pilot-stage, not production); and commercial LPG, telecom, and ESIC move from Enrichment to Reject (no viable third-party access model exists today for any of the three). The clearest single finding is that **telecom alt-data — probably the most-pitched "additional source" in this space — has no accessible credit signal for a third-party lender in 2026**; its tenure/usage data lives entirely inside telcos' own closed-loop NBFC lending arms, with only KYC-grade number-validation (MNRL/MNV) externally reachable. Conversely, the most underrated finding is that **IDBI Bank is already a live lending partner on GeM Sahay** — meaning the B2G-Credibility composite (§5, #9) is not a hackathon hypothetical but an extension of an integration IDBI already has.
+Of 34 candidates evaluated against the fixed 12-field rubric, **8 are retained as core**, **18 as enrichment**, and **8 are rejected** with a documented reason each. Eight tier assignments diverge from the initial screening tiers, all driven by 2026 access-reality research: MCA21, DISCOM electricity, and DGFT/ICEGATE move from Core to Enrichment (real but access-constrained); ONDC moves from Core straight to Reject (pilot-stage, not production); and commercial LPG, telecom, and ESIC move from Enrichment to Reject (no viable third-party access model exists today for any of the three). The clearest single finding is that **telecom alt-data — probably the most-pitched "additional source" in this space — has no accessible credit signal for a third-party lender in 2026**; its tenure/usage data lives entirely inside telcos' own closed-loop NBFC lending arms, with only KYC-grade number-validation (MNRL/MNV) externally reachable. Conversely, the most underrated finding is that **IDBI Bank is already a live lending partner on GeM Sahay** — meaning the B2G-Credibility composite (§5, #9) is not a hackathon hypothetical but an extension of an integration IDBI already has.
 
 The 13 composite indicators are the real deliverable of this appendix: each one is built so that faking it requires simultaneously compromising multiple independently-governed systems (a tax authority, a regulated bank, a state utility, a court registry) rather than shading a single self-reported number. That is the concrete, defensible answer to the orientation session's challenge — not a longer list of sources, but a fusion layer that turns "we also looked at FASTag" into "here is why FASTag plus e-way bill plus Vahan is harder to fake than any one of them alone."
 

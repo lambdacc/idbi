@@ -12,12 +12,13 @@ deterministic). `ml/` stays framework-free; label mapping happens in backend.
 """
 from __future__ import annotations
 
+import pickle
 from typing import Dict, List
 
 import numpy as np
 import pandas as pd
 
-from .features.base import (build_feature_matrix, compute_entity_features,
+from .features.base import (DATA_DIR, build_feature_matrix, compute_entity_features,
                             load_tables, _ensure_modules_loaded, _FEATURE_FUNCS)
 from .features.composite_features import compute_composites, composite_rationales
 from .models.pillars import PillarScorer
@@ -44,6 +45,7 @@ PRESENCE_FLAGS = {
     "pan_gstin": lambda f: f.get("gstin_active", 0) > 0,
     "property_tax": lambda f: f.get("ptax_has_record", 0) > 0,
     "vahan": lambda f: f.get("vahan_num_vehicles", 0) > 0,
+    "fastag": lambda f: f.get("fastag_toll_crossings_total", 0) > 0,
     "factory_licence": lambda f: f.get("factory_has_licence", 0) > 0,
     "gem": lambda f: f.get("gem_is_seller", 0) > 0,
     "procurement": lambda f: f.get("proc_tenders_won", 0) > 0,
@@ -188,12 +190,48 @@ class ScoringEngine:
         }
 
 
+    # ------------------------------------------------------------- persistence
+    # The SHAP TreeExplainer holds C-extension state — dropped on pickle and
+    # rebuilt from the fitted GBM on load (cheap, deterministic).
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state["shap"] = None
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        if self.gbm is not None and getattr(self.gbm, "model", None) is not None:
+            self.shap = ShapExplainer(self.gbm.model, self.gbm.features_)
+
+    def save(self, path=None) -> "ScoringEngine":
+        path = path or ENGINE_PICKLE
+        with open(path, "wb") as fh:
+            pickle.dump(self, fh)
+        return self
+
+
+ENGINE_PICKLE = DATA_DIR / "engine.pkl"
+
 _ENGINE: ScoringEngine | None = None
 
 
+def _load_prefit() -> ScoringEngine | None:
+    """Load the build-time pre-fit engine iff it isn't stale vs the cohort."""
+    master = DATA_DIR / "msme_master.csv"
+    try:
+        if not (ENGINE_PICKLE.exists() and master.exists()):
+            return None
+        if ENGINE_PICKLE.stat().st_mtime < master.stat().st_mtime:
+            return None  # cohort regenerated after the pickle — refit
+        with open(ENGINE_PICKLE, "rb") as fh:
+            return pickle.load(fh)
+    except Exception:
+        return None  # any load problem -> fall back to a fresh fit
+
+
 def get_engine() -> ScoringEngine:
-    """Cached singleton (fit once per process)."""
+    """Cached singleton: pre-fit pickle when fresh (Cloud Run cold-start), else fit."""
     global _ENGINE
     if _ENGINE is None:
-        _ENGINE = ScoringEngine().fit()
+        _ENGINE = _load_prefit() or ScoringEngine().fit()
     return _ENGINE

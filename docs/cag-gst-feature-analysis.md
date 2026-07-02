@@ -1,8 +1,8 @@
 # Intel Analysis — CAG GST Audit Reports → CreditPulse Features
 
 **Status:** Phase 2 feature-design input · **Date:** 28 Jun 2026 · **Owner:** Lambdac
-**Source files:** `../intel/gst/` — `Version 1 risk indicator.xlsx`, `Version 2 risk indicator and tables.pdf`, `Report-No.-7,-2024,Ch4.pdf` (DORF Phase I), `Report-No.-25,-2025,-Ch4.pdf` (DORF Phase II)
-**Feeds:** [`solution-design.md`](solution-design.md) §4 (feature engineering) and the G1 feature gate in [`agentic-execution-plan.md`](agentic-execution-plan.md).
+**Sources:** CAG Report No. 7 of 2024, Ch. 4 (DORF Phase I) and Report No. 25 of 2025, Ch. 4 (DORF Phase II) — public audit reports, cag.gov.in — plus the V1/V2 risk-indicator tables published alongside them
+**Feeds:** [`solution-design.md`](solution-design.md) §4 (feature engineering) and the feature-selection review in [`implementation-plan.md`](implementation-plan.md) §5.
 
 ---
 
@@ -131,12 +131,12 @@ Bundle the consistency cross-checks (GST↔bank, GSTR-1↔3B, 3B↔e-way-bill, 3
 - **Don't replicate CAG's enforcement framing.** We assess borrower *health/eligibility*, not tax guilt. A mismatch is a *data/quality/authenticity* signal feeding a score with reasons — never an accusation.
 - **Mind the data-quality caveat.** The reports themselves show the GST/EWB systems once carried absurd unvalidated values (₹71 lakh-crore EWB deviations). Treat raw cross-source gaps with **robust outlier handling and tolerance bands** (again, ReconWise practice) — don't let dirty data dominate the score.
 - **Period mismatch.** These cover 2018-21; thresholds (₹1cr/₹1.5cr composition, etc.) and rules have moved. Use the *shape* of the signal, not the 2018-21 constants.
-- **All of this is feature *inspiration*** — validate predictive value in the eval harness (G1 gate); keep only features that earn their place.
+- **All of this is feature *inspiration*** — validate predictive value in the eval harness; keep only features that earn their place.
 
 ## 8. How this plugs into the build
-- Fold the §5 backlog into `solution-design.md` §4 pillars and the **G1 feature gate** in `agentic-execution-plan.md` — human selects which to keep; agent implements the deterministic feature computations.
+- Fold the §5 backlog into `solution-design.md` §4 pillars — each feature is implemented as a deterministic, auditable computation and kept only if it earns its place in the eval harness.
 - The GST-only features are computable on our **synthetic GST data at stage-1** (no consent), reinforcing PS3's low-friction identification angle.
 - The Turnover-Authenticity sub-module (§6) becomes a headline demo moment.
 
 ## 9. Sources
-Intel files in `../intel/` (the two CAG chapters + V1 xlsx + V2 pdf). GST system-change context (Rule 36(4), GSTR-2B, §16(2)(aa)/§16(5), sequential filing, e-invoicing, ARSM, GSTN BO migration) corroborated by the report text and standard GST law; verify exact effective dates if cited externally.
+The two CAG chapters plus the V1/V2 risk-indicator tables (public CAG publications, cag.gov.in). GST system-change context (Rule 36(4), GSTR-2B, §16(2)(aa)/§16(5), sequential filing, e-invoicing, ARSM, GSTN BO migration) corroborated by the report text and standard GST law; verify exact effective dates if cited externally.

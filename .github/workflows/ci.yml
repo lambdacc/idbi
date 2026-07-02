@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [master, main]
+    branches: [master, main, "feature/**"]
   pull_request:
 
 jobs:
@@ -19,8 +19,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # n>=1000 keeps the eval-harness PSI gate meaningful — at n~200 the
+      # train/holdout PSI flags "shift" from small-sample noise alone.
       - name: Generate synthetic cohort
-        run: python -m app.data_gen.build_dataset --n 200
+        run: python -m app.data_gen.build_dataset --n 1000
 
       - name: Run tests
         run: python -m pytest app/tests -q

@@ -3,7 +3,7 @@
 Each is small (single-row source) but feeds a pillar or a composite:
   udyam/pan_gstin -> Formal-Identity + Stability
   property_tax    -> Premises-Authenticity composite
-  vahan/factory   -> Logistics / Production-Capacity composites
+  vahan/fastag/factory -> Logistics / Production-Capacity composites
   gem/procurement -> B2G-Credibility composite
   courts/insolvency/mca21 -> Legal-Risk-Overlay composite
   itr/dgft        -> Turnover-Authenticity (secondary) / Export-Orientation
@@ -50,6 +50,17 @@ def vahan_features(df: pd.DataFrame, master_row: dict) -> dict:
     r = _row(df)
     return {"vahan_num_vehicles": float(r.get("num_vehicles", 0.0)),
             "vahan_fitness_valid": float(r.get("fitness_valid", 1.0))}
+
+
+@feature_source("fastag")
+def fastag_features(df: pd.DataFrame, master_row: dict) -> dict:
+    # Monthly toll-crossing rows -> annual movement volume + route breadth.
+    if df is None or df.empty:
+        return {"fastag_toll_crossings_total": 0.0, "fastag_unique_routes_avg": 0.0}
+    return {
+        "fastag_toll_crossings_total": float(df["toll_crossings"].sum()),
+        "fastag_unique_routes_avg": float(df["unique_routes"].mean()),
+    }
 
 
 @feature_source("factory_licence")

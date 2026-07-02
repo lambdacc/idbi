@@ -30,7 +30,9 @@ a = state.require_assessment()
 
 
 # --------------------------------------------------------- per-stage detail
-def render_detail(container, stage) -> None:
+def render_detail(container, stage, upto: int | None = None) -> None:
+    """Render a stage's detail panel. `upto` (ingestion only) shows just the first
+    k source cards — the §6.2 breadth-reveal lights them up one by one."""
     d = stage.data
     with container.container():
         st.markdown(f"#### Stage {stage.index} · {stage.title}")
@@ -47,8 +49,9 @@ def render_detail(container, stage) -> None:
                              unsafe_allow_html=True)
 
         elif stage.key == "ingestion":
-            render_source_grid(d["sources"])
-            st.caption(f"{d['connected']} of {d['total']} sources carry a live signal for this entity.")
+            render_source_grid(d["sources"], limit=upto)
+            if upto is None:
+                st.caption(f"{d['connected']} of {d['total']} sources carry a live signal for this entity.")
 
         elif stage.key == "integration":
             cols = st.columns(3)
@@ -147,11 +150,27 @@ if play:
     for i, s in enumerate(stages, start=1):
         stage_ph.markdown(stage_list_html(stages, s.index), unsafe_allow_html=True)
         bar.progress((i - 1) / len(stages), text=f"Stage {s.index}/9 · {s.title}")
-        for ln in s.log:
+
+        def _console(ln: str) -> None:
             log_lines.append(ln)
             # Tail the console so the newest lines stay visible (CSS can't auto-scroll).
             console_ph.markdown(console_html(log_lines[-22:]), unsafe_allow_html=True)
-            time.sleep(0.05)
+
+        if s.key == "ingestion":
+            # The deliberate breadth moment (§6.2 stage 2): one console line + one
+            # source card per source, so the footprint visibly assembles.
+            n_sources = len(s.data["sources"])
+            _console(s.log[0])
+            for k, ln in enumerate(s.log[1:1 + n_sources], start=1):
+                _console(ln)
+                render_detail(detail_ph, s, upto=k)
+                time.sleep(0.12)
+            for ln in s.log[1 + n_sources:]:
+                _console(ln)
+        else:
+            for ln in s.log:
+                _console(ln)
+                time.sleep(0.05)
         render_detail(detail_ph, s)
         time.sleep(min(s.duration, 1.2) * 0.35)
     stage_ph.markdown(stage_list_html(stages, len(stages) + 1), unsafe_allow_html=True)

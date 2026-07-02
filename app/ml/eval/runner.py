@@ -77,8 +77,9 @@ def print_scorecard(report: Dict) -> None:
     print(f" Fraud detection (Turnover-Authenticity alone):")
     print(f"   {'':24s} AUC={f['auc']:.3f}  Gini={f['gini']:.3f}  KS={f['ks']:.3f}  "
           f"(positives={f['positives']})")
-    print(f"\n Stability: max PSI (train vs holdout) = {report['psi_max']:.4f} "
-          f"({'stable' if report['psi_max'] < 0.1 else 'shift'})")
+    psi = report["psi_max"]
+    psi_band = "stable" if psi < 0.1 else ("moderate" if psi < 0.25 else "significant shift")
+    print(f"\n Stability: max PSI (train vs holdout) = {psi:.4f} ({psi_band})")
     print("\n Honesty note: metrics are on SYNTHETIC data calibrated to the")
     print(" generator. Real-default backtesting + recalibration is the")
     print(" productionization step, not a stage-1 claim.")

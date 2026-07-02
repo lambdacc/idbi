@@ -1,7 +1,7 @@
 # Business-Impact Model — CreditPulse (PS3)
 
 **Status:** Phase 2 · **Date:** 28 Jun 2026 · **Use:** the quantified "business impact" story for the pitch.
-**Health warning:** every figure here is an **illustrative planning estimate** built to size the opportunity for judges — **not an audited forecast.** Market figures are cited (see `../00-screening/research-evidence.md`); IDBI-specific numbers are placeholders to replace with bank data if shared.
+**Health warning:** every figure here is an **illustrative planning estimate** built to size the opportunity for judges — **not an audited forecast.** Market figures come from public sources (RBI U.K. Sinha Committee 2019; SIDBI-CRISIL 2025; Sahamati AA impact reports); IDBI-specific numbers are placeholders to replace with bank data if shared.
 
 ---
 

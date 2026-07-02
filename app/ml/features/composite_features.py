@@ -45,9 +45,11 @@ def compute_composites(feats: Dict[str, float], master_row: dict) -> Dict[str, f
     out["production_capacity_consistency"] = round(
         1.0 - (max(signals) - min(signals)) if len(signals) >= 2 else 0.0, 3)
 
-    # 4. Logistics-Activity Index — e-way bills + vehicles.
+    # 4. Logistics-Activity Index — e-way bills + vehicles + FASTag toll movement.
     out["logistics_activity_index"] = round(min(
-        feats.get("ewb_count_total", 0.0) / 100.0 + feats.get("vahan_num_vehicles", 0.0) / 10.0, 1.0), 3)
+        feats.get("ewb_count_total", 0.0) / 100.0
+        + feats.get("vahan_num_vehicles", 0.0) / 10.0
+        + feats.get("fastag_toll_crossings_total", 0.0) / 200.0, 1.0), 3)
 
     # 5. Premises Authenticity — property-tax address corroborates GST premises.
     out["premises_authenticity"] = round(
@@ -77,6 +79,18 @@ def compute_composites(feats: Dict[str, float], master_row: dict) -> Dict[str, f
         + feats.get("insolvency_cirp_flag", 0.0) * 0.6
         + feats.get("insolvency_promoter_prior", 0.0) * 0.5
         + feats.get("mca_director_disqualified", 0.0) * 0.4, 1.0), 3)
+
+    # 10a. Supply-Chain Consistency — DGFT trade flows, the GST return and e-way-bill
+    #      goods movement tell the same story (Appendix A §5 #8; IEC holders only).
+    if feats.get("dgft_has_iec", 0.0) and declared > 0:
+        movement_agree = _ratio(feats.get("ewb_total_value", 0.0), declared)
+        # Exports need not equal turnover — full credit once they clear a plausible
+        # floor (~20% of declared); an IEC holder whose customs-side exports are tiny
+        # relative to declared turnover suggests the declaration, not the trade, is inflated.
+        export_agree = min(feats.get("dgft_export_value", 0.0) / (0.2 * declared), 1.0)
+        out["supply_chain_consistency"] = round(0.6 * movement_agree + 0.4 * export_agree, 3)
+    else:
+        out["supply_chain_consistency"] = 0.0
 
     # 10. Export Orientation — DGFT export value vs GST export markers (IGST-heavy).
     out["export_orientation"] = round(min(
@@ -116,4 +130,8 @@ def composite_rationales(feats: Dict[str, float]) -> Dict[str, str]:
     if feats.get("b2g_credibility", 0.0) > 0.2:
         r["b2g_credibility"] = ("Government-counterparty-verified revenue (GeM POs / awarded tenders) — "
                                 "confirmed by a buyer the applicant does not control. IDBI is a live GeM Sahay partner.")
+    if feats.get("dgft_has_iec", 0.0) and feats.get("supply_chain_consistency", 0.0) < 0.5:
+        r["supply_chain_consistency"] = ("Customs-declared trade, the GST return and e-way-bill goods "
+                                         "movement disagree — faking all three cross-referenced statutory "
+                                         "trails simultaneously is a well-monitored fraud vector.")
     return r

@@ -36,8 +36,8 @@ def test_composites_all_present_and_bounded(feature_matrix):
     expected = {"turnover_authenticity_score", "energy_intensity_flag",
                 "production_capacity_consistency", "logistics_activity_index",
                 "premises_authenticity", "business_continuity", "operational_stability",
-                "b2g_credibility", "legal_risk_overlay", "export_orientation",
-                "formal_identity_integrity", "credit_exposure_mismatch"}
+                "b2g_credibility", "legal_risk_overlay", "supply_chain_consistency",
+                "export_orientation", "formal_identity_integrity", "credit_exposure_mismatch"}
     assert expected <= set(feature_matrix.columns)
     # bounded composites in [0,1]; authenticity in [0,100]
     for c in expected - {"turnover_authenticity_score"}:
@@ -49,3 +49,21 @@ def test_rationales_are_strings():
     r = composite_rationales(compute_composites(GENUINE, ROW))
     assert "turnover_authenticity_score" in r
     assert all(isinstance(v, str) and v for v in r.values())
+
+
+def test_supply_chain_consistency_separates_genuine_from_inflated():
+    genuine = dict(GENUINE, dgft_has_iec=1.0, dgft_export_value=400_000.0)
+    inflated = dict(INFLATED, dgft_has_iec=1.0, dgft_export_value=300_000.0)
+    g = compute_composites(genuine, ROW)["supply_chain_consistency"]
+    b = compute_composites(inflated, ROW)["supply_chain_consistency"]
+    assert g >= 0.9, f"genuine exporter should be consistent, got {g}"
+    assert b <= 0.6, f"inflated declaration should score low, got {b}"
+    # Non-IEC entities are neutral-zero, never penalised via rationale.
+    assert compute_composites(GENUINE, ROW)["supply_chain_consistency"] == 0.0
+
+
+def test_fastag_contributes_to_logistics_index():
+    base = compute_composites(GENUINE, ROW)["logistics_activity_index"]
+    with_fastag = compute_composites(
+        dict(GENUINE, fastag_toll_crossings_total=120.0), ROW)["logistics_activity_index"]
+    assert with_fastag > base

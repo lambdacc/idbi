@@ -15,8 +15,10 @@ def test_feature_matrix_numeric_no_nan(feature_matrix):
 
 
 def test_every_source_has_feature_fn():
-    # All 24 feature sources register (POS/QR + insurance-only sources collapsed).
-    assert len(fbase.registered_sources()) == 24
+    # Every generator source has a matching feature function (POS/QR folded into UPI
+    # on both sides), so nothing is ingested-but-never-featurized.
+    from app.data_gen.generators.base import get_registry
+    assert set(fbase.registered_sources()) == set(get_registry().keys())
 
 
 @pytest.mark.parametrize("source", fbase.registered_sources())

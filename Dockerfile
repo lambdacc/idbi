@@ -18,8 +18,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Application code.
 COPY app ./app
 
-# Generate the synthetic cohort at build time so the demo is self-contained.
-RUN python -m app.data_gen.build_dataset --n 400
+# Generate the synthetic cohort at build time so the demo is self-contained,
+# then pre-fit + pickle the scoring engine so a Cloud Run cold start doesn't
+# pay the model-fit cost on the first request.
+RUN python -m app.data_gen.build_dataset --n 400 \
+    && python -m app.ml.prefit
 
 # Cloud Run injects $PORT; Streamlit must bind it on 0.0.0.0.
 ENV PORT=8080

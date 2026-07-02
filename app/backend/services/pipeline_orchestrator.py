@@ -76,8 +76,8 @@ COMPOSITE_CATALOG: List[dict] = [
          sources=["electricity", "epfo", "factory_licence"],
          desc="Sanctioned load, EPFO headcount and factory licence agree on real production scale."),
     dict(key="logistics_activity_index", label="Logistics Activity", kind="index",
-         sources=["ewaybill", "vahan"],
-         desc="E-way-bill volume and registered fleet corroborate goods-movement activity."),
+         sources=["ewaybill", "vahan", "fastag"],
+         desc="E-way-bill volume, registered fleet and FASTag toll crossings corroborate goods movement."),
     dict(key="premises_authenticity", label="Premises Authenticity", kind="index",
          sources=["property_tax", "shops_establishment", "gst"],
          desc="GST premises corroborated by independent municipal property-tax and Shops-&-Estab. records."),
@@ -93,6 +93,9 @@ COMPOSITE_CATALOG: List[dict] = [
     dict(key="legal_risk_overlay", label="Legal-Risk Overlay", kind="flag_bad",
          sources=["courts", "insolvency", "mca21"],
          desc="Court, insolvency and director-disqualification screens — independent judicial signal."),
+    dict(key="supply_chain_consistency", label="Supply-Chain Consistency", kind="index",
+         sources=["dgft", "gst", "ewaybill"],
+         desc="Customs trade flows, the GST return and e-way-bill movement tell one consistent story."),
     dict(key="export_orientation", label="Export Orientation", kind="index",
          sources=["dgft", "gst"],
          desc="DGFT export value cross-checked against IGST-heavy GST export markers."),
@@ -236,8 +239,8 @@ def _stage_ingestion(engine: ScoringEngine, entity_id: str, feats: Dict[str, flo
     connected = 0
     for stem, label, group in SOURCE_CATALOG:
         n = counts.get(stem, 0)
-        # "Connected" = carries a real signal. Fall back to row-presence for the
-        # handful of sources without an explicit presence predicate (e.g. FASTag).
+        # "Connected" = carries a real signal. Row-presence is the fallback for any
+        # source without an explicit presence predicate.
         is_on = present.get(stem, n > 0)
         if is_on:
             connected += 1

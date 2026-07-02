@@ -1,9 +1,9 @@
-# CreditPulse — Manual Demo Script (Sprint-3 acceptance G4)
+# CreditPulse — Manual Demo Script
 
 **Purpose:** the documented walkthrough of the full 9-stage staged-reveal flow (implementation-plan.md §6.2),
-with the expected on-screen content at each stage. Run by a second person unfamiliar with the internals — the
-"does a credit officer get it in 30 seconds?" UX gate. Pairs with the automated smoke test
-`app/tests/test_pipeline_orchestrator.py` (acceptance b).
+with the expected on-screen content at each stage. Best run by a second person unfamiliar with the internals — the
+"does a credit officer get it in 30 seconds?" test. Pairs with the automated smoke test
+`app/tests/test_pipeline_orchestrator.py`.
 
 **All data is synthetic.** State this out loud once at the start.
 
@@ -17,6 +17,7 @@ make demo            # → http://localhost:8080  (streamlit, binds $PORT)
 ```
 
 First load fits the scoring models on the synthetic cohort once (cached for the session) — a few seconds.
+Run `make prefit` beforehand for instant startup (the Docker image does this at build time).
 
 ---
 
@@ -40,7 +41,7 @@ content per stage:
 | 2 | **Data Ingestion — Breadth Reveal** | A grid of **25 source tiles**; the ones carrying a live signal light green with a record count, the rest greyed "not on file". Console lists each source ✓/—. This is the deliberate "footprint breadth" moment. |
 | 3 | **Data Integration** | KPIs: raw records reconciled, sources merged, **identity integrity** (GSTIN↔PAN↔Udyam↔MCA). |
 | 4 | **Feature Engineering** | Five per-pillar feature counters + a composites counter; total engineered-signal count. |
-| 5 | **Cross-Source Synthesis** | The differentiator: the **Turnover-Authenticity** flagship card first (its 0-100 score + manipulation-resistance note), then the 11 other composites, each naming its constituent sources. |
+| 5 | **Cross-Source Synthesis** | The differentiator: the **Turnover-Authenticity** flagship card first (its 0-100 score + manipulation-resistance note), then the 12 other composites, each naming its constituent sources. |
 | 6 | **Peer Segmentation** | A Plotly scatter of the cohort coloured by peer tier, with **this MSME highlighted (navy star)**; a "Peer group: …" badge. Labelled *descriptive only — not the decision*. |
 | 7 | **Scoring** | Five dimension bars + composite score + grade/band + model PD/risk KPIs. |
 | 8 | **Explainability** | Top **strengths (green)** and **risks (red)** in plain language + a **SHAP** waterfall for the GBM PD path. |
@@ -58,7 +59,7 @@ content per stage:
 
 ## 4 · Explainability & Architecture
 
-- **Explainability:** reason codes (deterministic path), dimension bars, the SHAP waterfall, and all 12 composite
+- **Explainability:** reason codes (deterministic path), dimension bars, the SHAP waterfall, and all 13 composite
   rationales ("what a fraudster would need to compromise simultaneously").
 - **Architecture:** the pipeline diagram, the 25-source catalog grouped by domain, the model stack, module boundaries,
   and the honest synthetic-data / deployment notes.

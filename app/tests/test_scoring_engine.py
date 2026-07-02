@@ -44,3 +44,21 @@ def test_health_card_contract(engine):
     assert {p.label for p in card.pillars} == labels    # brief-mandated vocabulary applied
     # pydantic round-trip
     assert HealthCard(**card.model_dump()).entity_id == card.entity_id
+
+
+def test_prefit_pickle_round_trip(engine, tmp_path):
+    """Build-time pre-fit (app.ml.prefit): a pickled engine must reload with SHAP
+    rebuilt and produce identical scores — the Cloud Run cold-start path."""
+    import pickle
+
+    path = tmp_path / "engine.pkl"
+    engine.save(path)
+    with open(path, "rb") as fh:
+        loaded = pickle.load(fh)
+
+    assert loaded.shap is not None                      # rebuilt in __setstate__
+    a = engine.score_entity("TEXTILE_MANUFACTURER")
+    b = loaded.score_entity("TEXTILE_MANUFACTURER")
+    assert a["composite_score"] == b["composite_score"]
+    assert a["grade"] == b["grade"]
+    assert a["pd"] == b["pd"]
