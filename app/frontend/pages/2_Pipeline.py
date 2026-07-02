@@ -8,6 +8,7 @@ completed state with no sleeps.
 """
 from __future__ import annotations
 
+import html
 import sys
 import time
 from pathlib import Path
@@ -108,7 +109,7 @@ def render_detail(container, stage, upto: int | None = None) -> None:
             st.markdown(
                 f"<div class='cp-hero'><div class='score'>{hc['composite_score']:.0f}"
                 f"<small>/100</small></div><div class='meta'>"
-                f"<div class='name'>{hc['name']}</div>"
+                f"<div class='name'>{html.escape(str(hc['name']))}</div>"
                 f"<div class='subtle'>Grade {hc['grade']}/10 · {hc['recommendation']} · "
                 f"Confidence {hc['confidence']}</div></div></div>", unsafe_allow_html=True)
             st.page_link("pages/3_Financial_Health_Card.py",

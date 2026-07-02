@@ -37,7 +37,8 @@ def _line_class(line: str) -> str:
 def console_html(lines: List[str]) -> str:
     body = "".join(
         f"<span class='ln {_line_class(ln)}'>{html.escape(ln)}</span>" for ln in lines)
-    return f"<div class='cp-console'>{body}</div>"
+    # role="log" + aria-live so screen readers announce pipeline progress.
+    return f"<div class='cp-console' role='log' aria-live='polite'>{body}</div>"
 
 
 # ------------------------------------------------------------- stage list
@@ -88,7 +89,7 @@ def render_composites(composites: List[dict]) -> None:
 def render_reasons(positives: List[dict], negatives: List[dict]) -> None:
     col_a, col_b = st.columns(2)
     with col_a:
-        st.markdown("**Key strengths**")
+        st.markdown("**Key Strengths**")
         if not positives:
             st.caption("No material strengths above threshold.")
         for r in positives:
@@ -96,7 +97,7 @@ def render_reasons(positives: List[dict], negatives: List[dict]) -> None:
                 f"<div class='cp-reason pos'><span class='mk'>+</span>"
                 f"<span class='tx'>{html.escape(r['text'])}</span></div>", unsafe_allow_html=True)
     with col_b:
-        st.markdown("**Key risks**")
+        st.markdown("**Key Risks**")
         if not negatives:
             st.caption("No material risks above threshold.")
         for r in negatives:

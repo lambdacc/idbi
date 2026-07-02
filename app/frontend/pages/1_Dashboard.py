@@ -13,6 +13,8 @@ _ROOT = next((par for par in _p.parents if (par / "requirements.txt").exists()),
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+import html
+
 import streamlit as st
 
 from app.frontend.components import charts, state
@@ -30,7 +32,7 @@ st.title("Credit Officer Dashboard")
 # Hero
 st.markdown(
     f"<div class='cp-hero'><div class='score'>{hc.composite_score:.0f}<small>/100</small></div>"
-    f"<div class='meta'><div class='name'>{hc.name}</div>"
+    f"<div class='meta'><div class='name'>{html.escape(hc.name)}</div>"
     f"<div class='subtle'>{a.entity.get('sector','')} · {a.entity.get('category','')} · "
     f"Grade {hc.grade}/10 · Peer group: {hc.peer_segment}</div></div>"
     f"<div style='text-align:right'><div class='score' style='font-size:1.6rem'>{hc.recommendation}</div>"
@@ -61,11 +63,11 @@ r2[2].markdown(kpi("Peer segment", hc.peer_segment or "—", "K-Means (descripti
 st.divider()
 left, right = st.columns([1, 1])
 with left:
-    st.subheader("Five dimensions")
+    st.subheader("Five Dimensions")
     st.plotly_chart(charts.radar([p.label for p in hc.pillars], [p.score for p in hc.pillars]),
                     use_container_width=True)
 with right:
-    st.subheader("What drove this")
+    st.subheader("What Drove This")
     render_reasons([r.model_dump() for r in hc.reasons_positive],
                    [r.model_dump() for r in hc.reasons_negative])
 

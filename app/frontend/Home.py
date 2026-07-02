@@ -15,6 +15,8 @@ _ROOT = next((par for par in _p.parents if (par / "requirements.txt").exists()),
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+import html
+
 import streamlit as st
 
 from app.backend.services.pipeline_orchestrator import list_scenarios, random_entity_id
@@ -36,7 +38,7 @@ st.markdown(
 engine = state.get_engine()
 scenarios = list_scenarios(engine)
 
-st.subheader("1 · Choose a business to assess")
+st.subheader("1 · Choose a Business to Assess")
 
 RANDOM = "🎲  Random MSME (varies each run)"
 labels = {f"{s['name']}  —  {s['sector']} · {s['category']}": s for s in scenarios}
@@ -52,7 +54,7 @@ if choice == RANDOM:
 else:
     s = labels[choice]
     st.markdown(
-        f"<div class='cp-card'><b>{s['name']}</b> &nbsp; {badge(s['sector'], 'info')} "
+        f"<div class='cp-card'><b>{html.escape(str(s['name']))}</b> &nbsp; {badge(s['sector'], 'info')} "
         f"{badge(s['category'], 'info')} {badge(fmt_inr(s['turnover']) + ' declared', 'info')}"
         f"<div class='cp-scn' style='margin-top:.5rem'>{s['blurb']}</div></div>",
         unsafe_allow_html=True)

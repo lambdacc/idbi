@@ -32,7 +32,7 @@ st.title("Financial Health Card")
 # Hero + recommendation banner
 st.markdown(
     f"<div class='cp-hero'><div class='score'>{hc.composite_score:.0f}<small>/100</small></div>"
-    f"<div class='meta'><div class='name'>{hc.name}</div>"
+    f"<div class='meta'><div class='name'>{html.escape(hc.name)}</div>"
     f"<div class='subtle'>{a.entity.get('sector','')} · {a.entity.get('category','')} · "
     f"vintage {a.entity.get('age_years','?')}y · {out['sources_connected']}</div>"
     f"<div style='margin-top:.5rem'>{badge('Grade ' + str(hc.grade) + '/10', band_class(hc.onboarding_band))} "
@@ -47,11 +47,11 @@ st.markdown(
 st.write("")
 left, right = st.columns([1, 1])
 with left:
-    st.subheader("Five dimensions")
+    st.subheader("Five Dimensions")
     st.plotly_chart(charts.radar([p.label for p in hc.pillars], [p.score for p in hc.pillars]),
                     use_container_width=True)
 with right:
-    st.subheader("Dimension scores")
+    st.subheader("Dimension Scores")
     for p in hc.pillars:
         cls = score_class(p.score)
         st.markdown(
@@ -72,7 +72,7 @@ k[3].markdown(kpi("Data confidence", out["confidence_band"], out["sources_connec
               confidence_class(out["confidence_band"])), unsafe_allow_html=True)
 
 st.divider()
-st.subheader("Key strengths & risks")
+st.subheader("Key Strengths & Risks")
 render_reasons([r.model_dump() for r in hc.reasons_positive],
                [r.model_dump() for r in hc.reasons_negative])
 

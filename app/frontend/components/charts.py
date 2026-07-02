@@ -9,7 +9,7 @@ from typing import Dict, List, Optional
 
 import plotly.graph_objects as go
 
-NAVY, BLUE, GREEN, AMBER, RED, GRID = "#0b3d75", "#1466b8", "#178a54", "#b7791f", "#c0392b", "#dbe2ec"
+NAVY, BLUE, GREEN, AMBER, RED, GRID = "#0b3d75", "#1466b8", "#147347", "#8f5c13", "#c0392b", "#dbe2ec"
 _BASE = dict(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
              font=dict(family="Inter, Segoe UI, sans-serif", color="#1b2733"),
              margin=dict(l=10, r=10, t=30, b=10))

@@ -1,0 +1,12 @@
+# Pin the light base theme so the custom banking palette renders identically
+# regardless of the viewer's OS/browser dark-mode preference (custom.css forces
+# white surfaces; without this, dark-theme widget text lands on white panels).
+[theme]
+base = "light"
+primaryColor = "#0b3d75"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f4f6fa"
+textColor = "#1b2733"
+
+[browser]
+gatherUsageStats = false

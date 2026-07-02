@@ -33,17 +33,17 @@ st.title("Explainability")
 st.caption("Bank-grade transparency: the primary decision path is interpretable by construction; "
            "SHAP explains the optional GBM lift model.")
 
-st.subheader("1 · Reason codes (deterministic scorecard)")
+st.subheader("1 · Reason Codes (Deterministic Scorecard)")
 render_reasons(explain["reasons_positive"], explain["reasons_negative"])
 
 st.divider()
 c1, c2 = st.columns([1, 1])
 with c1:
-    st.subheader("2 · Dimension scores")
+    st.subheader("2 · Dimension Scores")
     st.plotly_chart(charts.pillar_bars([p["label"] for p in scoring["pillars"]],
                     [p["score"] for p in scoring["pillars"]]), use_container_width=True)
 with c2:
-    st.subheader("3 · SHAP — GBM PD path")
+    st.subheader("3 · SHAP — GBM PD Path")
     if explain["shap_top"]:
         st.caption("Red pushes toward default, green away. Monotonic constraints keep it bank-defensible.")
         st.plotly_chart(charts.shap_waterfall(explain["shap_top"], feature_label),
@@ -52,7 +52,7 @@ with c2:
         st.info("SHAP unavailable for this run.")
 
 st.divider()
-st.subheader("4 · Cross-source synthesis — harder to fake than any single source")
+st.subheader("4 · Cross-Source Synthesis — Harder to Fake Than Any Single Source")
 st.caption("Each composite fuses independently-governed systems; the note states what a fraudster "
            "would need to compromise simultaneously to fake it.")
 comps = synthesis["composites"]

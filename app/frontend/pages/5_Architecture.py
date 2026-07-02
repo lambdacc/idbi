@@ -48,11 +48,14 @@ digraph CreditPulse {
 }
 """
 st.graphviz_chart(_DOT, use_container_width=True)
+st.caption("Flow: 25 alternate-data sources → data integration (canonical entity resolution) → "
+           "feature engineering → cross-source synthesis (13 composites) → segmentation, scoring "
+           "and confidence in parallel → explainability → the Financial Health Card.")
 
 st.divider()
 c1, c2 = st.columns([1.1, 1])
 with c1:
-    st.subheader(f"Data sources ({len(SOURCE_CATALOG)})")
+    st.subheader(f"Data Sources ({len(SOURCE_CATALOG)})")
     groups = defaultdict(list)
     for _stem, label, group in SOURCE_CATALOG:
         groups[group].append(label)
@@ -61,7 +64,7 @@ with c1:
     st.caption("Every source is Retain-tier from the Appendix-A rubric sweep (8 core + 17 enrichment); "
                "Reject-tier candidates are documented, not silently modelled.")
 with c2:
-    st.subheader("Model & synthesis stack")
+    st.subheader("Model & Synthesis Stack")
     st.markdown(
         "- **WOE/IV logistic scorecard** — interpretable PD backbone\n"
         "- **Monotonic LightGBM** — bank-defensible PD lift (hard constraints)\n"
@@ -69,7 +72,7 @@ with c2:
         "- **K-Means** — descriptive peer segmentation (silhouette k)\n"
         "- **Confidence score** — IV × source-breadth\n"
         "- **SHAP + native reason codes** — dual explanation paths")
-    st.subheader(f"Composite indicators ({len(COMPOSITE_CATALOG)})")
+    st.subheader(f"Composite Indicators ({len(COMPOSITE_CATALOG)})")
     st.caption(" · ".join(c["label"] for c in COMPOSITE_CATALOG))
 
 st.divider()

@@ -10,7 +10,7 @@ import streamlit as st
 _CSS = Path(__file__).resolve().parents[1] / "static" / "custom.css"
 
 # Semantic palette (mirrors custom.css :root)
-GREEN, AMBER, RED, NAVY, BLUE = "#178a54", "#b7791f", "#c0392b", "#0b3d75", "#1466b8"
+GREEN, AMBER, RED, NAVY, BLUE = "#147347", "#8f5c13", "#c0392b", "#0b3d75", "#1466b8"
 
 
 def page_setup(title: str, icon: str = "📊") -> None:

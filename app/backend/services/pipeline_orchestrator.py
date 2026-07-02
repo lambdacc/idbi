@@ -221,7 +221,7 @@ def _pillar_feature_counts() -> Dict[str, List[str]]:
 # --------------------------------------------------------------------------- #
 def _stage_scenario(entity: Dict[str, Any]) -> Stage:
     log = [
-        f"Loading entity: {entity['name']} ...",
+        f"Loading entity: {entity['name']} …",
         f"Sector: {entity.get('sector', '?')}  ·  Udyam category: {entity.get('category', '?')}",
         f"Vintage: {entity.get('age_years', '?')}y  ·  Headcount: {entity.get('employees', '?')}"
         f"  ·  Declared turnover: {_fmt_inr(entity.get('declared_turnover', 0))}",
@@ -250,7 +250,7 @@ def _stage_ingestion(engine: ScoringEngine, entity_id: str, feats: Dict[str, flo
             log.append(f"  {label:<22} ✓  loaded {n} record(s)")
         else:
             log.append(f"  {label:<22} —  not on file")
-    log.insert(0, f"Querying {len(SOURCE_CATALOG)} alternate-data sources ...")
+    log.insert(0, f"Querying {len(SOURCE_CATALOG)} alternate-data sources …")
     log.append(f"Footprint assembled: {connected} of {len(SOURCE_CATALOG)} sources carry a live signal.")
     return Stage(2, "ingestion", "Data Ingestion — Breadth Reveal",
                  "Every alternate-data source queried; the ones that carry signal light up.",
@@ -264,8 +264,8 @@ def _stage_integration(engine: ScoringEngine, entity_id: str, feats: Dict[str, f
     connected = sum(1 for stem, *_ in SOURCE_CATALOG if present.get(stem, counts.get(stem, 0) > 0))
     total_records = sum(counts.values())
     log = [
-        "Resolving records to a canonical entity schema ...",
-        "Matching identity across GSTIN ↔ PAN ↔ Udyam ↔ MCA ...",
+        "Resolving records to a canonical entity schema …",
+        "Matching identity across GSTIN ↔ PAN ↔ Udyam ↔ MCA …",
         f"Identity integrity: {feats.get('formal_identity_integrity', 0.0):.2f} (1.0 = all registries agree)",
         f"Reconciled {total_records:,} raw records from {connected} sources into 1 entity node.",
     ]
@@ -285,7 +285,7 @@ def _stage_features(feats: Dict[str, float]) -> Stage:
         counters.append({"pillar": pillar, "label": labels.get(pillar, pillar), "count": n})
         log.append(f"  {labels.get(pillar, pillar):<22} 0 → {n} features")
     n_comp = len(COMPOSITE_CATALOG)
-    log.insert(0, "Engineering per-source features ...")
+    log.insert(0, "Engineering per-source features …")
     log.append(f"  {'Cross-source composites':<22} 0 → {n_comp} indicators")
     log.append(f"Feature engineering complete: {total + n_comp} signals across 5 pillars.")
     return Stage(4, "features", "Feature Engineering",
@@ -296,7 +296,7 @@ def _stage_features(feats: Dict[str, float]) -> Stage:
 
 def _stage_synthesis(feats: Dict[str, float]) -> Stage:
     rationales = composite_rationales(feats)
-    composites, log = [], ["Fusing independently-governed sources into composite signals ..."]
+    composites, log = [], ["Fusing independently-governed sources into composite signals …"]
     for spec in COMPOSITE_CATALOG:
         key = spec["key"]
         val = float(feats.get(key, 0.0))
@@ -325,8 +325,8 @@ def _stage_clustering(engine: ScoringEngine, out: Dict[str, Any]) -> Stage:
     coord = out.get("peer_coord", (0.0, 0.0))
     seg = out.get("peer_segment", "Unclassified")
     log = [
-        f"Standardising pillar-score space and running K-Means (k={engine.segmenter.k}) ...",
-        "Assigning peer group by nearest centroid ...",
+        f"Standardising pillar-score space and running K-Means (k={engine.segmenter.k}) …",
+        "Assigning peer group by nearest centroid …",
         f"Peer group: {seg}",
         "Note: segmentation is descriptive only — never part of the credit decision.",
     ]
@@ -343,7 +343,7 @@ def _stage_scoring(out: Dict[str, Any]) -> Stage:
                for p, s in out["pillar_scores"].items()]
     log = [f"  {labels.get(p, p):<22} {round(s, 1):>5.1f} / 100"
            for p, s in out["pillar_scores"].items()]
-    log.insert(0, "Scoring pillars from the frozen reference distribution ...")
+    log.insert(0, "Scoring pillars from the frozen reference distribution …")
     log.append(f"Composite Financial Health Score: {out['composite_score']} / 100")
     log.append(f"CMR-style grade: {out['grade']} / 10  ·  Band: {out['onboarding_band']}")
     log.append(f"Model PD: {out['pd']:.3f}  ·  Risk category: {out['risk_category']}")
@@ -373,12 +373,12 @@ def _stage_explainability(engine: ScoringEngine, feats: Dict[str, float], out: D
                                 "direction": -1 if val > 0 else 1})  # +SHAP => toward default (risk)
         except Exception:
             shap_top = []
-    log = ["Generating native reason codes from pillar component scores ..."]
+    log = ["Generating native reason codes from pillar component scores …"]
     for r in out["reasons_positive"]:
         log.append(f"  (+) {r['text']}")
     for r in out["reasons_negative"]:
         log.append(f"  (−) {r['text']}")
-    log.append("Cross-checking with SHAP over the monotonic GBM PD path ...")
+    log.append("Cross-checking with SHAP over the monotonic GBM PD path …")
     return Stage(8, "explainability", "Explainability",
                  "Top strengths and risks in plain language, with a SHAP cross-check.",
                  3.0, log, {"reasons_positive": out["reasons_positive"],
@@ -388,7 +388,7 @@ def _stage_explainability(engine: ScoringEngine, feats: Dict[str, float], out: D
 
 def _stage_health_card(card: HealthCard) -> Stage:
     log = [
-        "Assembling the Financial Health Card ...",
+        "Assembling the Financial Health Card …",
         f"Recommendation: {card.recommendation}  ·  Indicative limit: {_fmt_inr(card.indicative_limit or 0)}",
         f"Confidence: {card.confidence}",
         "Assessment complete.",
