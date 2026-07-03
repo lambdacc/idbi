@@ -14,7 +14,9 @@ _BASE = dict(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
              font=dict(family="Inter, Segoe UI, sans-serif", color="#1b2733"),
              margin=dict(l=10, r=10, t=30, b=10))
 
-_CLUSTER_COLORS = [NAVY, GREEN, BLUE, AMBER, RED]
+# Non-semantic categorical palette for peer tiers (cool -> warm, muted/elegant).
+# Deliberately NOT the risk GREEN/AMBER/RED, which are reserved for risk semantics.
+_CLUSTER_COLORS = ["#0b3d75", "#0e7c66", "#b3541e", "#6b4fa1", "#8f5c13"]
 
 
 def radar(labels: List[str], values: List[float]) -> go.Figure:
@@ -56,8 +58,8 @@ def cluster_scatter(scatter: List[dict], entity_point: Dict[str, float],
     for i, (tier, pts) in enumerate(sorted(by_tier.items())):
         fig.add_trace(go.Scatter(
             x=[p["x"] for p in pts], y=[p["y"] for p in pts], mode="markers",
-            name=tier, marker=dict(size=7, color=_CLUSTER_COLORS[i % len(_CLUSTER_COLORS)],
-                                   opacity=0.5, line=dict(width=0)),
+            name=tier, marker=dict(size=8, color=_CLUSTER_COLORS[i % len(_CLUSTER_COLORS)],
+                                   opacity=0.75, line=dict(width=0.5, color="#ffffff")),
             hovertext=[p["name"] for p in pts], hoverinfo="text+name"))
     fig.add_trace(go.Scatter(
         x=[entity_point["x"]], y=[entity_point["y"]], mode="markers+text",

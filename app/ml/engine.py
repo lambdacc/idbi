@@ -78,6 +78,11 @@ def build_feature_source_map() -> Dict[str, str]:
 
 
 class ScoringEngine:
+    # Bump whenever the pickled state shape changes (new sub-model, renamed
+    # attribute, etc.) so a pickle from older code is refit instead of loaded
+    # and crashed on. See _load_prefit().
+    STATE_VERSION = 2
+
     def __init__(self):
         self.tables = None
         self.feature_matrix: pd.DataFrame | None = None
@@ -208,6 +213,7 @@ class ScoringEngine:
     def __getstate__(self):
         state = self.__dict__.copy()
         state["shap"] = None
+        state["_state_version"] = ScoringEngine.STATE_VERSION
         return state
 
     def __setstate__(self, state):
@@ -236,7 +242,12 @@ def _load_prefit() -> ScoringEngine | None:
         if ENGINE_PICKLE.stat().st_mtime < master.stat().st_mtime:
             return None  # cohort regenerated after the pickle — refit
         with open(ENGINE_PICKLE, "rb") as fh:
-            return pickle.load(fh)
+            obj = pickle.load(fh)
+        # Reject a pickle written by older code (missing sub-models etc.) so we
+        # refit cleanly rather than crash later in score_entity.
+        if getattr(obj, "_state_version", None) != ScoringEngine.STATE_VERSION:
+            return None
+        return obj
     except Exception:
         return None  # any load problem -> fall back to a fresh fit
 

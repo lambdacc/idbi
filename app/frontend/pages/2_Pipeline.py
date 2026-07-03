@@ -57,21 +57,20 @@ with top[1]:
         st.session_state["cp_pipeline_played"] = False
         st.rerun()
 
-# Layout (D3): the execution console is technical-view ambience only. In simple
-# view we drop the right column entirely so the stage rail widens — no empty hole.
-if technical:
-    left, right = st.columns([1, 1.25])
-    stage_ph = left.empty()
-    progress_ph = left.empty()
-    console_ph = right.empty()
-else:
-    stage_ph = st.empty()
-    progress_ph = st.empty()
-    console_ph = None
-
-# The live single-stage detail area (cleared when the run finishes) sits above the
-# accumulating notebook cells — the persistent per-stage record (D2).
-detail_ph = st.empty()
+# Layout (I2 / WP-G): two columns in BOTH views. Left = stage rail + progress
+# (narrower); right = the LIVE stage-output pane that streams each stage as it
+# generates. In Technical view the execution console sits BELOW the live pane
+# (compact `.short` variant); Simple view has no console. Both branches (play /
+# instant) share this one setup so the placeholders always exist — no NameError.
+left, right = st.columns([1, 1.6])
+stage_ph = left.empty()
+progress_ph = left.empty()
+# `.cp-live-anchor` gives CSS a stable hook to fade the live pane content in.
+right.markdown("<div class='cp-live-anchor'></div>", unsafe_allow_html=True)
+# The live single-stage detail area (cleared when the run finishes) now lives in
+# the right column, above the console. The notebook cells (D2) stay full-width below.
+detail_ph = right.empty()
+console_ph = right.empty() if technical else None
 cells = st.container()
 
 stages = a.stages
@@ -85,7 +84,7 @@ if play:
         log_lines.append(ln)
         # Technical view only; tail the console so newest lines stay visible.
         if console_ph is not None:
-            console_ph.markdown(console_html(log_lines[-22:]), unsafe_allow_html=True)
+            console_ph.markdown(console_html(log_lines[-22:], short=True), unsafe_allow_html=True)
 
     for i, s in enumerate(stages, start=1):
         stage_ph.markdown(stage_list_html(stages, s.index), unsafe_allow_html=True)
@@ -128,7 +127,7 @@ else:
     progress_ph.progress(1.0, text="Assessment complete ✓")
     if console_ph is not None:
         all_lines = [ln for s in stages for ln in s.log]
-        console_ph.markdown(console_html(all_lines), unsafe_allow_html=True)
+        console_ph.markdown(console_html(all_lines, short=True), unsafe_allow_html=True)
     with cells:
         for s in stages:
             render_stage_cell(s, technical, expanded=(s.index == len(stages)),

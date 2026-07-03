@@ -36,11 +36,14 @@ def _line_class(line: str) -> str:
     return ""
 
 
-def console_html(lines: List[str]) -> str:
+def console_html(lines: List[str], short: bool = False) -> str:
     body = "".join(
         f"<span class='ln {_line_class(ln)}'>{html.escape(ln)}</span>" for ln in lines)
+    # `short` picks the compact 220px variant used when the console sits *below*
+    # the live stage-output pane on the Pipeline page (WP-G).
+    cls = "cp-console short" if short else "cp-console"
     # role="log" + aria-live so screen readers announce pipeline progress.
-    return f"<div class='cp-console' role='log' aria-live='polite'>{body}</div>"
+    return f"<div class='{cls}' role='log' aria-live='polite'>{body}</div>"
 
 
 # ------------------------------------------------------------- stage list

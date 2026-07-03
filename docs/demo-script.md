@@ -8,7 +8,7 @@ with the expected on-screen content at each stage. Best run by a second person u
 **All data is synthetic.** State this out loud once at the start.
 
 **Two things to point at up front (the UI-humanization pass):**
-- Every page has a **View: Simple · Technical** toggle in the sidebar. It **defaults to Simple** — plain language, no model names — which is what a credit officer sees. Flip it to *Technical* to expose model internals (SHAP, K-Means, execution trace). Keep it on **Simple** for the narration below; there is one scripted "flip to Technical" beat in §2.
+- Every page has a **View: Simple · Technical** toggle at the top right. It **defaults to Simple** — plain language, no model names — which is what a credit officer sees. Flip it to *Technical* to expose model internals (SHAP, K-Means, execution trace). Keep it on **Simple** for the narration below; there is one scripted "flip to Technical" beat in §2.
 - Every headline number carries its **rationale** — either a one-line inference beside it or an **ⓘ info tooltip** (hover or keyboard-focus). Numbers are never shown bare.
 
 ---
@@ -58,7 +58,7 @@ officer can scroll and re-open, in human language. Expected content per stage:
 | 9 | **Financial Health Card** | A hero score banner + the **plain-language verdict** as the stage headline + a link to the full card. Progress bar reads *Assessment complete ✓*. |
 
 - **Controls:** **⏩ Instant (skip)** jumps to the completed state; **↻ Replay** re-runs the animation. Either way the **full 9-cell record** is what remains — nothing meaningful disappears when the animation ends.
-- **The live toggle beat (do this here):** with the 9 cells on screen in Simple view, open the **Explainability** cell — it reads in plain terms. Now **flip the sidebar toggle to Technical**: the same cell grows its SHAP waterfall and the execution console appears. Say it out loud — *"the officer sees this in plain English; and for your risk team, every model internal is one switch away — same run, nothing recomputed."* Flip back to Simple to continue.
+- **The live toggle beat (do this here):** with the 9 cells on screen in Simple view, open the **Explainability** cell — it reads in plain terms. Now **flip the top-right toggle to Technical**: the same cell grows its SHAP waterfall and the execution console appears. Say it out loud — *"the officer sees this in plain English; and for your risk team, every model internal is one switch away — same run, nothing recomputed."* Flip back to Simple to continue.
 - **UX gate:** the observer should be able to narrate the story back — *"it pulled 25 sources, fused them, scored, explained — and I can re-open any step and read what it found in plain language."*
 
 ## 3 · Financial Health Card

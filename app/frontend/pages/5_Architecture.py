@@ -23,8 +23,8 @@ st.title("Solution Architecture")
 st.caption("Single Cloud-Run container · Python-first · deterministic-first, explainable-by-construction")
 
 if not state.is_technical():
-    st.info("This page shows the system's internal architecture — switch to **Technical** view in "
-            "the sidebar for full engineering detail.")
+    st.info("This page shows the system's internal architecture — use the **Technical** toggle at "
+            "the top right for full engineering detail.")
 
 _DOT = """
 digraph CreditPulse {
@@ -82,21 +82,5 @@ with c2:
     st.caption(" · ".join(c["label"] for c in COMPOSITE_CATALOG))
 
 st.divider()
-b1, b2 = st.columns(2)
-with b1:
-    st.markdown(
-        "<div class='cp-card'><h4>Module boundaries</h4>"
-        "<b>frontend/</b> renders state only · <b>backend/</b> orchestrates + applies "
-        "brief-facing labels · <b>ml/</b> is framework-free (pure pandas/sklearn/LightGBM), "
-        "independently testable and reusable behind a future FastAPI adapter.</div>",
-        unsafe_allow_html=True)
-with b2:
-    st.markdown(
-        "<div class='cp-card'><h4>Deployment</h4>"
-        "Single Docker image on Google Cloud Run · Streamlit binds <code>$PORT</code> · "
-        "synthetic cohort generated at build time · scale-to-zero between demos, "
-        "min-instances=1 for the judging window. No PII, no external secrets.</div>",
-        unsafe_allow_html=True)
-
 st.info("All data is synthetic. Real-default backtesting and live GST/AA/EPFO integration are "
         "explicit post-hackathon productionization steps — stated honestly, not claimed here.")

@@ -29,7 +29,7 @@ html, body, [class*="css"] {
   font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--cp-ink);
 }
-.block-container { padding-top: 2.2rem; max-width: 1200px; }
+.block-container { padding-top: 2.2rem; max-width: 1500px; padding-left: 2rem; padding-right: 2rem; }
 
 /* Kill the default Streamlit chrome for a product feel — but keep the header
    present (transparent) so the sidebar collapse control survives on narrow
@@ -42,6 +42,18 @@ header[data-testid="stHeader"] { background: transparent; }
 [data-testid="stSidebar"] {
   background: linear-gradient(180deg, var(--cp-navy-deep), var(--cp-navy));
 }
+/* Brand-above-nav reorder (Streamlit 1.39-specific): Streamlit paints the
+   multipage nav (stSidebarNav) above all user content (stSidebarUserContent).
+   Make their common container a flex column and give the user content (the
+   brand block — now the only user sidebar content) order:1, the nav order:2,
+   so the brand sits on top. Fallback-safe: if these testids ever change, the
+   rule simply no-ops and the brand stays where Streamlit put it (no breakage). */
+[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
+  display: flex;
+  flex-direction: column;
+}
+[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] { order: 1; }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] { order: 2; }
 [data-testid="stSidebar"] * { color: #eaf1fb !important; }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] a { border-radius: 8px; }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] a:hover { background: rgba(255, 255, 255, .10); }
@@ -56,6 +68,35 @@ header[data-testid="stHeader"] { background: transparent; }
   padding: .3rem 0 0 0;
 }
 [data-testid="stSidebar"] .cp-brand-sub { font-size: .78rem; opacity: .8; }
+
+/* Top-right Simple/Technical view toggle (relocated from the sidebar).
+   The .cp-viewtoggle-anchor marker precedes the [5, 1.4] column row that holds
+   the horizontal radio; style that radio to read as a compact segmented pill,
+   right-aligned. Targets the horizontal radio group generically but scopes to
+   the toggle row via the marker's sibling column block. */
+.cp-viewtoggle-anchor { height: 0; margin: 0; }
+.cp-viewtoggle-anchor + div [data-testid="stRadio"] > div[role="radiogroup"] {
+  justify-content: flex-end;
+  gap: 0;
+  border: 1px solid var(--cp-border);
+  border-radius: 999px;
+  padding: 2px;
+  background: var(--cp-bg);
+  width: fit-content;
+  margin-left: auto;
+}
+.cp-viewtoggle-anchor + div [data-testid="stRadio"] label {
+  margin: 0;
+  padding: .2rem .7rem;
+  border-radius: 999px;
+  font-size: .82rem;
+  cursor: pointer;
+}
+/* Keyboard focus ring preserved on the underlying radio input. */
+.cp-viewtoggle-anchor + div [data-testid="stRadio"] label:focus-within {
+  outline: 2px solid var(--cp-navy);
+  outline-offset: 1px;
+}
 
 /* Headings */
 h1 { font-weight: 800; letter-spacing: -.4px; color: var(--cp-navy-deep); }
@@ -307,6 +348,23 @@ h2, h3 { font-weight: 700; color: var(--cp-navy-deep); }
 /* Honor the OS reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
   .cp-stage, .stButton > button, .cp-tipbox { transition: none; }
+  .cp-live-anchor + div { animation: none; }
+}
+
+/* ---- WP-G: Pipeline live-output pane + wide layout (append-only) ---------- */
+/* Slim the sidebar so the pipeline section gets more room (1.39 section testid). */
+[data-testid="stSidebar"] { min-width: 15rem; max-width: 15rem; }
+
+/* Compact console variant: sits BELOW the live stage-output pane in Technical view. */
+.cp-console.short { height: 220px; }
+
+/* Subtle entrance for the live pane content as each stage streams in. The anchor
+   is a zero-height marker emitted just above the live detail placeholder. */
+.cp-live-anchor { height: 0; margin: 0; }
+.cp-live-anchor + div { animation: cp-in .25s ease; }
+@keyframes cp-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
 }
 
 /* Scenario tiles (radio -> cards handled inline) */

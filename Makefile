@@ -38,7 +38,7 @@ eval:
 train:
 	$(PY) -m app.ml.train
 
-demo:
+demo: prefit
 	$(PY) -m streamlit run app/frontend/Home.py --server.port=$(PORT) --server.address=0.0.0.0
 
 docker-build:

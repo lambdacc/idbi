@@ -18,7 +18,7 @@ _PLAYED_KEY = "cp_pipeline_played"
 _VIEW_MODE_KEY = "cp_view_mode"
 
 
-@st.cache_resource(show_spinner="Fitting scoring models on the synthetic cohort …")
+@st.cache_resource(show_spinner="First launch: fitting the scoring models on the synthetic cohort — one time, about ten seconds. Later runs load instantly.")
 def get_engine() -> ScoringEngine:
     return _get_engine()
 

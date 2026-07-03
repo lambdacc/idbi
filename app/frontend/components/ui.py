@@ -22,17 +22,26 @@ def page_setup(title: str, icon: str = "📊") -> None:
             "<div class='cp-brand'>CreditPulse</div>"
             "<div class='cp-brand-sub'>MSME Financial Health Card · IDBI Innovate 2026</div><br>",
             unsafe_allow_html=True)
-        # Global Simple/Technical view toggle (design decision D3). Default
-        # "simple"; initialise without clobbering an existing choice, then bind
-        # the widget directly to the session key so the stored value is exactly
-        # "simple"/"technical" and persists across page switches.
-        if "cp_view_mode" not in st.session_state:
-            st.session_state["cp_view_mode"] = "simple"
+
+    # Global Simple/Technical view toggle (design decision D3). Default
+    # "simple"; initialise without clobbering an existing choice, then bind the
+    # widget directly to the session key so the stored value is exactly
+    # "simple"/"technical" and persists across page switches. The toggle lives
+    # top-right on every page (page_setup runs at the top of Home + pages 1-5),
+    # rendered above each page's title; the [5, 1.4] column pushes it right and
+    # the .cp-viewtoggle-anchor marker lets CSS compact it into a pill.
+    if "cp_view_mode" not in st.session_state:
+        st.session_state["cp_view_mode"] = "simple"
+    st.markdown("<div class='cp-viewtoggle-anchor'></div>", unsafe_allow_html=True)
+    _spacer, ctrl = st.columns([5, 1.4])
+    with ctrl:
         st.radio(
             "View",
             options=["simple", "technical"],
             format_func=lambda m: m.capitalize(),
             key="cp_view_mode",
+            horizontal=True,
+            label_visibility="collapsed",
             help="Technical view shows the model internals (SHAP, clustering, execution trace).",
         )
 
