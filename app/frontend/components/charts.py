@@ -9,18 +9,18 @@ from typing import Dict, List, Optional
 
 import plotly.graph_objects as go
 
-# Ledger palette: pine accent, semantic risk, warm rules, mono numerals.
-NAVY, BLUE, GREEN, AMBER, RED, GRID = "#1f5a45", "#1f5a45", "#1f5a45", "#8a5a12", "#a2331f", "#e4ddce"
-INK, MUTED = "#201d18", "#86806f"
+# Banking palette: navy/blue accent, semantic risk, cool rules, mono numerals.
+NAVY, BLUE, GREEN, AMBER, RED, GRID = "#0b3d75", "#1466b8", "#147347", "#8f5c13", "#c0392b", "#dbe2ec"
+INK, MUTED = "#1b2733", "#647587"
 _SANS = "Schibsted Grotesk, system-ui, sans-serif"
 _MONO = "IBM Plex Mono, ui-monospace, monospace"
 _BASE = dict(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
              font=dict(family=_SANS, color=INK),
              margin=dict(l=10, r=10, t=30, b=10))
 
-# Non-semantic categorical palette for peer tiers (muted, earthy; deliberately
+# Non-semantic categorical palette for peer tiers (cool -> warm, muted; deliberately
 # NOT the risk GREEN/AMBER/RED, which are reserved for risk semantics).
-_CLUSTER_COLORS = ["#1f5a45", "#3f6f8a", "#a2661f", "#6b5e8a", "#8a5a12"]
+_CLUSTER_COLORS = ["#0b3d75", "#0e7c66", "#b3541e", "#6b4fa1", "#8f5c13"]
 
 
 def radar(labels: List[str], values: List[float]) -> go.Figure:

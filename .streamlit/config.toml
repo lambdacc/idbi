@@ -3,10 +3,10 @@
 # without this pin, dark-theme widget text lands on light panels).
 [theme]
 base = "light"
-primaryColor = "#1f5a45"
-backgroundColor = "#fbfaf6"
-secondaryBackgroundColor = "#f4f1e9"
-textColor = "#201d18"
+primaryColor = "#0b3d75"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f4f6fa"
+textColor = "#1b2733"
 
 [browser]
 gatherUsageStats = false

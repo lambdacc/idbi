@@ -30,21 +30,21 @@ _DOT = """
 digraph CreditPulse {
   rankdir=TB; bgcolor="transparent"; splines=ortho;
   node [shape=box style="rounded,filled" fontname="Schibsted Grotesk" fontsize=11
-        color="#e4ddce" fillcolor="#f4f1e9" fontcolor="#201d18" margin="0.18,0.10"];
-  edge [color="#c9c0ad" arrowsize=0.7];
+        color="#dbe2ec" fillcolor="#f4f6fa" fontcolor="#1b2733" margin="0.18,0.10"];
+  edge [color="#8ca3bd" arrowsize=0.7];
 
   src [label="Alternate data sources (25)\\nGST · Bank/AA · UPI · EPFO · Bureau · Udyam\\nE-way · Electricity · MCA · GeM · Courts · …"
-       fillcolor="#ede8dc"];
+       fillcolor="#eef2f8"];
   integ [label="Data integration\\ncanonical entity resolution (GSTIN↔PAN↔Udyam↔MCA)"];
   feat  [label="Feature engineering\\n5 pillars · per-source modules"];
   synth [label="Cross-source synthesis\\n12 composites + turnover-authenticity (flagship)"
-         fillcolor="#e7efe8" color="#1f5a45"];
+         fillcolor="#e9f0fb" color="#1466b8"];
   clust [label="K-Means segmentation\\n(descriptive peer group only)"];
   score [label="Scoring models\\nWOE/IV scorecard + monotonic LightGBM\\n+ deterministic pillar→composite→grade"];
   conf  [label="Confidence score\\ndata-completeness (IV × breadth)"];
   expl  [label="Explainability\\nnative reason codes + SHAP"];
   card  [label="Financial health card\\n5 dimensions · grade · recommendation"
-         fillcolor="#1f5a45" fontcolor="#fbfaf6" color="#163f2f"];
+         fillcolor="#0b3d75" fontcolor="#ffffff" color="#0b3d75"];
 
   src -> integ -> feat -> synth;
   synth -> clust; synth -> score; synth -> conf;

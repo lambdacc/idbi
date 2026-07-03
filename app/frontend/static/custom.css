@@ -11,35 +11,35 @@
 :root {
   color-scheme: light;
 
-  /* Surfaces (warm paper family, no pure white, no dark surfaces) */
-  --cp-bg:        #fbfaf6;   /* base paper */
-  --cp-panel:     #f4f1e9;   /* raised panel */
-  --cp-panel-2:   #ede8dc;   /* deeper panel / hover */
-  --cp-border:    #e4ddce;   /* hairline rule */
-  --cp-border-2:  #d4ccb9;   /* stronger rule */
+  /* Surfaces (banking palette: white + cool blue-grays) */
+  --cp-bg:        #ffffff;   /* base */
+  --cp-panel:     #f4f6fa;   /* raised panel */
+  --cp-panel-2:   #eef2f8;   /* deeper panel / hover */
+  --cp-border:    #dbe2ec;   /* hairline rule */
+  --cp-border-2:  #c3cfe0;   /* stronger rule */
 
   /* Ink */
-  --cp-ink:       #201d18;   /* warm near-black text */
-  --cp-ink-soft:  #4b463c;   /* secondary text */
-  --cp-muted:     #86806f;   /* muted labels */
+  --cp-ink:       #1b2733;   /* near-black text */
+  --cp-ink-soft:  #33475a;   /* secondary text */
+  --cp-muted:     #647587;   /* muted labels */
 
-  /* One accent: pine. Doubles as the positive/health color. */
-  --cp-navy:      #1f5a45;   /* accent (name kept for compatibility) */
-  --cp-navy-deep: #163f2f;   /* accent, deep */
-  --cp-blue:      #1f5a45;   /* mapped to the single accent */
+  /* Accent: deep banking navy + a lighter blue. */
+  --cp-navy:      #0b3d75;   /* primary accent */
+  --cp-navy-deep: #072a52;   /* accent, deep */
+  --cp-blue:      #1466b8;   /* secondary accent */
 
   /* Semantic risk (reserved for meaning only) */
-  --cp-green:     #1f5a45;   --cp-green-bg: #e7efe8;   --cp-green-bd: #cad9cd;
-  --cp-amber:     #8a5a12;   --cp-amber-bg: #f4e9d2;   --cp-amber-bd: #e6d3a8;
-  --cp-red:       #a2331f;   --cp-red-bg:   #f1e1db;   --cp-red-bd:   #e2c4ba;
+  --cp-green:     #147347;   --cp-green-bg: #e6f5ec;   --cp-green-bd: #bfe6cf;
+  --cp-amber:     #8f5c13;   --cp-amber-bg: #fdf3e0;   --cp-amber-bd: #f2ddb0;
+  --cp-red:       #c0392b;   --cp-red-bg:   #fbecea;   --cp-red-bd:   #f0cdc8;
 
   /* Radius scale: panels 10, controls 6, tags 4. */
   --cp-radius: 10px;
   --cp-r:      6px;
   --cp-r-tag:  4px;
 
-  /* Warm-tinted shadow, used sparingly (hero only). */
-  --cp-shadow: 0 1px 2px rgba(32,29,24,.05), 0 10px 30px rgba(32,29,24,.06);
+  /* Blue-tinted shadow. */
+  --cp-shadow: 0 1px 3px rgba(11,61,117,.08), 0 4px 16px rgba(11,61,117,.06);
 
   --cp-serif: "Newsreader", Georgia, "Times New Roman", serif;
   --cp-sans:  "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -78,34 +78,30 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
 /* Streamlit captions read as quiet grotesk, not serif. */
 [data-testid="stCaptionContainer"], .stCaption, small { font-family: var(--cp-sans); color: var(--cp-muted); }
 
-/* ---- Sidebar (light paper rail, hairline edge, pine active) -------------- */
+/* ---- Sidebar (deep navy rail, light text, translucent active) ----------- */
 [data-testid="stSidebar"] {
-  background: var(--cp-panel);
-  border-right: 1px solid var(--cp-border);
+  background: linear-gradient(180deg, var(--cp-navy-deep), var(--cp-navy));
   min-width: 16rem; max-width: 16rem;
 }
 /* Brand-above-nav reorder (Streamlit 1.39 paints nav above user content). */
 [data-testid="stSidebar"] [data-testid="stSidebarContent"] { display: flex; flex-direction: column; }
 [data-testid="stSidebar"] [data-testid="stSidebarUserContent"] { order: 1; padding-top: .4rem; }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] { order: 2; }
-[data-testid="stSidebar"] * { color: var(--cp-ink-soft); }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] { margin-top: .6rem; border-top: 1px solid var(--cp-border); padding-top: .5rem; }
+[data-testid="stSidebar"] * { color: #eaf1fb; }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] { margin-top: .6rem; border-top: 1px solid rgba(255,255,255,.14); padding-top: .5rem; }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] a {
-  border-radius: var(--cp-r); padding-left: .35rem; transition: background-color .15s ease, color .15s ease;
+  border-radius: var(--cp-r); padding-left: .35rem; transition: background-color .15s ease;
 }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a span { color: var(--cp-ink-soft); font-family: var(--cp-sans); }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:hover { background: var(--cp-panel-2); }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:focus-visible { outline: 2px solid var(--cp-navy); outline-offset: 1px; }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] {
-  background: var(--cp-green-bg);
-  box-shadow: inset 3px 0 0 var(--cp-navy);
-}
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] span { color: var(--cp-navy-deep); font-weight: 600; }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] a span { color: #eaf1fb; font-family: var(--cp-sans); }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:hover { background: rgba(255,255,255,.10); }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:focus-visible { outline: 2px solid #eaf1fb; outline-offset: 1px; }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] { background: rgba(255,255,255,.16); }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] span { font-weight: 600; }
 [data-testid="stSidebar"] .cp-brand {
-  font-family: var(--cp-serif); font-size: 1.5rem; font-weight: 600; color: var(--cp-ink);
+  font-family: var(--cp-serif); font-size: 1.5rem; font-weight: 600; color: #ffffff;
   letter-spacing: -.01em; padding: .2rem 0 0 0;
 }
-[data-testid="stSidebar"] .cp-brand-sub { font-family: var(--cp-sans); font-size: .74rem; color: var(--cp-muted); line-height: 1.4; }
+[data-testid="stSidebar"] .cp-brand-sub { font-family: var(--cp-sans); font-size: .74rem; color: #eaf1fb; opacity: .8; line-height: 1.4; }
 
 /* ---- Simple / Technical toggle (top-right segmented control) -------------- */
 .cp-viewtoggle-anchor { height: 0; margin: 0; }
@@ -199,17 +195,17 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
 .cp-stage.done .idx { background: var(--cp-green); color: var(--cp-bg); }
 .cp-stage.done .status { color: var(--cp-green); }
 
-/* ---- Execution console (light "tape", not a dark terminal) --------------- */
+/* ---- Execution console (dark terminal, original ambience) ---------------- */
 .cp-console {
-  background: var(--cp-panel); color: var(--cp-ink-soft); border-radius: var(--cp-r);
+  background: #0c1320; color: #cfe3ff; border-radius: var(--cp-r);
   padding: .85rem 1rem; font-family: var(--cp-mono); font-size: .78rem; line-height: 1.6;
-  height: 340px; overflow-y: auto; border: 1px solid var(--cp-border);
+  height: 340px; overflow-y: auto; border: 1px solid #1b2b45;
   white-space: pre-wrap; font-variant-numeric: tabular-nums;
 }
 .cp-console .ln { display: block; }
-.cp-console .ok  { color: var(--cp-green); }
-.cp-console .bad { color: var(--cp-red); }
-.cp-console .dim { color: var(--cp-muted); }
+.cp-console .ok  { color: #6ee7a8; }
+.cp-console .bad { color: #ff9d8a; }
+.cp-console .dim { color: #7f97b8; }
 .cp-console.short { height: 220px; }
 
 /* ---- Source ingestion grid ----------------------------------------------- */
@@ -291,18 +287,17 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
 .cp-technique .bn { margin-top: .35rem; color: var(--cp-ink-soft); }
 .cp-technique .method { margin-top: .35rem; font-family: var(--cp-mono); font-size: .76rem; color: var(--cp-muted); }
 
-/* ---- Score hero (light rating-sheet block, big mono grade) --------------- */
+/* ---- Score hero (deep navy block, big mono grade) ------------------------ */
 .cp-hero {
   display: flex; gap: 1.6rem; align-items: center;
-  background: var(--cp-bg); color: var(--cp-ink);
-  border: 1px solid var(--cp-border); border-top: 3px solid var(--cp-navy);
+  background: linear-gradient(135deg, var(--cp-navy-deep), var(--cp-navy)); color: #ffffff;
   border-radius: var(--cp-radius); padding: 1.5rem 1.7rem; margin-bottom: 1rem; box-shadow: var(--cp-shadow);
 }
-.cp-hero .score { font-family: var(--cp-mono); font-size: 3.4rem; font-weight: 500; line-height: 1; color: var(--cp-navy-deep); }
-.cp-hero .score small { font-size: 1.05rem; color: var(--cp-muted); font-weight: 400; }
+.cp-hero .score { font-family: var(--cp-mono); font-size: 3.4rem; font-weight: 500; line-height: 1; color: #ffffff; }
+.cp-hero .score small { font-size: 1.05rem; color: rgba(255,255,255,.7); font-weight: 400; }
 .cp-hero .meta { flex: 1; }
 .cp-hero .name { font-family: var(--cp-serif); font-size: 1.55rem; font-weight: 600; letter-spacing: -.01em; }
-.cp-hero .subtle { color: var(--cp-muted); font-size: .9rem; margin-top: .15rem; }
+.cp-hero .subtle { color: rgba(255,255,255,.82); font-size: .9rem; margin-top: .15rem; }
 
 /* ---- Recommendation banner ----------------------------------------------- */
 .cp-rec {
