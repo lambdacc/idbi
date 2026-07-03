@@ -2,16 +2,37 @@
 from __future__ import annotations
 
 import html
+import json
 from pathlib import Path
 from typing import Optional
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 _CSS = Path(__file__).resolve().parents[1] / "static" / "custom.css"
 _FAVICON = Path(__file__).resolve().parents[1] / "static" / "favicon.png"
 
-# Semantic palette (mirrors custom.css :root). Pine doubles as accent + positive.
-GREEN, AMBER, RED, NAVY, BLUE = "#1f5a45", "#8a5a12", "#a2331f", "#1f5a45", "#1f5a45"
+# Semantic palette (mirrors custom.css :root).
+GREEN, AMBER, RED, NAVY, BLUE = "#147347", "#8f5c13", "#c0392b", "#0b3d75", "#1466b8"
+
+
+def _inject_css(css: str) -> None:
+    """Install the stylesheet in the TOP document's <head> so it survives page
+    navigations. A per-page `st.markdown('<style>')` is torn down and re-added on
+    every rerun, flashing Streamlit's default theme (light sidebar, wrong width,
+    toolbar) for a frame before the custom CSS re-applies -- that flash is the
+    sideways "jump" on nav clicks. Injecting into the parent <head> once (keyed by
+    id, updated in place) keeps the styling continuously applied across reruns."""
+    payload = json.dumps(css)
+    components.html(
+        "<script>"
+        "const d = window.parent.document;"
+        "let s = d.getElementById('cp-head-css');"
+        "if (!s) { s = d.createElement('style'); s.id = 'cp-head-css'; d.head.appendChild(s); }"
+        f"s.textContent = {payload};"
+        "</script>",
+        height=0,
+    )
 
 
 def brandmark() -> str:
@@ -25,7 +46,10 @@ def page_setup(title: str, icon: str = "") -> None:
     page_icon = str(_FAVICON) if _FAVICON.exists() else None
     st.set_page_config(page_title=f"CreditPulse · {title}", page_icon=page_icon, layout="wide")
     if _CSS.exists():
-        st.markdown(f"<style>{_CSS.read_text()}</style>", unsafe_allow_html=True)
+        css = _CSS.read_text()
+        # First-paint styling (immediate) + persistent head copy (survives nav).
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+        _inject_css(css)
     with st.sidebar:
         st.markdown(
             f"<div class='cp-brand'>{brandmark()}</div>"

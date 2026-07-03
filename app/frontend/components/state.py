@@ -43,9 +43,12 @@ def require_assessment() -> Optional[Assessment]:
     """Guard for pages that need a run; nudges the user to Home if none exists."""
     a = get_assessment()
     if a is None:
+        # Leading heading occupies the "beside the toggle" slot (the page's own
+        # st.title never runs because we st.stop() here); the card then flows
+        # below normally instead of being pulled up under the toggle.
+        st.markdown("<h1>No assessment yet</h1>", unsafe_allow_html=True)
         st.markdown(
             "<div class='cp-card' style='border-top:3px solid var(--cp-navy)'>"
-            "<h4>No assessment yet</h4>"
             "Pick a business on the <b>Home</b> page and click <b>Run assessment</b>. "
             "The health card, pipeline and explainability views populate from that run."
             "</div>", unsafe_allow_html=True)
