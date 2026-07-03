@@ -35,6 +35,9 @@ def build_health_card(engine_output: Dict) -> HealthCard:
         reasons_positive=_reason_codes(engine_output["reasons_positive"]),
         reasons_negative=_reason_codes(engine_output["reasons_negative"]),
         turnover_authenticity_score=engine_output["turnover_authenticity_score"],
+        anomaly_score=engine_output.get("anomaly_score"),
+        fraud_risk_score=engine_output.get("fraud_risk_score"),
+        fraud_band=engine_output.get("fraud_band"),
         peer_segment=engine_output["peer_segment"],
         indicative_limit=engine_output["indicative_limit"],
     )

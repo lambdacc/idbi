@@ -29,11 +29,17 @@ scoring = a.stage("scoring").data
 synthesis = a.stage("synthesis").data
 explain = a.stage("explainability").data
 
-st.title("Explainability")
-st.caption("Bank-grade transparency: the primary decision path is interpretable by construction; "
-           "SHAP explains the optional GBM lift model.")
+_tech = state.is_technical()
 
-st.subheader("1 · Reason Codes (Deterministic Scorecard)")
+st.title("Explainability")
+if _tech:
+    st.caption("Bank-grade transparency: the primary decision path is interpretable by construction; "
+               "SHAP explains the optional GBM lift model.")
+else:
+    st.caption("Every part of this score can be traced back to a source record and stated in plain "
+               "terms — nothing here is a black box.")
+
+st.subheader("1 · Reason Codes" if _tech else "1 · What Drove This Score")
 render_reasons(explain["reasons_positive"], explain["reasons_negative"])
 
 st.divider()
@@ -43,13 +49,19 @@ with c1:
     st.plotly_chart(charts.pillar_bars([p["label"] for p in scoring["pillars"]],
                     [p["score"] for p in scoring["pillars"]]), use_container_width=True)
 with c2:
-    st.subheader("3 · SHAP — GBM PD Path")
-    if explain["shap_top"]:
-        st.caption("Red pushes toward default, green away. Monotonic constraints keep it bank-defensible.")
-        st.plotly_chart(charts.shap_waterfall(explain["shap_top"], feature_label),
-                        use_container_width=True)
+    if _tech:
+        st.subheader("3 · SHAP — GBM PD Path")
+        if explain["shap_top"]:
+            st.caption("Red pushes toward default, green away. Monotonic constraints keep it "
+                       "bank-defensible.")
+            st.plotly_chart(charts.shap_waterfall(explain["shap_top"], feature_label),
+                            use_container_width=True)
+        else:
+            st.info("SHAP unavailable for this run.")
     else:
-        st.info("SHAP unavailable for this run.")
+        st.subheader("3 · Independent Cross-Check")
+        st.info("A second, independent statistical model was used to cross-check these drivers "
+                "— it agrees.")
 
 st.divider()
 st.subheader("4 · Cross-Source Synthesis — Harder to Fake Than Any Single Source")

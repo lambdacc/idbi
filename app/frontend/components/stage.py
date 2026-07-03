@@ -12,6 +12,8 @@ from typing import Dict, List
 import streamlit as st
 
 from app.backend.services.pipeline_orchestrator import COMPOSITE_CATALOG
+from app.frontend.components import charts
+from app.frontend.components.ui import badge, band_class, fmt_inr, kpi, risk_class
 from app.ml.explainability.reason_codes import _LABELS
 
 # feature/composite key -> pretty label for charts & waterfalls
@@ -116,3 +118,198 @@ def render_feature_counters(counters: List[dict], composite_count: int) -> None:
 def kpi_mini(label: str, value) -> str:
     return (f"<div class='cp-kpi'><div class='lbl'>{html.escape(str(label))}</div>"
             f"<div class='val'>{value}</div></div>")
+
+
+# ------------------------------------------------- plain-language findings
+def render_findings(findings: List[dict], technical: bool) -> None:
+    """Render each finding as a tone-coded `.cp-finding` callout (plan §4 WP-C).
+
+    In simple view, `technical=True` findings are skipped so non-technical users
+    never see model-internal notes. Every interpolated string is html-escaped (G3).
+    """
+    for f in findings:
+        if f.get("technical") and not technical:
+            continue
+        tone = f.get("tone", "neutral")
+        if tone not in ("good", "warn", "risk", "neutral"):
+            tone = "neutral"
+        st.markdown(
+            f"<div class='cp-finding {tone}'>{html.escape(str(f.get('text', '')))}</div>",
+            unsafe_allow_html=True)
+
+
+# ------------------------------------------------ per-stage ML technique
+def render_technique(technique: dict | None, technical: bool) -> None:
+    """Disclose WHICH ML technique runs at this stage and WHY it helps.
+
+    `plain` (jargon-free name) + `benefit` sentence are ALWAYS shown, in both view
+    modes. The `algorithm` string (the technical model name — contains banned terms
+    like Isolation Forest / WOE / SHAP) is appended in TECHNICAL mode only (G4).
+    Renders nothing when the stage carries no technique. Every interpolated string
+    is html-escaped (G3)."""
+    if not technique:
+        return
+    plain = html.escape(str(technique.get("plain", "")))
+    benefit = html.escape(str(technique.get("benefit", "")))
+    method = ""
+    if technical and technique.get("algorithm"):
+        method = (f"<div class='method'>Method: "
+                  f"{html.escape(str(technique['algorithm']))}</div>")
+    st.markdown(
+        f"<div class='cp-technique'><span class='chip'>⚙ Technique</span>"
+        f"<span class='nm'>{plain}</span>"
+        f"<div class='bn'>{benefit}</div>{method}</div>",
+        unsafe_allow_html=True)
+
+
+# ------------------------------------------------------- per-stage detail
+def render_detail(container, stage, entity_name: str, technical: bool,
+                  upto: int | None = None, show_header: bool = True,
+                  key_prefix: str = "") -> None:
+    """Render a stage's visualization panel — shared by the live playback loop and
+    the persistent notebook cells (plan §4 WP-C; relocated here from the page so
+    both paths use one dispatch, no duplication).
+
+    `upto` (ingestion only) shows just the first k source cards — the §6.2
+    breadth-reveal lights them up one by one. `show_header` prints the
+    `#### Stage N · Title` heading + caption (the live area wants it; the notebook
+    cell already has that in its expander label, so it passes False). Model-internal
+    bits (SHAP, the clustering algorithm name, Model PD) render only when
+    `technical` (design decision D3 / guardrail G4).
+
+    `key_prefix` disambiguates the plotly charts: the live playback area and a
+    completed stage's notebook cell can both hold the same stage's chart at once,
+    which would otherwise collide on Streamlit's auto-generated element id."""
+    d = stage.data
+
+    def _ck(name: str):
+        return f"{key_prefix}{stage.key}_{name}" if key_prefix else None
+    with container.container():
+        if show_header:
+            st.markdown(f"#### Stage {stage.index} · {stage.title}")
+            st.caption(stage.caption)
+
+        if stage.key == "scenario_lock_in":
+            e = d["entity"]
+            cols = st.columns(5)
+            cols[0].markdown(kpi("Sector", e.get("sector", "—")), unsafe_allow_html=True)
+            cols[1].markdown(kpi("Udyam category", e.get("category", "—")), unsafe_allow_html=True)
+            cols[2].markdown(kpi("Vintage", f"{e.get('age_years', '—')} y"), unsafe_allow_html=True)
+            cols[3].markdown(kpi("Employees", str(e.get("employees", "—"))), unsafe_allow_html=True)
+            cols[4].markdown(kpi("Declared turnover", fmt_inr(e.get("declared_turnover"))),
+                             unsafe_allow_html=True)
+
+        elif stage.key == "ingestion":
+            render_source_grid(d["sources"], limit=upto)
+            if upto is None:
+                st.caption(f"{d['connected']} of {d['total']} sources carry a live signal for this entity.")
+
+        elif stage.key == "integration":
+            cols = st.columns(3)
+            cols[0].markdown(kpi("Raw records reconciled", f"{d['total_records']:,}"),
+                             unsafe_allow_html=True)
+            cols[1].markdown(kpi("Sources merged", str(d["connected"])), unsafe_allow_html=True)
+            cols[2].markdown(kpi("Identity integrity", f"{d['identity_integrity']:.2f}",
+                             "1.0 = all registries agree"), unsafe_allow_html=True)
+
+        elif stage.key == "features":
+            render_feature_counters(d["counters"], d["composite_count"])
+            st.caption(f"{d['total_features']} engineered signals across 5 pillars + composites.")
+
+        elif stage.key == "synthesis":
+            comps = d["composites"]
+            flag = [c for c in comps if c.get("flagship")]
+            rest = [c for c in comps if not c.get("flagship")]
+            render_composites(flag)
+            left, right = st.columns(2)
+            with left:
+                render_composites(rest[0::2])
+            with right:
+                render_composites(rest[1::2])
+            # Fraud/anomaly cross-check panel (unsupervised second opinion). The
+            # headline is the blended fraud-risk score + band; the raw anomaly
+            # score and label-free signal count are model-internal (technical-only).
+            fraud = d.get("fraud") or {}
+            band = fraud.get("fraud_band") or "Low"
+            ftone = {"Elevated": "risk", "Moderate": "warn", "Low": "good"}.get(band, "neutral")
+            frisk = fraud.get("fraud_risk_score")
+            auth = fraud.get("authenticity_score")
+            frisk_txt = f"{frisk:.0f}/100" if isinstance(frisk, (int, float)) else "—"
+            auth_txt = f"{auth:.0f}/100" if isinstance(auth, (int, float)) else "—"
+            st.markdown(
+                f"<div class='cp-finding {ftone}'><b>Fraud risk: {html.escape(band)}</b> "
+                f"&nbsp;·&nbsp; blended score {html.escape(frisk_txt)} "
+                f"&nbsp;·&nbsp; turnover authenticity {html.escape(auth_txt)}</div>",
+                unsafe_allow_html=True)
+            if technical:
+                anom = fraud.get("anomaly_score")
+                sig = fraud.get("signals")
+                anom_txt = f"{anom:.0f}/100" if isinstance(anom, (int, float)) else "—"
+                fc = st.columns(2)
+                fc[0].markdown(kpi("Profile anomaly", anom_txt,
+                               "raw unsupervised score"), unsafe_allow_html=True)
+                fc[1].markdown(kpi("Label-free signals", str(sig if sig is not None else "—"),
+                               "consistency features cross-checked"), unsafe_allow_html=True)
+
+        elif stage.key == "clustering":
+            algo = (f"K-Means, k={d['k']} · descriptive only" if technical
+                    else "Compared with similar businesses · descriptive only")
+            st.markdown(badge(f"Peer group: {d['segment']}", "info") +
+                        f" &nbsp; <span class='cp-scn'>{algo}</span>",
+                        unsafe_allow_html=True)
+            st.plotly_chart(charts.cluster_scatter(d["scatter"], d["entity_point"],
+                            entity_name), use_container_width=True, key=_ck("scatter"))
+
+        elif stage.key == "scoring":
+            labels = [p["label"] for p in d["pillars"]]
+            vals = [p["score"] for p in d["pillars"]]
+            c1, c2 = st.columns([1.3, 1])
+            with c1:
+                st.plotly_chart(charts.pillar_bars(labels, vals),
+                                use_container_width=True, key=_ck("pillars"))
+            with c2:
+                st.markdown(kpi("Composite score", f"{d['composite_score']:.0f}<small>/100</small>",
+                            f"Grade {d['grade']}/10", band_class(d["onboarding_band"])),
+                            unsafe_allow_html=True)
+                if technical:
+                    st.markdown(kpi("Model PD", f"{d['pd']:.1%}", d["risk_category"] + " risk",
+                                risk_class(d["risk_category"])), unsafe_allow_html=True)
+                else:
+                    st.markdown(kpi("Estimated default risk", d["risk_category"],
+                                "chance of repayment difficulty",
+                                risk_class(d["risk_category"])), unsafe_allow_html=True)
+
+        elif stage.key == "explainability":
+            render_reasons(d["reasons_positive"], d["reasons_negative"])
+            if technical and d["shap_top"]:
+                st.markdown("**SHAP cross-check** — monotonic GBM PD path")
+                st.plotly_chart(charts.shap_waterfall(d["shap_top"], feature_label),
+                                use_container_width=True, key=_ck("shap"))
+
+        elif stage.key == "health_card":
+            hc = d["health_card"]
+            st.markdown(
+                f"<div class='cp-hero'><div class='score'>{hc['composite_score']:.0f}"
+                f"<small>/100</small></div><div class='meta'>"
+                f"<div class='name'>{html.escape(str(hc['name']))}</div>"
+                f"<div class='subtle'>Grade {hc['grade']}/10 · {hc['recommendation']} · "
+                f"Confidence {hc['confidence']}</div></div></div>", unsafe_allow_html=True)
+            st.page_link("pages/3_Financial_Health_Card.py",
+                         label="📋  Open the full Financial Health Card", use_container_width=True)
+
+
+# ------------------------------------------------- persistent notebook cell
+def render_stage_cell(stage, technical: bool, expanded: bool, detail_fn) -> None:
+    """One persistent, notebook-style record for a completed stage (plan §4 WP-C /
+    D2): an expander titled `Stage N · Title` whose summary line surfaces the
+    stage headline, body = plain-language findings + the stage visualization via
+    `detail_fn(container, stage)`. `detail_fn` is the page's `render_detail`
+    binding (entity name + view mode pre-applied), so there is no duplicated
+    dispatch."""
+    label = f"Stage {stage.index} · {stage.title}"
+    if stage.headline:
+        label += f" — {stage.headline}"
+    with st.expander(label, expanded=expanded):
+        render_technique(stage.technique, technical)
+        render_findings(stage.findings, technical)
+        detail_fn(st.container(), stage)

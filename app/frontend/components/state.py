@@ -15,6 +15,7 @@ from app.ml.engine import ScoringEngine, get_engine as _get_engine
 
 _ASSESSMENT_KEY = "cp_assessment"
 _PLAYED_KEY = "cp_pipeline_played"
+_VIEW_MODE_KEY = "cp_view_mode"
 
 
 @st.cache_resource(show_spinner="Fitting scoring models on the synthetic cohort …")
@@ -45,6 +46,20 @@ def require_assessment() -> Optional[Assessment]:
         st.info("No assessment yet — pick a scenario on the **Home** page and click **Run Assessment**.")
         st.stop()
     return a
+
+
+def view_mode() -> str:
+    """Active view mode: 'simple' (default) or 'technical'.
+
+    'simple' hides model internals (SHAP, clustering, execution trace) and
+    engineering names; 'technical' shows everything.
+    """
+    return st.session_state.get(_VIEW_MODE_KEY, "simple")
+
+
+def is_technical() -> bool:
+    """True when the user has opted into the technical (model-internals) view."""
+    return view_mode() == "technical"
 
 
 def mark_played() -> None:

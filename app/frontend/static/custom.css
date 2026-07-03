@@ -177,6 +177,105 @@ h2, h3 { font-weight: 700; color: var(--cp-navy-deep); }
 .cp-reason.neg .mk { color: var(--cp-red); }
 .cp-reason .tx { font-size: .86rem; color: var(--cp-ink); }
 
+/* Info tooltip — kpi(tip=…) info glyph + glossary copy (plan §4 WP-B, D4).
+   Keyboard-reachable (tabindex on .cp-info): the box shows on :hover AND
+   :focus-visible. High-contrast ink on white for AA (>=4.5:1). */
+.cp-info {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: .3rem;
+  font-size: .82rem;
+  line-height: 1;
+  color: var(--cp-navy);
+  opacity: .55;
+  cursor: help;
+  vertical-align: middle;
+}
+.cp-info:hover, .cp-info:focus-visible { opacity: 1; }
+.cp-info:focus-visible {
+  outline: 2px solid var(--cp-blue); outline-offset: 2px; border-radius: 3px;
+}
+.cp-tipbox {
+  position: absolute;
+  left: 0;
+  top: calc(100% + .4rem);
+  z-index: 40;                 /* above cards/kpis */
+  width: max-content;
+  max-width: 30ch;
+  padding: .5rem .65rem;
+  background: var(--cp-bg);
+  color: var(--cp-ink);
+  border: 1px solid var(--cp-border);
+  border-radius: 8px;
+  box-shadow: var(--cp-shadow);
+  /* Reset inherited .lbl typography so the tip reads as normal prose. */
+  font-size: .75rem;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .15s ease;
+}
+.cp-info:hover .cp-tipbox,
+.cp-info:focus-visible .cp-tipbox { opacity: 1; visibility: visible; }
+
+/* Plain-language finding callout (WP-C/D consumers). Block callout with a
+   tinted panel + tone-coded left bar — deliberately distinct from the flex
+   marker rows of .cp-reason. */
+.cp-finding {
+  border: 1px solid var(--cp-border);
+  border-left: 4px solid var(--cp-muted);
+  background: var(--cp-panel);
+  border-radius: 10px;
+  padding: .6rem .8rem;
+  margin-bottom: .5rem;
+  font-size: .86rem;
+  line-height: 1.5;
+  color: var(--cp-ink);
+}
+.cp-finding.good { border-left-color: var(--cp-green); background: var(--cp-green-bg); }
+.cp-finding.warn { border-left-color: var(--cp-amber); background: var(--cp-amber-bg); }
+.cp-finding.risk { border-left-color: var(--cp-red); background: var(--cp-red-bg); }
+.cp-finding.neutral { border-left-color: var(--cp-navy); background: var(--cp-panel); }
+
+/* Per-stage ML technique disclosure — visually distinct from .cp-finding: an
+   indigo/blue left-accent on a tinted panel, with a "⚙ Technique" chip. */
+.cp-technique {
+  border: 1px solid #cfe0f4;
+  border-left: 4px solid var(--cp-blue);
+  background: #f2f8ff;
+  border-radius: 10px;
+  padding: .6rem .8rem;
+  margin-bottom: .55rem;
+  font-size: .86rem;
+  line-height: 1.5;
+  color: var(--cp-ink);
+}
+.cp-technique .chip {
+  display: inline-block;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  color: var(--cp-blue);
+  background: var(--cp-panel-2);
+  border: 1px solid #cfe0f4;
+  border-radius: 999px;
+  padding: .1rem .5rem;
+  margin-right: .5rem;
+  vertical-align: middle;
+}
+.cp-technique .nm { font-weight: 800; color: var(--cp-navy-deep); }
+.cp-technique .bn { margin-top: .35rem; color: var(--cp-ink); }
+.cp-technique .method {
+  margin-top: .35rem; font-size: .78rem; color: var(--cp-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
 /* Big score hero */
 .cp-hero {
   display: flex; gap: 1.4rem; align-items: center;
@@ -207,7 +306,7 @@ h2, h3 { font-weight: 700; color: var(--cp-navy-deep); }
 
 /* Honor the OS reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .cp-stage, .stButton > button { transition: none; }
+  .cp-stage, .stButton > button, .cp-tipbox { transition: none; }
 }
 
 /* Scenario tiles (radio -> cards handled inline) */

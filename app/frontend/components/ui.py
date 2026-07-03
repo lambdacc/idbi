@@ -22,6 +22,19 @@ def page_setup(title: str, icon: str = "📊") -> None:
             "<div class='cp-brand'>CreditPulse</div>"
             "<div class='cp-brand-sub'>MSME Financial Health Card · IDBI Innovate 2026</div><br>",
             unsafe_allow_html=True)
+        # Global Simple/Technical view toggle (design decision D3). Default
+        # "simple"; initialise without clobbering an existing choice, then bind
+        # the widget directly to the session key so the stored value is exactly
+        # "simple"/"technical" and persists across page switches.
+        if "cp_view_mode" not in st.session_state:
+            st.session_state["cp_view_mode"] = "simple"
+        st.radio(
+            "View",
+            options=["simple", "technical"],
+            format_func=lambda m: m.capitalize(),
+            key="cp_view_mode",
+            help="Technical view shows the model internals (SHAP, clustering, execution trace).",
+        )
 
 
 def band_class(band: str) -> str:
@@ -44,9 +57,14 @@ def score_class(score: float) -> str:
     return "good" if score >= 74 else ("warn" if score >= 58 else "risk")
 
 
-def kpi(label: str, value: str, sub: str = "", kind: str = "") -> str:
+def kpi(label: str, value: str, sub: str = "", kind: str = "", tip: str = "") -> str:
     cls = f"cp-kpi {kind}".strip()
-    return (f"<div class='{cls}'><div class='lbl'>{html.escape(label)}</div>"
+    lbl = html.escape(label)
+    if tip:
+        safe_tip = html.escape(tip)  # escapes quotes too (aria-label safe)
+        lbl += (f"<span class='cp-info' tabindex='0' role='img' aria-label='{safe_tip}'>"
+                f"ⓘ<span class='cp-tipbox'>{safe_tip}</span></span>")
+    return (f"<div class='{cls}'><div class='lbl'>{lbl}</div>"
             f"<div class='val'>{value}</div><div class='sub'>{html.escape(sub)}</div></div>")
 
 

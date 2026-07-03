@@ -15,6 +15,7 @@ from ..features.base import load_tables, build_feature_matrix
 from ..models.pillars import PillarScorer
 from ..models.scorecard import WOEScorecard
 from ..models.gbm import MonotonicGBM
+from ..models.anomaly import AnomalyDetector
 from . import metrics
 from .holdout import split
 from .psi import psi_report
@@ -39,7 +40,8 @@ def run_eval(n_report_features: int = 12, seed: int = 42) -> Dict:
     gbm = MonotonicGBM().fit(Xtr, ytr)
     pillars = PillarScorer().fit(train)
 
-    sc_metrics = metrics.summary(yte, scorecard.predict_pd(Xte))
+    sc_pd = scorecard.predict_pd(Xte)
+    sc_metrics = metrics.summary(yte, sc_pd)
     gbm_metrics = metrics.summary(yte, gbm.predict_pd(Xte))
     # Deterministic composite as a protective score: risk = 100 - health.
     composite = pd.Series(
@@ -47,8 +49,25 @@ def run_eval(n_report_features: int = 12, seed: int = 42) -> Dict:
         index=Xte.index)
     comp_metrics = metrics.summary(yte, composite)
 
-    # Fraud discrimination: flagship authenticity score alone (lower = more fraud).
-    fraud_metrics = metrics.summary(test["label_fraud"], 100.0 - test["turnover_authenticity_score"])
+    # Calibration: does a stated PD match the observed default rate? Compare the
+    # raw model probability against the post-hoc-calibrated one on the holdout.
+    yte_arr = yte.to_numpy()
+    cal = {
+        "scorecard_raw": metrics.calibration(yte_arr, scorecard.predict_pd_raw(Xte)),
+        "scorecard_calibrated": metrics.calibration(yte_arr, sc_pd),
+        "scorecard_kind": scorecard.calibration_kind,
+        "gbm_raw": metrics.calibration(yte_arr, gbm.predict_pd_raw(Xte)),
+        "gbm_calibrated": metrics.calibration(yte_arr, gbm.predict_pd(Xte)),
+        "gbm_kind": gbm.calibration_kind,
+    }
+
+    # Fraud: hand-crafted authenticity composite ALONE vs the composite blended
+    # with the unsupervised Isolation Forest anomaly leg (fit on train only).
+    anomaly = AnomalyDetector().fit(train)
+    yfr = test["label_fraud"]
+    fraud_composite = metrics.summary(yfr, 100.0 - test["turnover_authenticity_score"])
+    fraud_anomaly = metrics.summary(yfr, anomaly.anomaly_scores(test))
+    fraud_ensemble = metrics.summary(yfr, anomaly.fraud_risk_series(test))
 
     top = list(scorecard.top_iv(n_report_features).keys())
     psi = psi_report(train, test, top)
@@ -57,7 +76,11 @@ def run_eval(n_report_features: int = 12, seed: int = 42) -> Dict:
         "n_entities": int(len(fm)), "n_features": len(feats),
         "n_train": int(len(train)), "n_test": int(len(test)),
         "scorecard": sc_metrics, "gbm": gbm_metrics, "composite": comp_metrics,
-        "fraud_authenticity": fraud_metrics,
+        "calibration": cal,
+        "fraud_authenticity": fraud_composite,        # back-compat key (composite alone)
+        "fraud_anomaly": fraud_anomaly,
+        "fraud_ensemble": fraud_ensemble,
+        "anomaly_features": anomaly.features_,
         "psi_top_features": psi, "psi_max": max(psi.values()) if psi else 0.0,
     }
 
@@ -73,10 +96,26 @@ def print_scorecard(report: Dict) -> None:
                       ("Deterministic composite", "composite")]:
         m = report[key]
         print(f"   {name:24s} AUC={m['auc']:.3f}  Gini={m['gini']:.3f}  KS={m['ks']:.3f}")
-    f = report["fraud_authenticity"]
-    print(f" Fraud detection (Turnover-Authenticity alone):")
-    print(f"   {'':24s} AUC={f['auc']:.3f}  Gini={f['gini']:.3f}  KS={f['ks']:.3f}  "
-          f"(positives={f['positives']})")
+    cal = report.get("calibration")
+    if cal:
+        print(f"\n Probability calibration (holdout — lower Brier/ECE = more honest PD):")
+        for name, kraw, kcal, kind in [
+            ("WOE scorecard", "scorecard_raw", "scorecard_calibrated", "scorecard_kind"),
+            ("Monotonic LightGBM", "gbm_raw", "gbm_calibrated", "gbm_kind")]:
+            r, c = cal[kraw], cal[kcal]
+            print(f"   {name:20s} raw  Brier={r['brier']:.4f} ECE={r['ece']:.3f}  ->  "
+                  f"calibrated({cal[kind]:8s}) Brier={c['brier']:.4f} ECE={c['ece']:.3f}")
+
+    print(f"\n Fraud / authenticity detection (holdout):")
+    fc, fa, fe = (report["fraud_authenticity"], report.get("fraud_anomaly"),
+                  report.get("fraud_ensemble"))
+    print(f"   {'Authenticity composite':30s} AUC={fc['auc']:.3f}  KS={fc['ks']:.3f}  "
+          f"(positives={fc['positives']})")
+    if fa:
+        print(f"   {'Isolation Forest (unsup.)':30s} AUC={fa['auc']:.3f}  KS={fa['ks']:.3f}")
+    if fe:
+        print(f"   {'Ensemble (composite + IF)':30s} AUC={fe['auc']:.3f}  KS={fe['ks']:.3f}"
+              f"   <- fraud lift")
     psi = report["psi_max"]
     psi_band = "stable" if psi < 0.1 else ("moderate" if psi < 0.25 else "significant shift")
     print(f"\n Stability: max PSI (train vs holdout) = {psi:.4f} ({psi_band})")

@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 
+from .calibration import PostHocCalibrator, out_of_fold_pd
 from .woe import WOEBinner
 
 # Standard scorecard scaling: PDO points-to-double-the-odds.
@@ -24,10 +25,13 @@ class WOEScorecard:
         self.binner = WOEBinner(n_bins=n_bins)
         self.iv_floor = iv_floor
         self.features_: List[str] = []
-        # No class_weight balancing here: we need CALIBRATED probabilities for the
-        # displayed PD, not just ranking. (The eval harness uses its own balanced
-        # baseline for discrimination.)
+        # No class_weight balancing: it wrecks the raw probability level. Instead we
+        # keep the linear model for interpretable point contributions AND fit a
+        # post-hoc calibrator (on out-of-fold PDs) so the DISPLAYED probability is
+        # honest, not just well-ranked. Calibration reshapes the probability only —
+        # the additive point-contribution reason path is unchanged.
         self.model = LogisticRegression(max_iter=1000)
+        self.calibrator = PostHocCalibrator(method="auto")
         self._factor = _PDO / np.log(2)
         self._offset = _BASE_SCORE - self._factor * np.log(_BASE_ODDS)
 
@@ -39,13 +43,24 @@ class WOEScorecard:
             self.features_ = sorted(X.columns, key=lambda c: -self.binner.iv_.get(c, 0))[:10]
         Xw = self.binner.transform(X)[self.features_]
         self.model.fit(Xw, y)
+        # Calibrate on cross-validated (out-of-fold) predictions, never in-sample.
+        oof = out_of_fold_pd(lambda: LogisticRegression(max_iter=1000), Xw, y)
+        self.calibrator.fit(oof, y)
         return self
 
     def _woe(self, X: pd.DataFrame) -> pd.DataFrame:
         return self.binner.transform(X)[self.features_]
 
-    def predict_pd(self, X: pd.DataFrame) -> np.ndarray:
+    @property
+    def calibration_kind(self) -> str:
+        return getattr(self.calibrator, "kind_", "identity")
+
+    def predict_pd_raw(self, X: pd.DataFrame) -> np.ndarray:
+        """Uncalibrated model probability (kept for eval before/after comparison)."""
         return self.model.predict_proba(self._woe(X))[:, 1]
+
+    def predict_pd(self, X: pd.DataFrame) -> np.ndarray:
+        return self.calibrator.transform(self.predict_pd_raw(X))
 
     def credit_score_300_900(self, X: pd.DataFrame) -> np.ndarray:
         """Optional bureau-style analogue derived from PD odds."""

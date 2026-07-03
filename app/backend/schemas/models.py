@@ -49,5 +49,9 @@ class HealthCard(BaseModel):
     reasons_positive: List[ReasonCode] = []
     reasons_negative: List[ReasonCode] = []
     turnover_authenticity_score: float = Field(ge=0, le=100)
+    # Unsupervised fraud cross-check (Isolation Forest) + blended fraud risk.
+    anomaly_score: Optional[float] = None           # 0-100, higher = more unusual profile
+    fraud_risk_score: Optional[float] = None        # 0-100, blended authenticity + anomaly
+    fraud_band: Optional[str] = None                # Low / Moderate / Elevated
     peer_segment: Optional[str] = None
     indicative_limit: Optional[float] = None

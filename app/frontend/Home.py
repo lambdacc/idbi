@@ -64,8 +64,10 @@ st.subheader("2 · Run")
 c1, c2 = st.columns([1, 2])
 with c1:
     staged = st.toggle("Staged reveal", value=True,
-                       help="Animated 9-stage pipeline. Turn off for Instant mode "
-                            "(skip straight to the Health Card).")
+                       help="Watch the assessment build step by step — each stage leaves behind a "
+                            "plain-language record of what it found and why, so the final score is "
+                            "never a black box. Turn off for Instant mode (skip straight to the "
+                            "Financial Health Card for repeat runs or quick Q&A).")
 with c2:
     go = st.button("▶  Run Assessment", type="primary", use_container_width=True)
 

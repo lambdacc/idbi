@@ -18,6 +18,7 @@ import html
 import streamlit as st
 
 from app.frontend.components import charts, state
+from app.frontend.components.glossary import GLOSSARY
 from app.frontend.components.stage import render_reasons
 from app.frontend.components.ui import (auth_class, badge, band_class, confidence_class,
                                         fmt_inr, kpi, page_setup, risk_class, score_class)
@@ -44,6 +45,14 @@ st.markdown(
     f"Indicative limit <b>{fmt_inr(hc.indicative_limit)}</b> &nbsp;·&nbsp; "
     f"Onboarding band <b>{hc.onboarding_band.replace('_',' ')}</b></div>", unsafe_allow_html=True)
 
+# Plain-language verdict — the Issue-1 centrepiece (backend-generated, §CB-9).
+# Sentence 1 carries the band tone, the driver is neutral, the divergence note is a risk.
+_verdict_tones = [band_class(hc.onboarding_band), "neutral", "risk"]
+for _i, _sentence in enumerate(a.verdict):
+    _tone = _verdict_tones[_i] if _i < len(_verdict_tones) else "neutral"
+    st.markdown(f"<div class='cp-finding {_tone}'>{html.escape(_sentence)}</div>",
+                unsafe_allow_html=True)
+
 st.write("")
 left, right = st.columns([1, 1])
 with left:
@@ -52,24 +61,41 @@ with left:
                     use_container_width=True)
 with right:
     st.subheader("Dimension Scores")
+    _show_eng = state.is_technical()
     for p in hc.pillars:
         cls = score_class(p.score)
+        eng = (f" <span class='cp-scn'>({html.escape(p.engineering_name)})</span>"
+               if _show_eng else "")
         st.markdown(
             f"<div style='display:flex;justify-content:space-between;padding:.3rem 0'>"
-            f"<span>{html.escape(p.label)} "
-            f"<span class='cp-scn'>({html.escape(p.engineering_name)})</span></span>"
+            f"<span>{html.escape(p.label)}{eng}</span>"
             f"{badge(f'{p.score:.0f}/100', cls)}</div>", unsafe_allow_html=True)
 
 st.divider()
-k = st.columns(4)
+# "Model PD" is technical-only wording (G4); in simple mode call it by its meaning.
+pd_label = "Model PD" if state.is_technical() else "Estimated default risk"
+# Fraud risk (blended authenticity + unsupervised anomaly cross-check) sits next to
+# the flagship authenticity KPI when available; tone by band.
+_fraud_tone = {"Elevated": "risk", "Moderate": "warn", "Low": "good"}
+has_fraud = hc.fraud_band is not None
+k = st.columns(5 if has_fraud else 4)
 k[0].markdown(kpi("Turnover authenticity", f"{hc.turnover_authenticity_score:.0f}<small>/100</small>",
-              "Flagship check", auth_class(hc.turnover_authenticity_score)), unsafe_allow_html=True)
-k[1].markdown(kpi("Model PD", f"{out['pd']:.1%}", out["risk_category"] + " risk",
-              risk_class(out["risk_category"])), unsafe_allow_html=True)
-k[2].markdown(kpi("Bureau-style score", f"{out['credit_score_300_900']}<small>/900</small>",
-              "300-900 analogue"), unsafe_allow_html=True)
-k[3].markdown(kpi("Data confidence", out["confidence_band"], out["sources_connected"],
-              confidence_class(out["confidence_band"])), unsafe_allow_html=True)
+              "Flagship check", auth_class(hc.turnover_authenticity_score),
+              tip=GLOSSARY["authenticity"]), unsafe_allow_html=True)
+_i = 1
+if has_fraud:
+    k[1].markdown(kpi("Fraud risk", hc.fraud_band,
+                  f"{(hc.fraud_risk_score or 0):.0f}/100 blended",
+                  _fraud_tone.get(hc.fraud_band, "info"),
+                  tip=GLOSSARY["fraud_risk"]), unsafe_allow_html=True)
+    _i = 2
+k[_i].markdown(kpi(pd_label, f"{out['pd']:.1%}", out["risk_category"] + " risk",
+              risk_class(out["risk_category"]), tip=GLOSSARY["pd"]), unsafe_allow_html=True)
+k[_i + 1].markdown(kpi("Bureau-style score", f"{out['credit_score_300_900']}<small>/900</small>",
+              "300-900 analogue", tip=GLOSSARY["bureau_score"]), unsafe_allow_html=True)
+k[_i + 2].markdown(kpi("Data confidence", out["confidence_band"], out["sources_connected"],
+              confidence_class(out["confidence_band"]), tip=GLOSSARY["confidence"]),
+              unsafe_allow_html=True)
 
 st.divider()
 st.subheader("Key Strengths & Risks")
@@ -85,11 +111,11 @@ if auth_reason:
 
 # Honest synthetic-data disclosure + ground-truth reveal for judges.
 with st.expander("Synthetic ground truth (for verification)"):
-    st.caption("All data is synthetic. The latent ground-truth labels below are hidden from the "
+    st.caption("All data is synthetic. The true ground-truth labels below are hidden from the "
                "model's scoring path — shown only so you can confirm the assessment caught what it should.")
     g1, g2 = st.columns(2)
-    g1.metric("Latent health", str(a.entity.get("_true_health", "—")))
-    g2.metric("Latent honesty", str(a.entity.get("_true_honesty", "—")))
+    g1.metric("True health", str(a.entity.get("_true_health", "—")))
+    g2.metric("True honesty", str(a.entity.get("_true_honesty", "—")))
     if a.entity.get("_true_honesty") == "inflated":
         st.warning("This entity's declared turnover is inflated above its true scale — the "
                    "Turnover-Authenticity composite is designed to catch exactly this, even when "

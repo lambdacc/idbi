@@ -14,12 +14,17 @@ from collections import defaultdict
 import streamlit as st
 
 from app.backend.services.pipeline_orchestrator import COMPOSITE_CATALOG, SOURCE_CATALOG
+from app.frontend.components import state
 from app.frontend.components.ui import page_setup
 
 page_setup("Architecture", icon="🏗️")
 
 st.title("Solution Architecture")
 st.caption("Single Cloud-Run container · Python-first · deterministic-first, explainable-by-construction")
+
+if not state.is_technical():
+    st.info("This page shows the system's internal architecture — switch to **Technical** view in "
+            "the sidebar for full engineering detail.")
 
 _DOT = """
 digraph CreditPulse {
@@ -66,8 +71,9 @@ with c1:
 with c2:
     st.subheader("Model & Synthesis Stack")
     st.markdown(
-        "- **WOE/IV logistic scorecard** — interpretable PD backbone\n"
-        "- **Monotonic LightGBM** — bank-defensible PD lift (hard constraints)\n"
+        "- **WOE/IV logistic scorecard** — interpretable, **probability-calibrated** PD backbone\n"
+        "- **Monotonic LightGBM** — bank-defensible, **probability-calibrated** PD lift (hard constraints)\n"
+        "- **Isolation Forest** — unsupervised fraud/anomaly cross-check (label-free)\n"
         "- **Deterministic pillar→composite→grade** — provably monotonic\n"
         "- **K-Means** — descriptive peer segmentation (silhouette k)\n"
         "- **Confidence score** — IV × source-breadth\n"

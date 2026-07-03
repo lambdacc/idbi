@@ -26,6 +26,7 @@ from .models.scorecard import WOEScorecard
 from .models.gbm import MonotonicGBM
 from .models.clustering import PeerSegmenter
 from .models.confidence_score import ConfidenceScorer
+from .models.anomaly import AnomalyDetector
 from .explainability.reason_codes import generate_reason_codes
 from .explainability.shap_explainer import ShapExplainer
 
@@ -86,6 +87,7 @@ class ScoringEngine:
         self.gbm = MonotonicGBM()
         self.segmenter = PeerSegmenter()
         self.confidence = ConfidenceScorer()
+        self.anomaly = AnomalyDetector()
         self.shap: ShapExplainer | None = None
         self._present_by_source: Dict[str, set] = {}
         self._data_sources: List[str] = []
@@ -109,6 +111,9 @@ class ScoringEngine:
         self._pillar_cols = list(pillar_mat.columns)
         self._pillar_mat = pillar_mat
         self.segmenter.fit(pillar_mat)
+
+        # Unsupervised fraud cross-check over cross-source consistency signals.
+        self.anomaly.fit(fm)
 
         # Confidence weights from IV per source. Exclude derived composites — they
         # aren't an independent data source for the completeness measure.
@@ -165,6 +170,8 @@ class ScoringEngine:
         pillar_row = pd.DataFrame([pillar_scores])[self._pillar_cols]
         seg_id = self.segmenter.predict(pillar_row)
 
+        fraud = self.anomaly.assess(feats)
+
         return {
             "entity_id": entity_id,
             "name": self.tables["msme_master"].set_index("entity_id").loc[entity_id].get("name", entity_id),
@@ -177,12 +184,17 @@ class ScoringEngine:
             "recommendation": recommendation,
             "pd": round(pds["pd_blended"], 4),
             "pd_detail": {k: round(v, 4) for k, v in pds.items()},
+            "pd_calibration": self.scorecard.calibration_kind,
             "risk_category": self._risk_category(pds["pd_blended"]),
             "credit_score_300_900": int(self.scorecard.credit_score_300_900(X)[0]),
             "confidence": round(conf, 3),
             "confidence_band": self.confidence.band(conf),
             "sources_connected": self.confidence.sources_connected(present),
             "turnover_authenticity_score": feats.get("turnover_authenticity_score", 0.0),
+            "anomaly_score": fraud["anomaly_score"],
+            "fraud_risk_score": fraud["fraud_risk_score"],
+            "fraud_band": fraud["fraud_band"],
+            "fraud_signals": fraud["n_signals"],
             "peer_segment": self.segmenter.name(seg_id),
             "indicative_limit": self.pillars.indicative_limit(band, annual_turnover),
             "reasons_positive": pos,
