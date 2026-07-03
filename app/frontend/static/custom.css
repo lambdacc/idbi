@@ -47,6 +47,12 @@
 }
 
 /* ---- Base surface + typography ------------------------------------------- */
+/* Always reserve the vertical scrollbar's space so navigating between a short
+   page (no scrollbar) and a tall one (scrollbar) does not shift the centered
+   content sideways. */
+html, [data-testid="stAppViewContainer"], [data-testid="stMain"], section.main {
+  scrollbar-gutter: stable;
+}
 .stApp { background: var(--cp-bg); }
 html, body, [class*="css"] {
   font-family: var(--cp-sans);

@@ -81,7 +81,3 @@ if go:
     else:
         st.switch_page("pages/3_Financial_Health_Card.py")
 
-st.divider()
-st.caption("Offline: `make data-gen` · `make eval` (holdout scorecard) · `make train` "
-           "(6-archetype demo) · `make demo` (this app).")
-
