@@ -101,9 +101,14 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
      settles"). Snap width instantly; the collapse control still works. */
   transition: none !important;
 }
+/* Reclaim the tall sidebar header: it reserves ~78px for an unused st.logo
+   spacer + padding, pushing the wordmark down. Collapse the spacer and trim the
+   header so the brand sits near the top; the collapse control still works. */
+[data-testid="stSidebar"] [data-testid="stSidebarHeader"] { padding-top: .5rem; padding-bottom: 0; min-height: 0; }
+[data-testid="stSidebar"] [data-testid="stLogoSpacer"] { display: none; }
 /* Brand-above-nav reorder (Streamlit 1.39 paints nav above user content). */
 [data-testid="stSidebar"] [data-testid="stSidebarContent"] { display: flex; flex-direction: column; }
-[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] { order: 1; padding-top: .4rem; }
+[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] { order: 1; padding-top: .35rem; margin-top: 0; }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] { order: 2; }
 [data-testid="stSidebar"] * { color: #eaf1fb; }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] { margin-top: .6rem; border-top: 1px solid rgba(255,255,255,.14); padding-top: .5rem; }
@@ -116,7 +121,6 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] { background: rgba(255,255,255,.16); }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] span { font-weight: 600; }
 [data-testid="stSidebar"] .cp-brand { font-size: 1.55rem; padding: .2rem 0 0 0; }
-[data-testid="stSidebar"] .cp-brand-sub { font-family: var(--cp-sans); font-size: .74rem; color: #eaf1fb; opacity: .78; line-height: 1.4; margin-top: .1rem; }
 
 /* ---- Wordmark ("Credit" upright + "Pulse" italic accent) ----------------- */
 .cp-logo { font-family: var(--cp-serif); font-weight: 500; letter-spacing: -.022em; white-space: nowrap; }

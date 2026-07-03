@@ -51,10 +51,7 @@ def page_setup(title: str, icon: str = "") -> None:
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
         _inject_css(css)
     with st.sidebar:
-        st.markdown(
-            f"<div class='cp-brand'>{brandmark()}</div>"
-            "<div class='cp-brand-sub'>MSME financial health card · IDBI Innovate 2026</div><br>",
-            unsafe_allow_html=True)
+        st.markdown(f"<div class='cp-brand'>{brandmark()}</div>", unsafe_allow_html=True)
 
     # Global Simple/Technical view toggle (design decision D3). Default
     # "simple"; initialise without clobbering an existing choice, then bind the
