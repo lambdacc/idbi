@@ -23,32 +23,32 @@ from app.backend.services.pipeline_orchestrator import list_scenarios, random_en
 from app.frontend.components import state
 from app.frontend.components.ui import badge, fmt_inr, page_setup
 
-page_setup("Home", icon="📊")
+page_setup("Home")
 
 st.title("CreditPulse")
-st.caption("MSME Financial Health Card · IDBI Innovate 2026 · PS3 — "
-           "deterministic-first, explainable-by-construction")
+st.caption("MSME financial health card · IDBI Innovate 2026 · PS3 · "
+           "deterministic-first, explainable by construction")
 
 st.markdown(
-    "<div class='cp-card'>Fuse an MSME's fragmented digital footprint — GST, banking, "
-    "UPI, EPFO, bureau, e-way bills, electricity, licences, procurement and more — into "
-    "one explainable Financial Health Card, with a <b>Turnover-Authenticity</b> check that "
+    "<div class='cp-card'>Fuse an MSME's fragmented digital footprint (GST, banking, "
+    "UPI, EPFO, bureau, e-way bills, electricity, licences, procurement and more) into "
+    "one explainable financial health card, with a <b>turnover-authenticity</b> check that "
     "is harder to fake than any single document.</div>", unsafe_allow_html=True)
 
 engine = state.get_engine()
 scenarios = list_scenarios(engine)
 
-st.subheader("1 · Choose a Business to Assess")
+st.subheader("1 · Choose a business to assess")
 
-RANDOM = "🎲  Random MSME (varies each run)"
-labels = {f"{s['name']}  —  {s['sector']} · {s['category']}": s for s in scenarios}
+RANDOM = "Random MSME (varies each run)"
+labels = {f"{s['name']}  ·  {s['sector']} · {s['category']}": s for s in scenarios}
 choice = st.radio("Demo archetypes", list(labels.keys()) + [RANDOM],
                   label_visibility="collapsed")
 
 if choice == RANDOM:
     st.markdown(
         "<div class='cp-card'><b>Random MSME</b><div class='cp-scn'>A randomised entity "
-        "from the synthetic cohort — demonstrates the pipeline is adaptive, not scripted.</div></div>",
+        "from the synthetic cohort. Demonstrates the pipeline is adaptive, not scripted.</div></div>",
         unsafe_allow_html=True)
     selected_id = None
 else:
@@ -64,12 +64,12 @@ st.subheader("2 · Run")
 c1, c2 = st.columns([1, 2])
 with c1:
     staged = st.toggle("Staged reveal", value=True,
-                       help="Watch the assessment build step by step — each stage leaves behind a "
+                       help="Watch the assessment build step by step. Each stage leaves behind a "
                             "plain-language record of what it found and why, so the final score is "
-                            "never a black box. Turn off for Instant mode (skip straight to the "
-                            "Financial Health Card for repeat runs or quick Q&A).")
+                            "never a black box. Turn off for instant mode (skip straight to the "
+                            "financial health card for repeat runs or quick Q&A).")
 with c2:
-    go = st.button("▶  Run Assessment", type="primary", use_container_width=True)
+    go = st.button("Run assessment", type="primary", use_container_width=True)
 
 if go:
     entity_id = selected_id or random_entity_id(engine)
@@ -84,3 +84,4 @@ if go:
 st.divider()
 st.caption("Offline: `make data-gen` · `make eval` (holdout scorecard) · `make train` "
            "(6-archetype demo) · `make demo` (this app).")
+

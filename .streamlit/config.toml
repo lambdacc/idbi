@@ -1,12 +1,12 @@
-# Pin the light base theme so the custom banking palette renders identically
-# regardless of the viewer's OS/browser dark-mode preference (custom.css forces
-# white surfaces; without this, dark-theme widget text lands on white panels).
+# Pin the light "Ledger" palette so widgets render identically regardless of the
+# viewer's OS/browser dark-mode preference (custom.css forces warm-paper surfaces;
+# without this pin, dark-theme widget text lands on light panels).
 [theme]
 base = "light"
-primaryColor = "#0b3d75"
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f4f6fa"
-textColor = "#1b2733"
+primaryColor = "#1f5a45"
+backgroundColor = "#fbfaf6"
+secondaryBackgroundColor = "#f4f1e9"
+textColor = "#201d18"
 
 [browser]
 gatherUsageStats = false

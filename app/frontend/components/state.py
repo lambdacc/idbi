@@ -18,7 +18,7 @@ _PLAYED_KEY = "cp_pipeline_played"
 _VIEW_MODE_KEY = "cp_view_mode"
 
 
-@st.cache_resource(show_spinner="First launch: fitting the scoring models on the synthetic cohort — one time, about ten seconds. Later runs load instantly.")
+@st.cache_resource(show_spinner="First launch: fitting the scoring models on the synthetic cohort, one time, about ten seconds. Later runs load instantly.")
 def get_engine() -> ScoringEngine:
     return _get_engine()
 
@@ -43,7 +43,13 @@ def require_assessment() -> Optional[Assessment]:
     """Guard for pages that need a run; nudges the user to Home if none exists."""
     a = get_assessment()
     if a is None:
-        st.info("No assessment yet — pick a scenario on the **Home** page and click **Run Assessment**.")
+        st.markdown(
+            "<div class='cp-card' style='border-top:3px solid var(--cp-navy)'>"
+            "<h4>No assessment yet</h4>"
+            "Pick a business on the <b>Home</b> page and click <b>Run assessment</b>. "
+            "The health card, pipeline and explainability views populate from that run."
+            "</div>", unsafe_allow_html=True)
+        st.page_link("Home.py", label="Go to Home")
         st.stop()
     return a
 

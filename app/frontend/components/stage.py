@@ -73,7 +73,7 @@ def render_source_grid(sources: List[dict], per_row: int = 6, limit: int | None 
             rc = f"{src['records']} rec" if src["connected"] else "not on file"
             col.markdown(
                 f"<div class='cp-src {on}'><div class='nm'>{html.escape(src['label'])}</div>"
-                f"<div class='rc'>{'✓ ' if src['connected'] else ''}{rc}</div></div>",
+                f"<div class='rc'>{rc}</div></div>",
                 unsafe_allow_html=True)
 
 
@@ -81,10 +81,11 @@ def render_composites(composites: List[dict]) -> None:
     for c in composites:
         flag = "flagship" if c.get("flagship") else ""
         srcs = " · ".join(c["sources"])
-        star = "★ " if c.get("flagship") else ""
+        tag = ("<span class='cp-badge good' style='margin-right:.4rem'>flagship</span>"
+               if c.get("flagship") else "")
         st.markdown(
             f"<div class='cp-comp {flag}'><div class='hd'>"
-            f"<span class='nm'>{star}{html.escape(c['label'])}</span>"
+            f"<span class='nm'>{tag}{html.escape(c['label'])}</span>"
             f"<span class='vl'>{html.escape(c['display'])}</span></div>"
             f"<div class='rt'>{html.escape(c['rationale'])}</div>"
             f"<div class='sr'>sources: {html.escape(srcs)}</div></div>",
@@ -94,7 +95,7 @@ def render_composites(composites: List[dict]) -> None:
 def render_reasons(positives: List[dict], negatives: List[dict]) -> None:
     col_a, col_b = st.columns(2)
     with col_a:
-        st.markdown("**Key Strengths**")
+        st.markdown("**Key strengths**")
         if not positives:
             st.caption("No material strengths above threshold.")
         for r in positives:
@@ -102,7 +103,7 @@ def render_reasons(positives: List[dict], negatives: List[dict]) -> None:
                 f"<div class='cp-reason pos'><span class='mk'>+</span>"
                 f"<span class='tx'>{html.escape(r['text'])}</span></div>", unsafe_allow_html=True)
     with col_b:
-        st.markdown("**Key Risks**")
+        st.markdown("**Key risks**")
         if not negatives:
             st.caption("No material risks above threshold.")
         for r in negatives:
@@ -159,7 +160,7 @@ def render_technique(technique: dict | None, technical: bool) -> None:
         method = (f"<div class='method'>Method: "
                   f"{html.escape(str(technique['algorithm']))}</div>")
     st.markdown(
-        f"<div class='cp-technique'><span class='chip'>⚙ Technique</span>"
+        f"<div class='cp-technique'><span class='chip'>Technique</span>"
         f"<span class='nm'>{plain}</span>"
         f"<div class='bn'>{benefit}</div>{method}</div>",
         unsafe_allow_html=True)
@@ -195,10 +196,10 @@ def render_detail(container, stage, entity_name: str, technical: bool,
         if stage.key == "scenario_lock_in":
             e = d["entity"]
             cols = st.columns(5)
-            cols[0].markdown(kpi("Sector", e.get("sector", "—")), unsafe_allow_html=True)
-            cols[1].markdown(kpi("Udyam category", e.get("category", "—")), unsafe_allow_html=True)
-            cols[2].markdown(kpi("Vintage", f"{e.get('age_years', '—')} y"), unsafe_allow_html=True)
-            cols[3].markdown(kpi("Employees", str(e.get("employees", "—"))), unsafe_allow_html=True)
+            cols[0].markdown(kpi("Sector", e.get("sector", "-")), unsafe_allow_html=True)
+            cols[1].markdown(kpi("Udyam category", e.get("category", "-")), unsafe_allow_html=True)
+            cols[2].markdown(kpi("Vintage", f"{e.get('age_years', '-')} y"), unsafe_allow_html=True)
+            cols[3].markdown(kpi("Employees", str(e.get("employees", "-"))), unsafe_allow_html=True)
             cols[4].markdown(kpi("Declared turnover", fmt_inr(e.get("declared_turnover"))),
                              unsafe_allow_html=True)
 
@@ -237,8 +238,8 @@ def render_detail(container, stage, entity_name: str, technical: bool,
             ftone = {"Elevated": "risk", "Moderate": "warn", "Low": "good"}.get(band, "neutral")
             frisk = fraud.get("fraud_risk_score")
             auth = fraud.get("authenticity_score")
-            frisk_txt = f"{frisk:.0f}/100" if isinstance(frisk, (int, float)) else "—"
-            auth_txt = f"{auth:.0f}/100" if isinstance(auth, (int, float)) else "—"
+            frisk_txt = f"{frisk:.0f}/100" if isinstance(frisk, (int, float)) else "-"
+            auth_txt = f"{auth:.0f}/100" if isinstance(auth, (int, float)) else "-"
             st.markdown(
                 f"<div class='cp-finding {ftone}'><b>Fraud risk: {html.escape(band)}</b> "
                 f"&nbsp;·&nbsp; blended score {html.escape(frisk_txt)} "
@@ -247,11 +248,11 @@ def render_detail(container, stage, entity_name: str, technical: bool,
             if technical:
                 anom = fraud.get("anomaly_score")
                 sig = fraud.get("signals")
-                anom_txt = f"{anom:.0f}/100" if isinstance(anom, (int, float)) else "—"
+                anom_txt = f"{anom:.0f}/100" if isinstance(anom, (int, float)) else "-"
                 fc = st.columns(2)
                 fc[0].markdown(kpi("Profile anomaly", anom_txt,
                                "raw unsupervised score"), unsafe_allow_html=True)
-                fc[1].markdown(kpi("Label-free signals", str(sig if sig is not None else "—"),
+                fc[1].markdown(kpi("Label-free signals", str(sig if sig is not None else "-"),
                                "consistency features cross-checked"), unsafe_allow_html=True)
 
         elif stage.key == "clustering":
@@ -285,7 +286,7 @@ def render_detail(container, stage, entity_name: str, technical: bool,
         elif stage.key == "explainability":
             render_reasons(d["reasons_positive"], d["reasons_negative"])
             if technical and d["shap_top"]:
-                st.markdown("**SHAP cross-check** — monotonic GBM PD path")
+                st.markdown("**SHAP cross-check**, monotonic GBM PD path")
                 st.plotly_chart(charts.shap_waterfall(d["shap_top"], feature_label),
                                 use_container_width=True, key=_ck("shap"))
 
@@ -296,9 +297,9 @@ def render_detail(container, stage, entity_name: str, technical: bool,
                 f"<small>/100</small></div><div class='meta'>"
                 f"<div class='name'>{html.escape(str(hc['name']))}</div>"
                 f"<div class='subtle'>Grade {hc['grade']}/10 · {hc['recommendation']} · "
-                f"Confidence {hc['confidence']}</div></div></div>", unsafe_allow_html=True)
+                f"confidence {hc['confidence']}</div></div></div>", unsafe_allow_html=True)
             st.page_link("pages/3_Financial_Health_Card.py",
-                         label="📋  Open the full Financial Health Card", use_container_width=True)
+                         label="Open the full health card", use_container_width=True)
 
 
 # ------------------------------------------------- persistent notebook cell

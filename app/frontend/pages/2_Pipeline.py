@@ -29,7 +29,7 @@ from app.frontend.components.stage import (console_html, render_detail,
                                            render_stage_cell, stage_list_html)
 from app.frontend.components.ui import page_setup
 
-page_setup("Pipeline", icon="⚙️")
+page_setup("Pipeline")
 a = state.require_assessment()
 technical = state.is_technical()
 
@@ -42,18 +42,18 @@ def cell_detail(container, stage) -> None:
 
 
 # ------------------------------------------------------------------ header
-st.title("Assessment Pipeline")
+st.title("Assessment pipeline")
 st.caption(f"{a.entity['name']} · {a.entity.get('sector', '')} · "
-           f"{a.entity.get('category', '')} — end-to-end alternate-data assessment")
+           f"{a.entity.get('category', '')} · end-to-end alternate-data assessment")
 
 top = st.columns([1, 1, 2])
 instant = st.session_state.get("cp_instant", False)
 with top[0]:
-    if st.button("⏩  Instant (skip)", use_container_width=True):
+    if st.button("Skip to result", use_container_width=True):
         state.mark_played()
         instant = True
 with top[1]:
-    if st.button("↻  Replay", use_container_width=True):
+    if st.button("Replay", use_container_width=True):
         st.session_state["cp_pipeline_played"] = False
         st.rerun()
 
@@ -115,7 +115,7 @@ if play:
                 render_stage_cell(s, technical, expanded=False, detail_fn=cell_detail)
 
     stage_ph.markdown(stage_list_html(stages, len(stages) + 1), unsafe_allow_html=True)
-    bar.progress(1.0, text="Assessment complete ✓")
+    bar.progress(1.0, text="Assessment complete")
     # Run finished: clear the live area — the notebook cells are the record.
     detail_ph.empty()
     with cells:
@@ -124,7 +124,7 @@ if play:
 else:
     # Completed / instant / already-played: no animation, the full 9-cell record.
     stage_ph.markdown(stage_list_html(stages, len(stages) + 1), unsafe_allow_html=True)
-    progress_ph.progress(1.0, text="Assessment complete ✓")
+    progress_ph.progress(1.0, text="Assessment complete")
     if console_ph is not None:
         all_lines = [ln for s in stages for ln in s.log]
         console_ph.markdown(console_html(all_lines, short=True), unsafe_allow_html=True)

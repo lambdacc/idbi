@@ -8,13 +8,16 @@ from typing import Optional
 import streamlit as st
 
 _CSS = Path(__file__).resolve().parents[1] / "static" / "custom.css"
+_FAVICON = Path(__file__).resolve().parents[1] / "static" / "favicon.png"
 
-# Semantic palette (mirrors custom.css :root)
-GREEN, AMBER, RED, NAVY, BLUE = "#147347", "#8f5c13", "#c0392b", "#0b3d75", "#1466b8"
+# Semantic palette (mirrors custom.css :root). Pine doubles as accent + positive.
+GREEN, AMBER, RED, NAVY, BLUE = "#1f5a45", "#8a5a12", "#a2331f", "#1f5a45", "#1f5a45"
 
 
-def page_setup(title: str, icon: str = "📊") -> None:
-    st.set_page_config(page_title=f"CreditPulse · {title}", page_icon=icon, layout="wide")
+def page_setup(title: str, icon: str = "") -> None:
+    # A single pine monogram favicon replaces the old per-page emoji icons.
+    page_icon = str(_FAVICON) if _FAVICON.exists() else None
+    st.set_page_config(page_title=f"CreditPulse · {title}", page_icon=page_icon, layout="wide")
     if _CSS.exists():
         st.markdown(f"<style>{_CSS.read_text()}</style>", unsafe_allow_html=True)
     with st.sidebar:
@@ -93,3 +96,29 @@ def fmt_inr(x: Optional[float]) -> str:
     if x >= 1e5:
         return f"₹{x / 1e5:.1f} L"
     return f"₹{x:,.0f}"
+
+
+def dimension_bars(pillars, show_eng: bool = False) -> str:
+    """Render the five dimension scores as horizontal bullet bars (the Ledger
+    replacement for the radar). Each `pillar` is either a pydantic Pillar or a
+    dict carrying `label`, `score`, and optionally `engineering_name`."""
+    rows = []
+    for p in pillars:
+        label = getattr(p, "label", None) or p["label"]
+        score = getattr(p, "score", None)
+        if score is None:
+            score = p["score"]
+        eng_name = getattr(p, "engineering_name", None)
+        if eng_name is None and isinstance(p, dict):
+            eng_name = p.get("engineering_name")
+        cls = score_class(float(score))
+        pct = max(0.0, min(100.0, float(score)))
+        eng = (f" <span class='eng'>({html.escape(str(eng_name))})</span>"
+               if show_eng and eng_name else "")
+        rows.append(
+            f"<div class='cp-dimbar {cls}'>"
+            f"<div class='row'><span class='k'>{html.escape(str(label))}{eng}</span>"
+            f"<span class='v'>{float(score):.0f}<small>/100</small></span></div>"
+            f"<div class='track'><div class='fill' style='width:{pct:.0f}%'></div></div>"
+            f"</div>")
+    return "".join(rows)

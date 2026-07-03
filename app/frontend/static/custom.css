@@ -1,372 +1,364 @@
-/* CreditPulse — banking-grade styling (implementation-plan §6.3, demo-architecture.md).
-   White background, light-gray panels, deep-blue accent; green/amber/red reserved
-   for risk semantics only. No default Streamlit look. */
+/* CreditPulse - "Ledger" design system.
+   A credit rating memo brought to screen: warm paper, ink text, one pine-green
+   accent, semantic red/amber reserved for risk. Editorial serif for display,
+   grotesk for UI, mono for every numeral. Light theme only, one radius scale,
+   hairline rules instead of boxed shadows. Class names are preserved so the
+   Python render helpers keep working unchanged. */
+
+/* ---- Fonts (self-describing roles) --------------------------------------- */
+@import url("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Schibsted+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 
 :root {
   color-scheme: light;
-  --cp-bg: #ffffff;
-  --cp-panel: #f4f6fa;
-  --cp-panel-2: #eef2f8;
-  --cp-border: #dbe2ec;
-  --cp-navy: #0b3d75;
-  --cp-navy-deep: #072a52;
-  --cp-blue: #1466b8;
-  --cp-ink: #1b2733;
-  --cp-muted: #647587;
-  --cp-green: #147347;   /* dark enough for AA as small text on --cp-green-bg */
-  --cp-green-bg: #e6f5ec;
-  --cp-amber: #8f5c13;   /* dark enough for AA as small text on --cp-amber-bg */
-  --cp-amber-bg: #fdf3e0;
-  --cp-red: #c0392b;
-  --cp-red-bg: #fbecea;
-  --cp-radius: 14px;
-  --cp-shadow: 0 1px 3px rgba(11, 61, 117, 0.08), 0 4px 16px rgba(11, 61, 117, 0.06);
+
+  /* Surfaces (warm paper family, no pure white, no dark surfaces) */
+  --cp-bg:        #fbfaf6;   /* base paper */
+  --cp-panel:     #f4f1e9;   /* raised panel */
+  --cp-panel-2:   #ede8dc;   /* deeper panel / hover */
+  --cp-border:    #e4ddce;   /* hairline rule */
+  --cp-border-2:  #d4ccb9;   /* stronger rule */
+
+  /* Ink */
+  --cp-ink:       #201d18;   /* warm near-black text */
+  --cp-ink-soft:  #4b463c;   /* secondary text */
+  --cp-muted:     #86806f;   /* muted labels */
+
+  /* One accent: pine. Doubles as the positive/health color. */
+  --cp-navy:      #1f5a45;   /* accent (name kept for compatibility) */
+  --cp-navy-deep: #163f2f;   /* accent, deep */
+  --cp-blue:      #1f5a45;   /* mapped to the single accent */
+
+  /* Semantic risk (reserved for meaning only) */
+  --cp-green:     #1f5a45;   --cp-green-bg: #e7efe8;   --cp-green-bd: #cad9cd;
+  --cp-amber:     #8a5a12;   --cp-amber-bg: #f4e9d2;   --cp-amber-bd: #e6d3a8;
+  --cp-red:       #a2331f;   --cp-red-bg:   #f1e1db;   --cp-red-bd:   #e2c4ba;
+
+  /* Radius scale: panels 10, controls 6, tags 4. */
+  --cp-radius: 10px;
+  --cp-r:      6px;
+  --cp-r-tag:  4px;
+
+  /* Warm-tinted shadow, used sparingly (hero only). */
+  --cp-shadow: 0 1px 2px rgba(32,29,24,.05), 0 10px 30px rgba(32,29,24,.06);
+
+  --cp-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --cp-sans:  "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --cp-mono:  "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-/* Base surface + typography */
+/* ---- Base surface + typography ------------------------------------------- */
 .stApp { background: var(--cp-bg); }
 html, body, [class*="css"] {
-  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-family: var(--cp-sans);
   color: var(--cp-ink);
+  -webkit-font-smoothing: antialiased;
 }
-.block-container { padding-top: 2.2rem; max-width: 1500px; padding-left: 2rem; padding-right: 2rem; }
+.block-container { padding-top: 2.4rem; max-width: 1440px; padding-left: 2.2rem; padding-right: 2.2rem; }
 
-/* Kill the default Streamlit chrome for a product feel — but keep the header
-   present (transparent) so the sidebar collapse control survives on narrow
-   viewports. */
+/* Strip default Streamlit chrome for a product feel; keep header transparent so
+   the sidebar collapse control survives on narrow viewports. */
 #MainMenu, footer { visibility: hidden; }
 header[data-testid="stHeader"] { background: transparent; }
 [data-testid="stToolbar"] { display: none; }
+/* Streamlit's default rainbow top-loading bar clashes with the paper palette. */
+[data-testid="stDecoration"] { display: none; }
 
-/* Sidebar */
-[data-testid="stSidebar"] {
-  background: linear-gradient(180deg, var(--cp-navy-deep), var(--cp-navy));
-}
-/* Brand-above-nav reorder (Streamlit 1.39-specific): Streamlit paints the
-   multipage nav (stSidebarNav) above all user content (stSidebarUserContent).
-   Make their common container a flex column and give the user content (the
-   brand block — now the only user sidebar content) order:1, the nav order:2,
-   so the brand sits on top. Fallback-safe: if these testids ever change, the
-   rule simply no-ops and the brand stays where Streamlit put it (no breakage). */
-[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
-  display: flex;
-  flex-direction: column;
-}
-[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] { order: 1; }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] { order: 2; }
-[data-testid="stSidebar"] * { color: #eaf1fb !important; }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a { border-radius: 8px; }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:hover { background: rgba(255, 255, 255, .10); }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:focus-visible {
-  outline: 2px solid #eaf1fb; outline-offset: 1px;
-}
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] {
-  background: rgba(255, 255, 255, .16);
-}
-[data-testid="stSidebar"] .cp-brand {
-  font-size: 1.35rem; font-weight: 800; letter-spacing: .3px;
-  padding: .3rem 0 0 0;
-}
-[data-testid="stSidebar"] .cp-brand-sub { font-size: .78rem; opacity: .8; }
-
-/* Top-right Simple/Technical view toggle (relocated from the sidebar).
-   The .cp-viewtoggle-anchor marker precedes the [5, 1.4] column row that holds
-   the horizontal radio; style that radio to read as a compact segmented pill,
-   right-aligned. Targets the horizontal radio group generically but scopes to
-   the toggle row via the marker's sibling column block. */
-.cp-viewtoggle-anchor { height: 0; margin: 0; }
-.cp-viewtoggle-anchor + div [data-testid="stRadio"] > div[role="radiogroup"] {
-  justify-content: flex-end;
-  gap: 0;
-  border: 1px solid var(--cp-border);
-  border-radius: 999px;
-  padding: 2px;
-  background: var(--cp-bg);
-  width: fit-content;
-  margin-left: auto;
-}
-.cp-viewtoggle-anchor + div [data-testid="stRadio"] label {
-  margin: 0;
-  padding: .2rem .7rem;
-  border-radius: 999px;
-  font-size: .82rem;
-  cursor: pointer;
-}
-/* Keyboard focus ring preserved on the underlying radio input. */
-.cp-viewtoggle-anchor + div [data-testid="stRadio"] label:focus-within {
-  outline: 2px solid var(--cp-navy);
-  outline-offset: 1px;
-}
-
-/* Headings */
-h1 { font-weight: 800; letter-spacing: -.4px; color: var(--cp-navy-deep); }
-h2, h3 { font-weight: 700; color: var(--cp-navy-deep); }
-
-/* Generic panel / card */
-.cp-card {
-  background: var(--cp-bg);
-  border: 1px solid var(--cp-border);
-  border-radius: var(--cp-radius);
-  box-shadow: var(--cp-shadow);
-  padding: 1.1rem 1.25rem;
-  margin-bottom: 1rem;
-}
-.cp-card h4 { margin: 0 0 .5rem 0; font-size: .95rem; color: var(--cp-muted);
-  text-transform: uppercase; letter-spacing: .6px; font-weight: 700; }
-
-/* KPI metric card */
-.cp-kpi {
-  background: var(--cp-bg);
-  border: 1px solid var(--cp-border);
-  border-left: 4px solid var(--cp-blue);
-  border-radius: 12px;
-  box-shadow: var(--cp-shadow);
-  padding: .9rem 1.05rem;
-  height: 100%;
-}
-.cp-kpi .lbl { font-size: .74rem; color: var(--cp-muted); text-transform: uppercase;
-  letter-spacing: .5px; font-weight: 700; }
-.cp-kpi .val { font-size: 1.8rem; font-weight: 800; color: var(--cp-navy-deep); line-height: 1.15;
-  font-variant-numeric: tabular-nums; }
-.cp-kpi .sub { font-size: .78rem; color: var(--cp-muted); }
-.cp-kpi.good { border-left-color: var(--cp-green); }
-.cp-kpi.warn { border-left-color: var(--cp-amber); }
-.cp-kpi.risk { border-left-color: var(--cp-red); }
-
-/* Badges / pills */
-.cp-badge {
-  display: inline-block; padding: .22rem .7rem; border-radius: 999px;
-  font-size: .78rem; font-weight: 700; letter-spacing: .2px;
-}
-.cp-badge.good { background: var(--cp-green-bg); color: var(--cp-green); }
-.cp-badge.warn { background: var(--cp-amber-bg); color: var(--cp-amber); }
-.cp-badge.risk { background: var(--cp-red-bg); color: var(--cp-red); }
-.cp-badge.info { background: var(--cp-panel-2); color: var(--cp-navy); }
-
-/* Pipeline stage row */
-.cp-stage {
-  display: flex; align-items: center; gap: .7rem;
-  padding: .55rem .8rem; border-radius: 10px; margin-bottom: .4rem;
-  border: 1px solid var(--cp-border); background: var(--cp-bg);
-  transition: border-color .25s ease, background-color .25s ease,
-              box-shadow .25s ease, opacity .25s ease;
-}
-.cp-stage .idx {
-  width: 26px; height: 26px; border-radius: 50%; flex: 0 0 26px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: .8rem; font-weight: 700; background: var(--cp-panel-2); color: var(--cp-muted);
-}
-.cp-stage .ttl { font-weight: 600; font-size: .9rem; }
-.cp-stage.waiting { opacity: .55; }
-.cp-stage.running {
-  border-color: var(--cp-blue); background: #f2f8ff;
-  box-shadow: 0 0 0 3px rgba(20, 102, 184, .12);
-}
-.cp-stage.running .idx { background: var(--cp-blue); color: #fff; }
-.cp-stage.done { border-color: var(--cp-green); }
-.cp-stage.done .idx { background: var(--cp-green); color: #fff; }
-.cp-stage .status { margin-left: auto; font-size: .74rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .5px; color: var(--cp-muted); }
-.cp-stage.running .status { color: var(--cp-blue); }
-.cp-stage.done .status { color: var(--cp-green); }
-
-/* Execution console */
-.cp-console {
-  background: #0c1320; color: #cfe3ff; border-radius: 12px;
-  padding: .9rem 1rem; font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
-  font-size: .8rem; line-height: 1.55; height: 340px; overflow-y: auto;
-  border: 1px solid #1b2b45; white-space: pre-wrap;
+/* Numerals: tabular mono everywhere data lives. */
+.cp-kpi .val, .cp-hero .score, .cp-badge, .cp-console, .cp-comp .vl,
+.cp-grade, .cp-dimbar .v, .stMetric [data-testid="stMetricValue"] {
+  font-family: var(--cp-mono);
   font-variant-numeric: tabular-nums;
 }
+
+/* ---- Headings (editorial serif) ------------------------------------------ */
+h1, h2, h3, h4 { font-family: var(--cp-serif); color: var(--cp-ink); text-wrap: balance; }
+h1 { font-weight: 560; font-size: 2.45rem; letter-spacing: -.015em; line-height: 1.08; }
+h2 { font-weight: 500; font-size: 1.55rem; letter-spacing: -.01em; }
+h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
+/* Streamlit captions read as quiet grotesk, not serif. */
+[data-testid="stCaptionContainer"], .stCaption, small { font-family: var(--cp-sans); color: var(--cp-muted); }
+
+/* ---- Sidebar (light paper rail, hairline edge, pine active) -------------- */
+[data-testid="stSidebar"] {
+  background: var(--cp-panel);
+  border-right: 1px solid var(--cp-border);
+  min-width: 16rem; max-width: 16rem;
+}
+/* Brand-above-nav reorder (Streamlit 1.39 paints nav above user content). */
+[data-testid="stSidebar"] [data-testid="stSidebarContent"] { display: flex; flex-direction: column; }
+[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] { order: 1; padding-top: .4rem; }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] { order: 2; }
+[data-testid="stSidebar"] * { color: var(--cp-ink-soft); }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] { margin-top: .6rem; border-top: 1px solid var(--cp-border); padding-top: .5rem; }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] a {
+  border-radius: var(--cp-r); padding-left: .35rem; transition: background-color .15s ease, color .15s ease;
+}
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] a span { color: var(--cp-ink-soft); font-family: var(--cp-sans); }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:hover { background: var(--cp-panel-2); }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:focus-visible { outline: 2px solid var(--cp-navy); outline-offset: 1px; }
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] {
+  background: var(--cp-green-bg);
+  box-shadow: inset 3px 0 0 var(--cp-navy);
+}
+[data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] span { color: var(--cp-navy-deep); font-weight: 600; }
+[data-testid="stSidebar"] .cp-brand {
+  font-family: var(--cp-serif); font-size: 1.5rem; font-weight: 600; color: var(--cp-ink);
+  letter-spacing: -.01em; padding: .2rem 0 0 0;
+}
+[data-testid="stSidebar"] .cp-brand-sub { font-family: var(--cp-sans); font-size: .74rem; color: var(--cp-muted); line-height: 1.4; }
+
+/* ---- Simple / Technical toggle (top-right segmented control) -------------- */
+.cp-viewtoggle-anchor { height: 0; margin: 0; }
+.cp-viewtoggle-anchor + div [data-testid="stRadio"] > div[role="radiogroup"] {
+  justify-content: flex-end; gap: 0;
+  border: 1px solid var(--cp-border-2); border-radius: var(--cp-r);
+  padding: 2px; background: var(--cp-panel); width: fit-content; margin-left: auto;
+}
+.cp-viewtoggle-anchor + div [data-testid="stRadio"] label {
+  margin: 0; padding: .2rem .75rem; border-radius: 4px; font-size: .8rem; cursor: pointer;
+}
+.cp-viewtoggle-anchor + div [data-testid="stRadio"] label:hover { background: var(--cp-panel-2); }
+.cp-viewtoggle-anchor + div [data-testid="stRadio"] label:focus-within { outline: 2px solid var(--cp-navy); outline-offset: 1px; }
+
+/* ---- Panel / card (hairline, minimal, flat) ------------------------------ */
+.cp-card {
+  background: var(--cp-bg); border: 1px solid var(--cp-border);
+  border-radius: var(--cp-radius); padding: 1.05rem 1.2rem; margin-bottom: 1rem;
+}
+.cp-card h4 {
+  margin: 0 0 .5rem 0; font-family: var(--cp-sans); font-size: .72rem; color: var(--cp-muted);
+  text-transform: uppercase; letter-spacing: .09em; font-weight: 600;
+}
+
+/* ---- KPI tile (no bootstrap left-bar; label + big mono value + top accent) - */
+.cp-kpi {
+  background: var(--cp-bg); border: 1px solid var(--cp-border);
+  border-top: 2px solid var(--cp-border-2);
+  border-radius: var(--cp-r); padding: .85rem 1rem; height: 100%;
+}
+.cp-kpi .lbl {
+  font-family: var(--cp-sans); font-size: .68rem; color: var(--cp-muted);
+  text-transform: uppercase; letter-spacing: .08em; font-weight: 600;
+}
+.cp-kpi .val { font-size: 1.7rem; font-weight: 500; color: var(--cp-ink); line-height: 1.2; margin-top: .1rem; }
+.cp-kpi .val small { font-size: .9rem; color: var(--cp-muted); }
+.cp-kpi .sub { font-family: var(--cp-sans); font-size: .76rem; color: var(--cp-muted); margin-top: .1rem; }
+.cp-kpi.good { border-top-color: var(--cp-green); }
+.cp-kpi.good .val { color: var(--cp-green); }
+.cp-kpi.warn { border-top-color: var(--cp-amber); }
+.cp-kpi.warn .val { color: var(--cp-amber); }
+.cp-kpi.risk { border-top-color: var(--cp-red); }
+.cp-kpi.risk .val { color: var(--cp-red); }
+
+/* ---- Tags (square, not pills) -------------------------------------------- */
+.cp-badge {
+  display: inline-block; padding: .16rem .55rem; border-radius: var(--cp-r-tag);
+  font-family: var(--cp-sans); font-size: .72rem; font-weight: 600; letter-spacing: .02em;
+  border: 1px solid transparent; font-variant-numeric: tabular-nums;
+}
+.cp-badge.good { background: var(--cp-green-bg); color: var(--cp-green); border-color: var(--cp-green-bd); }
+.cp-badge.warn { background: var(--cp-amber-bg); color: var(--cp-amber); border-color: var(--cp-amber-bd); }
+.cp-badge.risk { background: var(--cp-red-bg);   color: var(--cp-red);   border-color: var(--cp-red-bd); }
+.cp-badge.info { background: var(--cp-panel-2);   color: var(--cp-ink-soft); border-color: var(--cp-border-2); }
+
+/* ---- Dimension bullet bars (replaces the radar) -------------------------- */
+.cp-dimbar { margin-bottom: .7rem; }
+.cp-dimbar .row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .28rem; }
+.cp-dimbar .k { font-family: var(--cp-sans); font-size: .9rem; color: var(--cp-ink); }
+.cp-dimbar .k .eng { color: var(--cp-muted); font-size: .78rem; }
+.cp-dimbar .v { font-size: .9rem; color: var(--cp-ink); font-weight: 500; }
+.cp-dimbar .v small { color: var(--cp-muted); }
+.cp-dimbar .track { height: 8px; background: var(--cp-panel-2); border-radius: 999px; overflow: hidden; }
+.cp-dimbar .fill { height: 100%; border-radius: 999px; }
+.cp-dimbar.good .fill { background: var(--cp-green); } .cp-dimbar.good .v { color: var(--cp-green); }
+.cp-dimbar.warn .fill { background: var(--cp-amber); } .cp-dimbar.warn .v { color: var(--cp-amber); }
+.cp-dimbar.risk .fill { background: var(--cp-red);   } .cp-dimbar.risk .v { color: var(--cp-red); }
+
+/* ---- Pipeline stage row -------------------------------------------------- */
+.cp-stage {
+  display: flex; align-items: center; gap: .7rem; padding: .55rem .8rem;
+  border-radius: var(--cp-r); margin-bottom: .4rem; border: 1px solid var(--cp-border);
+  background: var(--cp-bg);
+  transition: border-color .25s ease, background-color .25s ease, box-shadow .25s ease, opacity .25s ease;
+}
+.cp-stage .idx {
+  width: 25px; height: 25px; border-radius: 50%; flex: 0 0 25px; font-family: var(--cp-mono);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .78rem; font-weight: 500; background: var(--cp-panel-2); color: var(--cp-muted);
+}
+.cp-stage .ttl { font-weight: 500; font-size: .9rem; }
+.cp-stage .status {
+  margin-left: auto; font-family: var(--cp-sans); font-size: .66rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em; color: var(--cp-muted);
+}
+.cp-stage.waiting { opacity: .5; }
+.cp-stage.running { border-color: var(--cp-navy); background: var(--cp-green-bg); box-shadow: inset 3px 0 0 var(--cp-navy); }
+.cp-stage.running .idx { background: var(--cp-navy); color: var(--cp-bg); }
+.cp-stage.running .status { color: var(--cp-navy); }
+.cp-stage.done { border-color: var(--cp-green-bd); }
+.cp-stage.done .idx { background: var(--cp-green); color: var(--cp-bg); }
+.cp-stage.done .status { color: var(--cp-green); }
+
+/* ---- Execution console (light "tape", not a dark terminal) --------------- */
+.cp-console {
+  background: var(--cp-panel); color: var(--cp-ink-soft); border-radius: var(--cp-r);
+  padding: .85rem 1rem; font-family: var(--cp-mono); font-size: .78rem; line-height: 1.6;
+  height: 340px; overflow-y: auto; border: 1px solid var(--cp-border);
+  white-space: pre-wrap; font-variant-numeric: tabular-nums;
+}
 .cp-console .ln { display: block; }
-.cp-console .ok { color: #6ee7a8; }
-.cp-console .bad { color: #ff9d8a; }
-.cp-console .dim { color: #7f97b8; }
+.cp-console .ok  { color: var(--cp-green); }
+.cp-console .bad { color: var(--cp-red); }
+.cp-console .dim { color: var(--cp-muted); }
+.cp-console.short { height: 220px; }
 
-/* Source ingestion grid */
+/* ---- Source ingestion grid ----------------------------------------------- */
 .cp-src {
-  border: 1px solid var(--cp-border); border-radius: 10px; padding: .5rem .6rem;
-  background: var(--cp-panel); text-align: center; margin-bottom: .5rem; min-height: 62px;
+  border: 1px solid var(--cp-border); border-radius: var(--cp-r); padding: .5rem .6rem;
+  background: var(--cp-bg); text-align: center; margin-bottom: .5rem; min-height: 62px;
 }
-.cp-src.on { background: var(--cp-green-bg); border-color: #bfe6cf; }
-.cp-src .nm { font-size: .78rem; font-weight: 700; color: var(--cp-navy-deep); }
-.cp-src .rc { font-size: .72rem; color: var(--cp-muted); }
-.cp-src.on .rc { color: var(--cp-green); font-weight: 600; }
+.cp-src.on { background: var(--cp-green-bg); border-color: var(--cp-green-bd); }
+.cp-src .nm { font-family: var(--cp-sans); font-size: .78rem; font-weight: 600; color: var(--cp-ink); }
+.cp-src .rc { font-family: var(--cp-mono); font-size: .7rem; color: var(--cp-muted); }
+.cp-src.on .rc { color: var(--cp-green); font-weight: 500; }
+.cp-src.on .rc::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--cp-green); margin-right: 5px; vertical-align: middle; }
 
-/* Composite card */
+/* ---- Composite card ------------------------------------------------------ */
 .cp-comp {
-  border: 1px solid var(--cp-border); border-left: 4px solid var(--cp-blue);
-  border-radius: 10px; padding: .7rem .85rem; background: var(--cp-bg);
-  margin-bottom: .6rem; box-shadow: var(--cp-shadow);
+  border: 1px solid var(--cp-border); border-radius: var(--cp-r); padding: .7rem .85rem;
+  background: var(--cp-bg); margin-bottom: .6rem;
 }
-.cp-comp.flagship { border-left-color: var(--cp-navy); background: #f7faff; }
-.cp-comp .hd { display: flex; justify-content: space-between; align-items: baseline; }
-.cp-comp .nm { font-weight: 700; color: var(--cp-navy-deep); font-size: .92rem; }
-.cp-comp .vl { font-weight: 800; color: var(--cp-blue); font-size: 1rem; }
-.cp-comp .rt { font-size: .8rem; color: var(--cp-muted); margin-top: .35rem; line-height: 1.4; }
-.cp-comp .sr { font-size: .72rem; color: var(--cp-blue); margin-top: .3rem; }
+.cp-comp.flagship { border-color: var(--cp-green-bd); background: var(--cp-green-bg); box-shadow: inset 3px 0 0 var(--cp-navy); }
+.cp-comp .hd { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; }
+.cp-comp .nm { font-family: var(--cp-sans); font-weight: 600; color: var(--cp-ink); font-size: .9rem; }
+.cp-comp .vl { font-weight: 500; color: var(--cp-navy-deep); font-size: .95rem; }
+.cp-comp .rt { font-size: .8rem; color: var(--cp-muted); margin-top: .35rem; line-height: 1.45; }
+.cp-comp .sr { font-family: var(--cp-mono); font-size: .7rem; color: var(--cp-navy); margin-top: .3rem; }
 
-/* Reason code rows */
+/* ---- Reason-code rows ---------------------------------------------------- */
 .cp-reason {
   display: flex; gap: .6rem; align-items: flex-start; padding: .55rem .75rem;
-  border-radius: 10px; margin-bottom: .45rem; border: 1px solid var(--cp-border);
+  border-radius: var(--cp-r); margin-bottom: .45rem; border: 1px solid var(--cp-border);
 }
-.cp-reason.pos { background: var(--cp-green-bg); border-color: #bfe6cf; }
-.cp-reason.neg { background: var(--cp-red-bg); border-color: #f0cdc8; }
-.cp-reason .mk { font-weight: 800; font-size: 1.05rem; }
+.cp-reason.pos { background: var(--cp-green-bg); border-color: var(--cp-green-bd); }
+.cp-reason.neg { background: var(--cp-red-bg); border-color: var(--cp-red-bd); }
+.cp-reason .mk { font-family: var(--cp-mono); font-weight: 600; font-size: 1rem; line-height: 1.3; }
 .cp-reason.pos .mk { color: var(--cp-green); }
 .cp-reason.neg .mk { color: var(--cp-red); }
-.cp-reason .tx { font-size: .86rem; color: var(--cp-ink); }
+.cp-reason .tx { font-size: .86rem; color: var(--cp-ink); line-height: 1.5; }
 
-/* Info tooltip — kpi(tip=…) info glyph + glossary copy (plan §4 WP-B, D4).
-   Keyboard-reachable (tabindex on .cp-info): the box shows on :hover AND
-   :focus-visible. High-contrast ink on white for AA (>=4.5:1). */
+/* ---- Info tooltip (keyboard reachable, AA ink on paper) ------------------ */
 .cp-info {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  margin-left: .3rem;
-  font-size: .82rem;
-  line-height: 1;
-  color: var(--cp-navy);
-  opacity: .55;
-  cursor: help;
-  vertical-align: middle;
+  position: relative; display: inline-flex; align-items: center; margin-left: .3rem;
+  font-size: .78rem; line-height: 1; color: var(--cp-navy); opacity: .55; cursor: help; vertical-align: middle;
 }
 .cp-info:hover, .cp-info:focus-visible { opacity: 1; }
-.cp-info:focus-visible {
-  outline: 2px solid var(--cp-blue); outline-offset: 2px; border-radius: 3px;
-}
+.cp-info:focus-visible { outline: 2px solid var(--cp-navy); outline-offset: 2px; border-radius: 3px; }
 .cp-tipbox {
-  position: absolute;
-  left: 0;
-  top: calc(100% + .4rem);
-  z-index: 40;                 /* above cards/kpis */
-  width: max-content;
-  max-width: 30ch;
-  padding: .5rem .65rem;
-  background: var(--cp-bg);
-  color: var(--cp-ink);
-  border: 1px solid var(--cp-border);
-  border-radius: 8px;
-  box-shadow: var(--cp-shadow);
-  /* Reset inherited .lbl typography so the tip reads as normal prose. */
-  font-size: .75rem;
-  font-weight: 500;
-  line-height: 1.45;
-  letter-spacing: normal;
-  text-transform: none;
-  white-space: normal;
-  opacity: 0;
-  visibility: hidden;
+  position: absolute; left: 0; top: calc(100% + .4rem); z-index: 40; width: max-content; max-width: 30ch;
+  padding: .5rem .65rem; background: var(--cp-bg); color: var(--cp-ink-soft);
+  border: 1px solid var(--cp-border-2); border-radius: var(--cp-r); box-shadow: var(--cp-shadow);
+  font-family: var(--cp-sans); font-size: .75rem; font-weight: 400; line-height: 1.45;
+  letter-spacing: normal; text-transform: none; white-space: normal; opacity: 0; visibility: hidden;
   transition: opacity .15s ease;
 }
-.cp-info:hover .cp-tipbox,
-.cp-info:focus-visible .cp-tipbox { opacity: 1; visibility: visible; }
+.cp-info:hover .cp-tipbox, .cp-info:focus-visible .cp-tipbox { opacity: 1; visibility: visible; }
 
-/* Plain-language finding callout (WP-C/D consumers). Block callout with a
-   tinted panel + tone-coded left bar — deliberately distinct from the flex
-   marker rows of .cp-reason. */
+/* ---- Plain-language finding callout -------------------------------------- */
 .cp-finding {
-  border: 1px solid var(--cp-border);
-  border-left: 4px solid var(--cp-muted);
-  background: var(--cp-panel);
-  border-radius: 10px;
-  padding: .6rem .8rem;
-  margin-bottom: .5rem;
-  font-size: .86rem;
-  line-height: 1.5;
-  color: var(--cp-ink);
+  border: 1px solid var(--cp-border); box-shadow: inset 3px 0 0 var(--cp-border-2);
+  background: var(--cp-panel); border-radius: var(--cp-r); padding: .6rem .8rem .6rem .95rem;
+  margin-bottom: .5rem; font-size: .88rem; line-height: 1.55; color: var(--cp-ink);
 }
-.cp-finding.good { border-left-color: var(--cp-green); background: var(--cp-green-bg); }
-.cp-finding.warn { border-left-color: var(--cp-amber); background: var(--cp-amber-bg); }
-.cp-finding.risk { border-left-color: var(--cp-red); background: var(--cp-red-bg); }
-.cp-finding.neutral { border-left-color: var(--cp-navy); background: var(--cp-panel); }
+.cp-finding.good { box-shadow: inset 3px 0 0 var(--cp-green); background: var(--cp-green-bg); border-color: var(--cp-green-bd); }
+.cp-finding.warn { box-shadow: inset 3px 0 0 var(--cp-amber); background: var(--cp-amber-bg); border-color: var(--cp-amber-bd); }
+.cp-finding.risk { box-shadow: inset 3px 0 0 var(--cp-red);   background: var(--cp-red-bg);   border-color: var(--cp-red-bd); }
+.cp-finding.neutral { box-shadow: inset 3px 0 0 var(--cp-border-2); background: var(--cp-panel); }
 
-/* Per-stage ML technique disclosure — visually distinct from .cp-finding: an
-   indigo/blue left-accent on a tinted panel, with a "⚙ Technique" chip. */
+/* ---- ML technique disclosure (parchment panel, pine chip) ---------------- */
 .cp-technique {
-  border: 1px solid #cfe0f4;
-  border-left: 4px solid var(--cp-blue);
-  background: #f2f8ff;
-  border-radius: 10px;
-  padding: .6rem .8rem;
-  margin-bottom: .55rem;
-  font-size: .86rem;
-  line-height: 1.5;
-  color: var(--cp-ink);
+  border: 1px solid var(--cp-border); box-shadow: inset 3px 0 0 var(--cp-navy);
+  background: var(--cp-panel); border-radius: var(--cp-r); padding: .6rem .8rem .6rem .95rem;
+  margin-bottom: .55rem; font-size: .88rem; line-height: 1.55; color: var(--cp-ink);
 }
 .cp-technique .chip {
-  display: inline-block;
-  font-size: .68rem;
-  font-weight: 800;
-  letter-spacing: .4px;
-  text-transform: uppercase;
-  color: var(--cp-blue);
-  background: var(--cp-panel-2);
-  border: 1px solid #cfe0f4;
-  border-radius: 999px;
-  padding: .1rem .5rem;
-  margin-right: .5rem;
-  vertical-align: middle;
+  display: inline-block; font-family: var(--cp-sans); font-size: .64rem; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--cp-navy);
+  background: var(--cp-green-bg); border: 1px solid var(--cp-green-bd); border-radius: var(--cp-r-tag);
+  padding: .12rem .5rem; margin-right: .5rem; vertical-align: middle;
 }
-.cp-technique .nm { font-weight: 800; color: var(--cp-navy-deep); }
-.cp-technique .bn { margin-top: .35rem; color: var(--cp-ink); }
-.cp-technique .method {
-  margin-top: .35rem; font-size: .78rem; color: var(--cp-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-}
+.cp-technique .nm { font-family: var(--cp-sans); font-weight: 600; color: var(--cp-ink); }
+.cp-technique .bn { margin-top: .35rem; color: var(--cp-ink-soft); }
+.cp-technique .method { margin-top: .35rem; font-family: var(--cp-mono); font-size: .76rem; color: var(--cp-muted); }
 
-/* Big score hero */
+/* ---- Score hero (light rating-sheet block, big mono grade) --------------- */
 .cp-hero {
-  display: flex; gap: 1.4rem; align-items: center;
-  background: linear-gradient(135deg, var(--cp-navy-deep), var(--cp-navy));
-  color: #fff; border-radius: var(--cp-radius); padding: 1.4rem 1.6rem; margin-bottom: 1rem;
+  display: flex; gap: 1.6rem; align-items: center;
+  background: var(--cp-bg); color: var(--cp-ink);
+  border: 1px solid var(--cp-border); border-top: 3px solid var(--cp-navy);
+  border-radius: var(--cp-radius); padding: 1.5rem 1.7rem; margin-bottom: 1rem; box-shadow: var(--cp-shadow);
 }
-.cp-hero .score { font-size: 3.2rem; font-weight: 800; line-height: 1; }
-.cp-hero .score small { font-size: 1.1rem; opacity: .7; font-weight: 600; }
+.cp-hero .score { font-family: var(--cp-mono); font-size: 3.4rem; font-weight: 500; line-height: 1; color: var(--cp-navy-deep); }
+.cp-hero .score small { font-size: 1.05rem; color: var(--cp-muted); font-weight: 400; }
 .cp-hero .meta { flex: 1; }
-.cp-hero .name { font-size: 1.35rem; font-weight: 800; }
-.cp-hero .subtle { opacity: .82; font-size: .9rem; }
+.cp-hero .name { font-family: var(--cp-serif); font-size: 1.55rem; font-weight: 600; letter-spacing: -.01em; }
+.cp-hero .subtle { color: var(--cp-muted); font-size: .9rem; margin-top: .15rem; }
 
-/* Recommendation banner */
-.cp-rec { border-radius: 12px; padding: 1rem 1.2rem; font-weight: 600; }
-.cp-rec.good { background: var(--cp-green-bg); color: var(--cp-green); border: 1px solid #bfe6cf; }
-.cp-rec.warn { background: var(--cp-amber-bg); color: var(--cp-amber); border: 1px solid #f2ddb0; }
-.cp-rec.risk { background: var(--cp-red-bg); color: var(--cp-red); border: 1px solid #f0cdc8; }
+/* ---- Recommendation banner ----------------------------------------------- */
+.cp-rec {
+  border-radius: var(--cp-r); padding: .9rem 1.1rem; font-weight: 500; font-size: .95rem;
+  border: 1px solid var(--cp-border); box-shadow: inset 3px 0 0 var(--cp-border-2);
+}
+.cp-rec.good { background: var(--cp-green-bg); color: var(--cp-green); border-color: var(--cp-green-bd); box-shadow: inset 3px 0 0 var(--cp-green); }
+.cp-rec.warn { background: var(--cp-amber-bg); color: var(--cp-amber); border-color: var(--cp-amber-bd); box-shadow: inset 3px 0 0 var(--cp-amber); }
+.cp-rec.risk { background: var(--cp-red-bg);   color: var(--cp-red);   border-color: var(--cp-red-bd);   box-shadow: inset 3px 0 0 var(--cp-red); }
 
-/* Buttons */
+/* ---- Buttons (pine primary, ink-outline secondary) ----------------------- */
 .stButton > button {
-  background: var(--cp-navy); color: #fff; border: none; border-radius: 10px;
-  font-weight: 700; padding: .55rem 1.1rem; transition: background-color .2s ease;
+  background: var(--cp-navy); color: var(--cp-bg); border: 1px solid var(--cp-navy);
+  border-radius: var(--cp-r); font-family: var(--cp-sans); font-weight: 600; padding: .5rem 1.1rem;
+  transition: background-color .18s ease, transform .05s ease;
 }
-.stButton > button:hover { background: var(--cp-blue); color: #fff; }
-.stButton > button:focus-visible {
-  outline: 3px solid var(--cp-blue); outline-offset: 2px;
+.stButton > button:hover { background: var(--cp-navy-deep); border-color: var(--cp-navy-deep); color: var(--cp-bg); }
+.stButton > button:active { transform: translateY(1px); }
+.stButton > button:focus-visible { outline: 2px solid var(--cp-navy); outline-offset: 2px; }
+/* Secondary (non-primary) buttons read as quiet outline. */
+.stButton > button[kind="secondary"] {
+  background: var(--cp-bg); color: var(--cp-ink); border: 1px solid var(--cp-border-2);
+}
+.stButton > button[kind="secondary"]:hover { background: var(--cp-panel); color: var(--cp-ink); border-color: var(--cp-navy); }
+
+/* Page-link chrome to match the tag/button language. */
+[data-testid="stPageLink"] a { border-radius: var(--cp-r); }
+[data-testid="stPageLink"] a:hover { background: var(--cp-panel); }
+
+/* ---- Radio scenario list + inputs ---------------------------------------- */
+[data-testid="stExpander"] { border: 1px solid var(--cp-border); border-radius: var(--cp-r); background: var(--cp-bg); }
+[data-testid="stExpander"] summary { font-family: var(--cp-sans); }
+
+/* ---- Streamlit info/alert boxes retinted to the paper palette ------------ */
+[data-testid="stAlert"] {
+  border-radius: var(--cp-r); border: 1px solid var(--cp-border-2);
+  box-shadow: inset 3px 0 0 var(--cp-navy); background: var(--cp-panel); color: var(--cp-ink);
 }
 
-/* Honor the OS reduced-motion preference */
+/* ---- Live pane entrance + reduced motion --------------------------------- */
+.cp-live-anchor { height: 0; margin: 0; }
+.cp-live-anchor + div { animation: cp-in .25s ease; }
+@keyframes cp-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
   .cp-stage, .stButton > button, .cp-tipbox { transition: none; }
   .cp-live-anchor + div { animation: none; }
 }
 
-/* ---- WP-G: Pipeline live-output pane + wide layout (append-only) ---------- */
-/* Slim the sidebar so the pipeline section gets more room (1.39 section testid). */
-[data-testid="stSidebar"] { min-width: 15rem; max-width: 15rem; }
-
-/* Compact console variant: sits BELOW the live stage-output pane in Technical view. */
-.cp-console.short { height: 220px; }
-
-/* Subtle entrance for the live pane content as each stage streams in. The anchor
-   is a zero-height marker emitted just above the live detail placeholder. */
-.cp-live-anchor { height: 0; margin: 0; }
-.cp-live-anchor + div { animation: cp-in .25s ease; }
-@keyframes cp-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: none; }
-}
-
-/* Scenario tiles (radio -> cards handled inline) */
-.cp-scn { font-size: .82rem; color: var(--cp-muted); }
+/* ---- Misc ---------------------------------------------------------------- */
+.cp-scn { font-family: var(--cp-sans); font-size: .82rem; color: var(--cp-muted); }
 hr { border-color: var(--cp-border); }
+[data-testid="stMetricValue"] { color: var(--cp-ink); }
+
+/* ---- Mobile ------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .block-container { padding-left: 1rem; padding-right: 1rem; }
+  .cp-hero { flex-direction: column; align-items: flex-start; gap: .8rem; text-align: left; }
+  h1 { font-size: 2rem; }
+}

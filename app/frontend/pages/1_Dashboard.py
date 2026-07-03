@@ -17,18 +17,19 @@ import html
 
 import streamlit as st
 
-from app.frontend.components import charts, state
+from app.frontend.components import state
 from app.frontend.components.glossary import GLOSSARY
 from app.frontend.components.stage import render_reasons
-from app.frontend.components.ui import (auth_class, band_class, confidence_class, fmt_inr,
-                                        kpi, page_setup, risk_class, score_class)
+from app.frontend.components.ui import (auth_class, band_class, confidence_class,
+                                        dimension_bars, fmt_inr, kpi, page_setup,
+                                        risk_class, score_class)
 
-page_setup("Dashboard", icon="📈")
+page_setup("Dashboard")
 a = state.require_assessment()
 hc = a.health_card
 out = a.engine_output
 
-st.title("Credit Officer Dashboard")
+st.title("Credit officer dashboard")
 
 # Hero
 st.markdown(
@@ -69,23 +70,23 @@ r2[0].markdown(kpi("Turnover authenticity", f"{hc.turnover_authenticity_score:.0
 r2[1].markdown(kpi("Data confidence", out["confidence_band"],
                out["sources_connected"], confidence_class(out["confidence_band"]),
                tip=GLOSSARY["confidence"]), unsafe_allow_html=True)
-r2[2].markdown(kpi("Peer segment", hc.peer_segment or "—", peer_sub,
+r2[2].markdown(kpi("Peer segment", hc.peer_segment or "-", peer_sub,
                tip=GLOSSARY["peer_segment"]), unsafe_allow_html=True)
 
 st.divider()
 left, right = st.columns([1, 1])
 with left:
-    st.subheader("Five Dimensions")
-    st.plotly_chart(charts.radar([p.label for p in hc.pillars], [p.score for p in hc.pillars]),
-                    use_container_width=True)
+    st.subheader("Five dimensions")
+    st.markdown(dimension_bars(hc.pillars, show_eng=state.is_technical()),
+                unsafe_allow_html=True)
 with right:
-    st.subheader("What Drove This")
+    st.subheader("What drove this")
     render_reasons([r.model_dump() for r in hc.reasons_positive],
                    [r.model_dump() for r in hc.reasons_negative])
 
 st.divider()
 nav = st.columns(4)
-nav[0].page_link("pages/2_Pipeline.py", label="⚙️  Pipeline")
-nav[1].page_link("pages/3_Financial_Health_Card.py", label="📋  Health Card")
-nav[2].page_link("pages/4_Explainability.py", label="🔍  Explainability")
-nav[3].page_link("Home.py", label="🏠  New assessment")
+nav[0].page_link("pages/2_Pipeline.py", label="Pipeline")
+nav[1].page_link("pages/3_Financial_Health_Card.py", label="Health card")
+nav[2].page_link("pages/4_Explainability.py", label="Explainability")
+nav[3].page_link("Home.py", label="New assessment")

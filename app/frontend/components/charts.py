@@ -9,14 +9,18 @@ from typing import Dict, List, Optional
 
 import plotly.graph_objects as go
 
-NAVY, BLUE, GREEN, AMBER, RED, GRID = "#0b3d75", "#1466b8", "#147347", "#8f5c13", "#c0392b", "#dbe2ec"
+# Ledger palette: pine accent, semantic risk, warm rules, mono numerals.
+NAVY, BLUE, GREEN, AMBER, RED, GRID = "#1f5a45", "#1f5a45", "#1f5a45", "#8a5a12", "#a2331f", "#e4ddce"
+INK, MUTED = "#201d18", "#86806f"
+_SANS = "Schibsted Grotesk, system-ui, sans-serif"
+_MONO = "IBM Plex Mono, ui-monospace, monospace"
 _BASE = dict(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-             font=dict(family="Inter, Segoe UI, sans-serif", color="#1b2733"),
+             font=dict(family=_SANS, color=INK),
              margin=dict(l=10, r=10, t=30, b=10))
 
-# Non-semantic categorical palette for peer tiers (cool -> warm, muted/elegant).
-# Deliberately NOT the risk GREEN/AMBER/RED, which are reserved for risk semantics.
-_CLUSTER_COLORS = ["#0b3d75", "#0e7c66", "#b3541e", "#6b4fa1", "#8f5c13"]
+# Non-semantic categorical palette for peer tiers (muted, earthy; deliberately
+# NOT the risk GREEN/AMBER/RED, which are reserved for risk semantics).
+_CLUSTER_COLORS = ["#1f5a45", "#3f6f8a", "#a2661f", "#6b5e8a", "#8a5a12"]
 
 
 def radar(labels: List[str], values: List[float]) -> go.Figure:
@@ -64,7 +68,7 @@ def cluster_scatter(scatter: List[dict], entity_point: Dict[str, float],
     fig.add_trace(go.Scatter(
         x=[entity_point["x"]], y=[entity_point["y"]], mode="markers+text",
         name=entity_name, text=[f"  {entity_name}"], textposition="middle right",
-        textfont=dict(color=NAVY, size=12, family="Inter"),
+        textfont=dict(color=NAVY, size=12, family=_SANS),
         marker=dict(size=20, color=NAVY, symbol="star", line=dict(width=2, color="#fff")),
         hovertext=[entity_name], hoverinfo="text"))
     fig.update_layout(**_BASE, height=420,

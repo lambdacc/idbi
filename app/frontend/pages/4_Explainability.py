@@ -20,9 +20,9 @@ import streamlit as st
 from app.frontend.components import charts, state
 from app.frontend.components.stage import (feature_label, render_composites,
                                            render_reasons)
-from app.frontend.components.ui import kpi, page_setup
+from app.frontend.components.ui import dimension_bars, page_setup
 
-page_setup("Explainability", icon="🔍")
+page_setup("Explainability")
 a = state.require_assessment()
 hc = a.health_card
 scoring = a.stage("scoring").data
@@ -37,20 +37,19 @@ if _tech:
                "SHAP explains the optional GBM lift model.")
 else:
     st.caption("Every part of this score can be traced back to a source record and stated in plain "
-               "terms — nothing here is a black box.")
+               "terms. Nothing here is a black box.")
 
-st.subheader("1 · Reason Codes" if _tech else "1 · What Drove This Score")
+st.subheader("1 · Reason codes" if _tech else "1 · What drove this score")
 render_reasons(explain["reasons_positive"], explain["reasons_negative"])
 
 st.divider()
 c1, c2 = st.columns([1, 1])
 with c1:
-    st.subheader("2 · Dimension Scores")
-    st.plotly_chart(charts.pillar_bars([p["label"] for p in scoring["pillars"]],
-                    [p["score"] for p in scoring["pillars"]]), use_container_width=True)
+    st.subheader("2 · Dimension scores")
+    st.markdown(dimension_bars(scoring["pillars"]), unsafe_allow_html=True)
 with c2:
     if _tech:
-        st.subheader("3 · SHAP — GBM PD Path")
+        st.subheader("3 · SHAP, GBM PD path")
         if explain["shap_top"]:
             st.caption("Red pushes toward default, green away. Monotonic constraints keep it "
                        "bank-defensible.")
@@ -59,12 +58,12 @@ with c2:
         else:
             st.info("SHAP unavailable for this run.")
     else:
-        st.subheader("3 · Independent Cross-Check")
-        st.info("A second, independent statistical model was used to cross-check these drivers "
-                "— it agrees.")
+        st.subheader("3 · Independent cross-check")
+        st.info("A second, independent statistical model was used to cross-check these drivers, "
+                "and it agrees.")
 
 st.divider()
-st.subheader("4 · Cross-Source Synthesis — Harder to Fake Than Any Single Source")
+st.subheader("4 · Cross-source synthesis, harder to fake than any single source")
 st.caption("Each composite fuses independently-governed systems; the note states what a fraudster "
            "would need to compromise simultaneously to fake it.")
 comps = synthesis["composites"]
@@ -79,6 +78,6 @@ with r:
 
 st.divider()
 nav = st.columns(3)
-nav[0].page_link("pages/3_Financial_Health_Card.py", label="📋  Health Card")
-nav[1].page_link("pages/5_Architecture.py", label="🏗️  Architecture")
-nav[2].page_link("Home.py", label="🏠  New assessment")
+nav[0].page_link("pages/3_Financial_Health_Card.py", label="Health card")
+nav[1].page_link("pages/5_Architecture.py", label="Architecture")
+nav[2].page_link("Home.py", label="New assessment")
