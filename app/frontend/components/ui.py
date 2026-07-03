@@ -14,16 +14,22 @@ _FAVICON = Path(__file__).resolve().parents[1] / "static" / "favicon.png"
 GREEN, AMBER, RED, NAVY, BLUE = "#1f5a45", "#8a5a12", "#a2331f", "#1f5a45", "#1f5a45"
 
 
+def brandmark() -> str:
+    """The CreditPulse wordmark: 'Credit' upright + 'Pulse' italic accent.
+    Same serif family, inverts to light-on-dark inside the navy sidebar."""
+    return "<span class='cp-logo'><span class='a'>Credit</span><span class='b'>Pulse</span></span>"
+
+
 def page_setup(title: str, icon: str = "") -> None:
-    # A single pine monogram favicon replaces the old per-page emoji icons.
+    # A single navy monogram favicon replaces the old per-page emoji icons.
     page_icon = str(_FAVICON) if _FAVICON.exists() else None
     st.set_page_config(page_title=f"CreditPulse · {title}", page_icon=page_icon, layout="wide")
     if _CSS.exists():
         st.markdown(f"<style>{_CSS.read_text()}</style>", unsafe_allow_html=True)
     with st.sidebar:
         st.markdown(
-            "<div class='cp-brand'>CreditPulse</div>"
-            "<div class='cp-brand-sub'>MSME Financial Health Card · IDBI Innovate 2026</div><br>",
+            f"<div class='cp-brand'>{brandmark()}</div>"
+            "<div class='cp-brand-sub'>MSME financial health card · IDBI Innovate 2026</div><br>",
             unsafe_allow_html=True)
 
     # Global Simple/Technical view toggle (design decision D3). Default

@@ -53,7 +53,7 @@ html, body, [class*="css"] {
   color: var(--cp-ink);
   -webkit-font-smoothing: antialiased;
 }
-.block-container { padding-top: 2.4rem; max-width: 1440px; padding-left: 2.2rem; padding-right: 2.2rem; }
+.block-container { padding-top: 1.3rem; max-width: 1440px; padding-left: 2.2rem; padding-right: 2.2rem; }
 
 /* Strip default Streamlit chrome for a product feel; keep header transparent so
    the sidebar collapse control survives on narrow viewports. */
@@ -97,14 +97,23 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] a:focus-visible { outline: 2px solid #eaf1fb; outline-offset: 1px; }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] { background: rgba(255,255,255,.16); }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] span { font-weight: 600; }
-[data-testid="stSidebar"] .cp-brand {
-  font-family: var(--cp-serif); font-size: 1.5rem; font-weight: 600; color: #ffffff;
-  letter-spacing: -.01em; padding: .2rem 0 0 0;
-}
-[data-testid="stSidebar"] .cp-brand-sub { font-family: var(--cp-sans); font-size: .74rem; color: #eaf1fb; opacity: .8; line-height: 1.4; }
+[data-testid="stSidebar"] .cp-brand { font-size: 1.55rem; padding: .2rem 0 0 0; }
+[data-testid="stSidebar"] .cp-brand-sub { font-family: var(--cp-sans); font-size: .74rem; color: #eaf1fb; opacity: .78; line-height: 1.4; margin-top: .1rem; }
+
+/* ---- Wordmark ("Credit" upright + "Pulse" italic accent) ----------------- */
+.cp-logo { font-family: var(--cp-serif); font-weight: 500; letter-spacing: -.022em; white-space: nowrap; }
+.cp-logo .a { color: var(--cp-navy-deep); }
+.cp-logo .b { color: var(--cp-blue); font-style: italic; padding-right: .04em; }
+h1.cp-logo-page { font-size: 2.7rem; line-height: 1.05; margin-top: 0; margin-bottom: .1rem; }
+/* On the navy sidebar the wordmark inverts to light-on-dark. */
+[data-testid="stSidebar"] .cp-logo .a { color: #ffffff; }
+[data-testid="stSidebar"] .cp-logo .b { color: #9cc2ee; }
 
 /* ---- Simple / Technical toggle (top-right segmented control) -------------- */
+/* Collapse the toggle row's vertical footprint so the page title rises up beside
+   it (title left, toggle right) instead of leaving a tall empty band on top. */
 .cp-viewtoggle-anchor { height: 0; margin: 0; }
+.cp-viewtoggle-anchor + div { margin-top: -.6rem; margin-bottom: -3.7rem; }
 .cp-viewtoggle-anchor + div [data-testid="stRadio"] > div[role="radiogroup"] {
   justify-content: flex-end; gap: 0;
   border: 1px solid var(--cp-border-2); border-radius: var(--cp-r);

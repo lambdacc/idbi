@@ -21,11 +21,11 @@ import streamlit as st
 
 from app.backend.services.pipeline_orchestrator import list_scenarios, random_entity_id
 from app.frontend.components import state
-from app.frontend.components.ui import badge, fmt_inr, page_setup
+from app.frontend.components.ui import badge, brandmark, fmt_inr, page_setup
 
 page_setup("Home")
 
-st.title("CreditPulse")
+st.markdown(f"<h1 class='cp-logo-page'>{brandmark()}</h1>", unsafe_allow_html=True)
 st.caption("MSME financial health card · IDBI Innovate 2026 · PS3 · "
            "deterministic-first, explainable by construction")
 
