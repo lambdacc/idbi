@@ -106,6 +106,8 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
    header so the brand sits near the top; the collapse control still works. */
 [data-testid="stSidebar"] [data-testid="stSidebarHeader"] { padding-top: .5rem; padding-bottom: 0; min-height: 0; }
 [data-testid="stSidebar"] [data-testid="stLogoSpacer"] { display: none; }
+/* Collapse control not needed; the sidebar is fixed navigation. */
+[data-testid="stSidebarCollapseButton"] { display: none !important; }
 /* Brand-above-nav reorder (Streamlit 1.39 paints nav above user content). */
 [data-testid="stSidebar"] [data-testid="stSidebarContent"] { display: flex; flex-direction: column; }
 [data-testid="stSidebar"] [data-testid="stSidebarUserContent"] { order: 1; padding-top: .35rem; margin-top: 0; }
