@@ -5,7 +5,8 @@
       "Write",
       "Read",
       "Bash",
-      "Skill(update-config)"
+      "Skill(update-config)",
+      "WebSearch"
     ],
     "deny": [
       "Bash(git commit*)",
