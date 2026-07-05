@@ -44,8 +44,9 @@ TRACKS = [
 - **Isolation linter test** (platform tests): walk `app/tracks/*/**.py` ASTs/imports — fail on any `app.tracks.<other>` import. Also: `app/frontend`, `app/ml`, `app/data_gen`, `app/backend` core must not import from `app.tracks.*` **except** via the registry's guarded discovery points (registry, prefit, state engine wrappers).
 - **Makefile:** `test:` runs `pytest app/tests app/tracks`; each track carries its own `tests/` so deletion removes them.
 
-### R2 — Router (`app/frontend/app.py`)
-- sys.path bootstrap (same pattern as Home.py).
+### R2 — Router (`app/frontend/main.py`)
+> **Name it `main.py`, NOT `app.py`.** A file named `app.py` inside `app/frontend/` shadows the top-level `app` package (Streamlit puts the entrypoint's dir on `sys.path`, so `import app.backend` resolves to the router file → `'app' is not a package`; it breaks Home.py too). See wp-s-findings.md CRITICAL note.
+- sys.path bootstrap: insert repo root at `sys.path[0]` **unconditionally** (drop the `if str(_ROOT) not in sys.path` guard — remove any stale entry first, then `insert(0, ...)`) so the entrypoint dir can never win `import app` resolution.
 - `ui.shell_setup()` (see R3) BEFORE `st.navigation`.
 - Build `st.navigation({t.label: [st.Page(p.path, title=p.title, ...) for p in t.pages] for t in TRACKS}, position="sidebar")`, run it.
 - Per wp-s-findings: `st.set_page_config` lives here only.
@@ -80,13 +81,13 @@ Create the four new page files as minimal "coming online" stubs with correct `pa
 - Respect `prefers-reduced-motion` for anything animated. Keep the brace-balance discipline (count `{`/`}` before/after).
 
 ### R8 — Test migration (structural edits — WP-R owns)
-- `test_frontend_smoke.py`: `_HOME` → `_APP = app/frontend/app.py`; `_drive()` boots app.py, seeds session keys individually (SafeSessionState has no `.update`), then `at.switch_page(rel_page)` per wp-s-findings convention. `_PAGES` list gains `pages/0_Overview.py` and the four placeholders (render-only assertion for placeholders at this stage).
+- `test_frontend_smoke.py`: `_HOME` → `_APP = app/frontend/main.py`; `_drive()` boots main.py, seeds session keys individually (SafeSessionState has no `.update`), then `at.switch_page(rel_page)` per wp-s-findings convention. `_PAGES` list gains `pages/0_Overview.py` and the four placeholders (render-only assertion for placeholders at this stage).
 - Keep every existing assertion (verdict on Health Card, SHAP in technical explainability, jargon sweep pages 1–4 + Overview; Architecture stays exempt).
 - Any other test referencing Home.py as entrypoint: grep `AppTest|Home.py` across `app/tests` and update.
 - Add `test_tracks_registry.py`: every registry path exists on disk; titles unique; exactly one default page; every `pages/*.py` file is registered (no orphans).
 
 ### R9 — Makefile/Dockerfile
-- `demo:` target now runs `streamlit run app/frontend/app.py ...` (keep flags/port identical).
+- `demo:` target now runs `streamlit run app/frontend/main.py ...` (keep flags/port identical).
 - Dockerfile CMD likewise. Nothing else changes in this WP.
 
 ## Acceptance

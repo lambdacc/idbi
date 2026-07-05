@@ -32,7 +32,7 @@ app/
   ml/                  # PLATFORM CORE: models/ (woe, gbm, calibration, clustering, anomaly, …),
                        #   features/, explainability/, eval/ framework — the shared ML kit
   backend/             # PLATFORM CORE: shared Stage/Assessment dataclass module(s) only
-  frontend/            # PLATFORM CORE: app.py router, tracks.py registry, components/, static/,
+  frontend/            # PLATFORM CORE: main.py router (NOT app.py — collides with the app package), tracks.py registry, components/, static/,
                        #   pages/platform/ (Overview) — no track logic
   tracks/
     t03_financial_health/   # engine glue (ScoringEngine wiring + prefit hook), pipeline_orchestrator,
@@ -48,7 +48,7 @@ app/
 
 ## 2. Locked architecture decisions
 
-- **D1 — Navigation:** switch the entrypoint from the `pages/` auto-registry to explicit `st.navigation`/`st.Page` (both confirmed available in pinned Streamlit 1.39.0). New router `app/frontend/app.py`; **page FILES keep their current paths** (`Home.py`, `pages/*.py`) to minimize churn; nav labels/groups/icons defined once in a declarative `app/frontend/tracks.py` registry.
+- **D1 — Navigation:** switch the entrypoint from the `pages/` auto-registry to explicit `st.navigation`/`st.Page` (both confirmed available in pinned Streamlit 1.39.0). New router `app/frontend/main.py` (**not `app.py`** — a file named `app.py` in `app/frontend/` shadows the `app` package and breaks all imports, see wp-s-findings.md); **page FILES keep their current paths** (`Home.py`, `pages/*.py`) to minimize churn; nav labels/groups/icons defined once in a declarative `app/frontend/tracks.py` registry.
 - **D2 — Shell owns chrome:** with `st.navigation`, the entrypoint runs on every rerun (it is the router). `page_setup()`-style global chrome (CSS injection, sidebar brand, view toggle, set_page_config) moves into the router so each page stops repeating it. Pages keep only their titles/content. `ui.page_setup` remains but is split: `ui.shell_setup()` (router-level) + `ui.page_header(title)` (page-level). Backward-compat: `page_setup` may stay as a thin deprecated alias during migration if it shrinks the diff.
 - **D3 — Session/state contracts unchanged:** `cp_view_mode` ("simple"/"technical"), `cp_assessment`, `cp_pipeline_played`, `cp_instant` keep their exact names and semantics. New tracks add parallel keys: `cp_monitoring_run`, `cp_case_<...>` (see WP files).
 - **D4 — Engines:** three engine singletons behind `st.cache_resource` in `components/state.py`: existing `get_engine()` (ScoringEngine) + new `get_ews_engine()` (EWSEngine) + new `get_fraud_engine()` (FraudEngine). Each engine follows the ScoringEngine pattern exactly: `fit(...)`, `save()/load` with a `STATE_VERSION` class attr stamped in `__getstate__` and checked on prefit-load, mtime-vs-source staleness check, fallback to refit. `app/ml/prefit.py` warms all three pickles (skip-if-fresh per engine).
@@ -74,7 +74,7 @@ app/
 
 | File / area | Owner | Others |
 |---|---|---|
-| Platform core: `app/frontend/app.py`, `frontend/tracks.py`, `frontend/pages/platform/`, `components/ui.py`, `components/state.py` (shell), `static/custom.css` (shell/nav blocks) + the **t03 move** (`git mv` into `app/tracks/t03_financial_health/` incl. import/test fixes) | WP-R | read-only |
+| Platform core: `app/frontend/main.py`, `frontend/tracks.py`, `frontend/pages/platform/`, `components/ui.py`, `components/state.py` (shell), `static/custom.css` (shell/nav blocks) + the **t03 move** (`git mv` into `app/tracks/t03_financial_health/` incl. import/test fixes) | WP-R | read-only |
 | `app/tracks/t04_early_warning/**` (everything inside, incl. its `pages/`, `charts.py`, `tests/`) | WP-4D/4M/4A per wave | nobody else |
 | `app/tracks/t05_fraud_intelligence/**` | WP-5D/5M/5A per wave | nobody else |
 | `components/state.py` — `get_ews_engine` / `get_fraud_engine` cache wrappers (thin, guarded imports) | WP-4A / WP-5A | append-only, separate sections |
