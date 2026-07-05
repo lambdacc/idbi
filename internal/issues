@@ -1,3 +1,5 @@
+0. Solution architecture - claims One platform, three problem statements: Track 03 (financial health), Track 04 (early warning) and Track 05 (fraud intelligence) all run on the shared stack below.. but the digrams is that of track 3. Create 3 separate digrams. Kepo the 3 tracks radio selectible on the page.
+
 1. Offline: make data-gen · make eval (holdout scorecard) · make train (6-archetype demo) · make demo (this
  app). this should not be shown to user. Should be in repo docs only
 

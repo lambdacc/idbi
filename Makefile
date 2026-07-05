@@ -25,6 +25,8 @@ install: venv
 
 data-gen:
 	$(PY) -m app.data_gen.build_dataset --n $(N)
+	@if [ -d app/tracks/t04_early_warning ]; then $(PY) -m app.tracks.t04_early_warning.data_gen.build; fi
+	@if [ -d app/tracks/t05_fraud_intelligence ]; then $(PY) -m app.tracks.t05_fraud_intelligence.data_gen.build; fi
 
 prefit:
 	$(PY) -m app.ml.prefit
@@ -48,4 +50,4 @@ docker-run:
 	docker run --rm -e PORT=$(PORT) -p $(PORT):$(PORT) creditpulse:local
 
 clean:
-	rm -rf app/data/*.csv .pytest_cache **/__pycache__
+	rm -rf app/data/*.csv app/data/*.pkl app/tracks/*/data .pytest_cache **/__pycache__

@@ -8,6 +8,8 @@ __pycache__/
 # Generated synthetic data + pre-fit engine (rebuilt via `make data-gen` / `make prefit`)
 app/data/*.csv
 app/data/*.pkl
+# Track engine prefit pickles (rebuilt via `make prefit`; never commit these)
+app/tracks/*/data/*.pkl
 
 # IDE
 .idea/

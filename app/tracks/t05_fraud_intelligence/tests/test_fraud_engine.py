@@ -109,7 +109,8 @@ def test_typology_captures_injected_accounts(engine, gt, typ):
 
 def test_hard_negatives_fire_no_typology_at_review(engine, gt):
     """No hard-negative fires any typology at Review strength (the differentiator)."""
-    hn = gt[gt.is_hard_negative == "1"].account_id
+    hn = gt[gt.is_hard_negative == 1].account_id
+    assert len(hn) >= 5  # guard against a vacuous pass if the filter/dtype drifts
     for a in hn:
         for h in engine.typology_hits(a):
             assert h.score < BAND_REVIEW, (a, h.name, h.score)
@@ -117,7 +118,8 @@ def test_hard_negatives_fire_no_typology_at_review(engine, gt):
 
 def test_hard_negatives_all_clear(engine, gt):
     scored = engine.score_accounts()
-    hn = gt[gt.is_hard_negative == "1"].account_id
+    hn = gt[gt.is_hard_negative == 1].account_id
+    assert len(hn) >= 5  # guard against a vacuous pass if the filter/dtype drifts
     for a in hn:
         assert scored.loc[a, "band"] == "Clear", (a, scored.loc[a, "score"])
 
