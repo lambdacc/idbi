@@ -4,3 +4,5 @@
 2. Instant (skip) option can be removed.
 
 3. The Assessment pipeline as rectangular boxes is not intuitive. Can we make it into a dynamic diagramatic flow, like animated flow chart that grows in stages, with hover showing more info on what happens in that stage. The idea is to help user create the mental map of what's under the hood.
+
+4. Minimum 3 seconds elapsed time for each assessmet pipeline stage before the next stage starts.

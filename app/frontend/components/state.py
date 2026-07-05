@@ -49,10 +49,14 @@ def require_assessment() -> Optional[Assessment]:
         st.markdown("<h1>No assessment yet</h1>", unsafe_allow_html=True)
         st.markdown(
             "<div class='cp-card' style='border-top:3px solid var(--cp-navy)'>"
-            "Pick a business on the <b>Home</b> page and click <b>Run assessment</b>. "
+            "Pick a business on the <b>Run Assessment</b> page and click <b>Run assessment</b>. "
             "The health card, pipeline and explainability views populate from that run."
             "</div>", unsafe_allow_html=True)
-        st.page_link("Home.py", label="Go to Home")
+        # Object-form link via the registry (path strings don't resolve against
+        # callable-registered pages — wp-s Q4); guarded so core never hard-imports
+        # a track (D10). Called only from T03 pages, so the target always exists.
+        from app.frontend import tracks
+        st.page_link(tracks.get_page("t03.run"), label="Go to Run Assessment")
         st.stop()
     return a
 

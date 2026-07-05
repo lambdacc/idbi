@@ -28,4 +28,4 @@ RUN python -m app.data_gen.build_dataset --n 400 \
 ENV PORT=8080
 EXPOSE 8080
 
-CMD ["sh", "-c", "streamlit run app/frontend/Home.py --server.port=${PORT} --server.address=0.0.0.0 --server.headless=true"]
+CMD ["sh", "-c", "streamlit run app/frontend/main.py --server.port=${PORT} --server.address=0.0.0.0 --server.headless=true"]

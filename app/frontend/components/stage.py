@@ -298,7 +298,8 @@ def render_detail(container, stage, entity_name: str, technical: bool,
                 f"<div class='name'>{html.escape(str(hc['name']))}</div>"
                 f"<div class='subtle'>Grade {hc['grade']}/10 · {hc['recommendation']} · "
                 f"confidence {hc['confidence']}</div></div></div>", unsafe_allow_html=True)
-            st.page_link("pages/3_Financial_Health_Card.py",
+            from app.frontend import tracks
+            st.page_link(tracks.get_page("t03.health_card"),
                          label="Open the full health card", use_container_width=True)
 
 

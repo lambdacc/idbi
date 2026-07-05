@@ -30,7 +30,7 @@ prefit:
 	$(PY) -m app.ml.prefit
 
 test:
-	$(PY) -m pytest app/tests -q
+	$(PY) -m pytest app/tests app/tracks -q
 
 eval:
 	$(PY) -m app.ml.eval.runner
@@ -39,7 +39,7 @@ train:
 	$(PY) -m app.ml.train
 
 demo: prefit
-	$(PY) -m streamlit run app/frontend/Home.py --server.port=$(PORT) --server.address=0.0.0.0
+	$(PY) -m streamlit run app/frontend/main.py --server.port=$(PORT) --server.address=0.0.0.0
 
 docker-build:
 	docker build -t creditpulse:local .

@@ -120,9 +120,35 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] a span { color: #eaf1fb; font-family: var(--cp-sans); }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] a:hover { background: rgba(255,255,255,.10); }
 [data-testid="stSidebar"] [data-testid="stSidebarNav"] a:focus-visible { outline: 2px solid #eaf1fb; outline-offset: 1px; }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] { background: rgba(255,255,255,.16); }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] span { font-weight: 600; }
+/* Active-link highlight: under st.navigation (MPA v2, pinned 1.39) nav links no
+   longer emit `aria-current="page"` (only the date-picker does) — the old
+   `a[aria-current="page"]` rule went dead. The active state is now Streamlit's
+   built-in `isActive` styling (bold label + darkened pill), which reads fine on
+   the navy rail; we reinforce it here targeting the stable NavLink testid so the
+   active pill keeps a light translucent wash consistent with the Ledger look. */
+[data-testid="stSidebar"] [data-testid="stSidebarNavLink"] span { color: #eaf1fb; font-family: var(--cp-sans); }
+/* Nav-group section headers — a net-new element under grouped st.navigation
+   (wp-s Q3). Small-caps, letter-spaced, muted-light on navy to echo `.cp-tag`. */
+[data-testid="stSidebar"] [data-testid="stNavSectionHeader"] {
+  color: #9cc2ee; font-family: var(--cp-sans); font-size: .64rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .11em; padding: .1rem .35rem;
+  margin-top: .7rem; opacity: .9;
+}
+[data-testid="stSidebar"] [data-testid="stNavSectionHeader"]:first-of-type { margin-top: .2rem; }
+/* We render every group (expanded=True), so the "view more" toggle never shows;
+   hide it defensively in case a future rerun collapses. */
+[data-testid="stSidebar"] [data-testid="stSidebarNavViewButton"] { display: none !important; }
 [data-testid="stSidebar"] .cp-brand { font-size: 1.55rem; padding: .2rem 0 0 0; }
+
+/* ---- Overview track cards: PS badge + capability list -------------------- */
+.cp-track-badge {
+  display: inline-block; padding: .16rem .55rem; border-radius: var(--cp-r-tag);
+  font-family: var(--cp-sans); font-size: .68rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--cp-navy); background: var(--cp-green-bg);
+  border: 1px solid var(--cp-green-bd);
+}
+ul.cp-caps { margin: 0; padding-left: 1.05rem; }
+ul.cp-caps li { font-family: var(--cp-sans); font-size: .82rem; color: var(--cp-ink-soft); line-height: 1.5; margin-bottom: .15rem; }
 
 /* ---- Wordmark ("Credit" upright + "Pulse" italic accent) ----------------- */
 .cp-logo { font-family: var(--cp-serif); font-weight: 500; letter-spacing: -.022em; white-space: nowrap; }

@@ -41,13 +41,23 @@ def brandmark() -> str:
     return "<span class='cp-logo'><span class='a'>Credit</span><span class='b'>Pulse</span></span>"
 
 
-def page_setup(title: str, icon: str = "") -> None:
+def shell_setup() -> None:
+    """Router-level chrome (multi-track D2), run once per rerun by `main.py`
+    BEFORE `st.navigation`. Owns everything that used to live in `page_setup`
+    except the per-page title: page config (its literal first Streamlit call),
+    the stylesheet (first-paint + persistent head copy), the sidebar brand, and
+    the single global Simple/Technical view toggle. Pages now render only their
+    own `page_header(...)` + body; they must NOT repeat any of this."""
     # A single navy monogram favicon replaces the old per-page emoji icons.
+    # set_page_config MUST be the first Streamlit command of the run (wp-s Q2),
+    # so it comes ahead of the CSS/brand/toggle deltas below.
     page_icon = str(_FAVICON) if _FAVICON.exists() else None
-    st.set_page_config(page_title=f"CreditPulse · {title}", page_icon=page_icon, layout="wide")
+    st.set_page_config(page_title="CreditPulse", page_icon=page_icon, layout="wide")
     if _CSS.exists():
         css = _CSS.read_text()
         # First-paint styling (immediate) + persistent head copy (survives nav).
+        # Under st.navigation the router runs every rerun, so this head-injection
+        # applies before any page body renders — no FOUC on nav clicks.
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
         _inject_css(css)
     with st.sidebar:
@@ -57,9 +67,9 @@ def page_setup(title: str, icon: str = "") -> None:
     # "simple"; initialise without clobbering an existing choice, then bind the
     # widget directly to the session key so the stored value is exactly
     # "simple"/"technical" and persists across page switches. The toggle lives
-    # top-right on every page (page_setup runs at the top of Home + pages 1-5),
-    # rendered above each page's title; the [5, 1.4] column pushes it right and
-    # the .cp-viewtoggle-anchor marker lets CSS compact it into a pill.
+    # top-right on every page (rendered once by the router, above each page's
+    # title); the [5, 1.4] column pushes it right and the .cp-viewtoggle-anchor
+    # marker lets CSS compact it into a pill and pull the page title up beside it.
     if "cp_view_mode" not in st.session_state:
         st.session_state["cp_view_mode"] = "simple"
     st.markdown("<div class='cp-viewtoggle-anchor'></div>", unsafe_allow_html=True)
@@ -74,6 +84,24 @@ def page_setup(title: str, icon: str = "") -> None:
             label_visibility="collapsed",
             help="Technical view shows the model internals (SHAP, clustering, execution trace).",
         )
+
+
+def page_header(title: str, caption: Optional[str] = None) -> None:
+    """Page-level heading (multi-track D2). Renders the page h1 (+ optional
+    caption) directly under the router-owned view toggle, so the toggle-compaction
+    CSS pulls the title up beside the toggle exactly as before. Replaces the title
+    half of the old `page_setup`; all chrome now lives in `shell_setup`."""
+    st.title(title)
+    if caption:
+        st.caption(caption)
+
+
+def page_setup(title: str, icon: str = "") -> None:  # pragma: no cover
+    """Deprecated shim kept only so any stray caller does not crash. The router
+    (`shell_setup`) owns chrome now and pages call `page_header`. Do NOT use in
+    new code; this renders only the page title (config/CSS/brand/toggle are the
+    router's job and calling set_page_config here would raise under st.navigation)."""
+    page_header(title)
 
 
 def band_class(band: str) -> str:
