@@ -106,11 +106,13 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
 .st-key-cp_topnav [data-testid="stHorizontalBlock"] {
   flex-wrap: nowrap; gap: .3rem; align-items: center;
 }
+/* max-content basis: a nav column can never shrink below its label, so pills
+   and tabs cannot truncate or overlap at any viewport width or zoom level. */
 .st-key-cp_topnav [data-testid="stColumn"],
 .st-key-cp_pills  [data-testid="stColumn"] {
-  flex: 0 0 auto !important; width: auto !important; min-width: 0 !important;
+  flex: 0 0 max-content !important; width: max-content !important; min-width: 0 !important;
 }
-.st-key-cp_topnav [data-testid="stColumn"]:has(.cp-nav-spacer) { flex: 1 1 auto !important; }
+.st-key-cp_topnav [data-testid="stColumn"]:has(.cp-nav-spacer) { flex: 1 1 auto !important; width: auto !important; }
 .st-key-cp_topnav [data-testid="stVerticalBlock"],
 .st-key-cp_pills  [data-testid="stVerticalBlock"] { gap: 0 !important; }
 .cp-here, .cp-nav-spacer { height: 0; }
@@ -208,18 +210,35 @@ ul.cp-caps li { font-family: var(--cp-sans); font-size: .82rem; color: var(--cp-
 .cp-card {
   background: var(--cp-bg); border: 1px solid var(--cp-border);
   border-radius: var(--cp-radius); padding: 1.05rem 1.2rem; margin-bottom: 1rem;
+  transition: box-shadow .18s ease, border-color .18s ease;
 }
+.cp-card:hover { box-shadow: var(--cp-shadow); }
 .cp-card h4 {
   margin: 0 0 .5rem 0; font-family: var(--cp-sans); font-size: .72rem; color: var(--cp-muted);
   text-transform: uppercase; letter-spacing: .09em; font-weight: 600;
+}
+/* Lists inside cards: tight navy dot markers close to their text (the UA
+   default floats bullets a wide indent away inside stMarkdown blocks). */
+.cp-card ul:not(.cp-caps) { list-style: none; margin: .15rem 0 0; padding-left: .15rem; }
+.cp-card ul:not(.cp-caps) > li { position: relative; padding-left: 1.1rem; margin: .4rem 0; line-height: 1.55; }
+.cp-card ul:not(.cp-caps) > li::before {
+  content: ""; position: absolute; left: 0; top: .58em; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--cp-navy);
 }
 
 /* ---- KPI tile (no bootstrap left-bar; label + big mono value + top accent) - */
 .cp-kpi {
   background: var(--cp-bg); border: 1px solid var(--cp-border);
   border-top: 2px solid var(--cp-border-2);
-  border-radius: var(--cp-r); padding: .85rem 1rem; height: 100%;
+  border-radius: var(--cp-r); padding: .85rem 1rem;
+  /* Streamlit's stMarkdownContainer carries margin-bottom:-1rem (it assumes a
+     trailing <p> with a 1rem margin). A raw div block must supply that 1rem
+     itself or the container under-counts its height by 16px and the next
+     element overlaps the tile's bottom border. Same pattern as .cp-card. */
+  margin-bottom: 1rem;
+  transition: transform .18s ease, box-shadow .18s ease;
 }
+.cp-kpi:hover { transform: translateY(-2px); box-shadow: var(--cp-shadow); }
 .cp-kpi .lbl {
   font-family: var(--cp-sans); font-size: .68rem; color: var(--cp-muted);
   text-transform: uppercase; letter-spacing: .08em; font-weight: 600;
@@ -311,7 +330,9 @@ ul.cp-caps li { font-family: var(--cp-sans); font-size: .82rem; color: var(--cp-
 .cp-comp {
   border: 1px solid var(--cp-border); border-radius: var(--cp-r); padding: .7rem .85rem;
   background: var(--cp-bg); margin-bottom: .6rem;
+  transition: border-color .18s ease, box-shadow .18s ease;
 }
+.cp-comp:hover { border-color: var(--cp-border-2); box-shadow: var(--cp-shadow); }
 .cp-comp.flagship { border-color: var(--cp-green-bd); background: var(--cp-green-bg); box-shadow: inset 3px 0 0 var(--cp-navy); }
 .cp-comp .hd { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; }
 .cp-comp .nm { font-family: var(--cp-sans); font-weight: 600; color: var(--cp-ink); font-size: .9rem; }
@@ -438,7 +459,9 @@ ul.cp-caps li { font-family: var(--cp-sans); font-size: .82rem; color: var(--cp-
 .cp-live-anchor + div { animation: cp-in .25s ease; }
 @keyframes cp-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .cp-stage, .stButton > button, .cp-tipbox { transition: none; }
+  .cp-stage, .stButton > button, .cp-tipbox, .cp-kpi, .cp-card, .cp-comp,
+  [data-testid="stPageLink"] a { transition: none; }
+  .cp-kpi:hover { transform: none; }
   .cp-live-anchor + div { animation: none; }
 }
 
@@ -448,9 +471,11 @@ hr { border-color: var(--cp-border); }
 [data-testid="stMetricValue"] { color: var(--cp-ink); }
 
 /* ---- Narrow viewports ----------------------------------------------------- */
-/* Let the navbar wrap to two rows before it would overflow. */
+/* Let the navbar wrap to two rows before it would overflow; drop the stretch
+   spacer so wrapped rows flow compactly instead of stranding the right side. */
 @media (max-width: 980px) {
-  .st-key-cp_topnav [data-testid="stHorizontalBlock"] { flex-wrap: wrap; row-gap: .15rem; }
+  .st-key-cp_topnav [data-testid="stHorizontalBlock"] { flex-wrap: wrap; row-gap: .3rem; }
+  .st-key-cp_topnav [data-testid="stColumn"]:has(.cp-nav-spacer) { display: none; }
 }
 @media (max-width: 640px) {
   .block-container { padding-left: 1rem; padding-right: 1rem; }
