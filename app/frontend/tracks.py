@@ -225,22 +225,27 @@ def render_topnav(current_page) -> None:
     """Registry-driven top product navbar for the hidden-position router
     (replaces the sidebar rail — team-lead + UX review, 06 Jul).
 
-    Two navigation levels, kept visually separate so each reads unambiguously:
+    Three layers, kept visually separate so each reads unambiguously:
 
-      * the navy bar = WHICH PRODUCT: brand wordmark, Overview, one tab per
-        installed problem-statement track, Architecture, and the global
-        Simple/Technical toggle (right);
+      * a slim utility row above everything, right-aligned: the global
+        Simple/Technical view toggle;
+      * the navy bar = WHICH PRODUCT: brand wordmark (left), then Overview,
+        one tab per installed problem-statement track, and Architecture as a
+        centred link group;
       * below it, on product pages only: a masthead heading the product
-        ('CreditPulse | Financial Health' + its PS badge) and one pill per
-        page of the ACTIVE track.
+        (product name + its PS badge) and one pill per page of the ACTIVE
+        track.
 
-    Columns are content-sized via CSS (flex auto), with one stretch spacer
-    pushing Architecture + the toggle to the right edge."""
+    Columns are content-sized via CSS (flex max-content); the two stretch
+    spacers around the link group centre it inside the bar."""
     from app.frontend.components import ui
 
     active = track_of_page(current_page)
     current_key = _key_of_page(current_page)
     products = [t for t in installed_tracks() if t.badge]
+
+    with st.container(key="cp_utilbar"):
+        ui.view_toggle()
 
     with st.container(key="cp_topnav"):
         cols = iter(st.columns(len(products) + 5, vertical_alignment="center"))
@@ -249,18 +254,18 @@ def render_topnav(current_page) -> None:
                 "<div class='cp-nav-brand'><span class='a'>Credit</span>"
                 "<span class='b'>Pulse</span></div>", unsafe_allow_html=True)
         with next(cols):
+            st.markdown("<div class='cp-nav-spacer'></div>", unsafe_allow_html=True)
+        with next(cols):
             _nav_link("platform.overview", "Overview",
                       active is not None and active.id == "platform")
         for track in products:
             with next(cols):
                 _nav_link(track.start_key, _short(track.label), track is active)
         with next(cols):
-            st.markdown("<div class='cp-nav-spacer'></div>", unsafe_allow_html=True)
-        with next(cols):
             _nav_link("ref.architecture", "Architecture",
                       active is not None and active.id == "ref")
         with next(cols):
-            ui.view_toggle()
+            st.markdown("<div class='cp-nav-spacer'></div>", unsafe_allow_html=True)
 
     # Product masthead + page pills — product pages only; Overview is the brand
     # landing and Reference pages carry a masthead without a badge. The navbar

@@ -119,15 +119,21 @@ def score_class(score: float) -> str:
     return "good" if score >= 74 else ("warn" if score >= 58 else "risk")
 
 
-def kpi(label: str, value: str, sub: str = "", kind: str = "", tip: str = "") -> str:
+def kpi(label: str, value: str, sub: str = "", kind: str = "", tip: str = "",
+        text: bool = False) -> str:
+    """One KPI tile. `text=True` marks a WORD value (sector, category, risk
+    band): it renders in the sans face at a size that always fits the tile —
+    the big numeral mono is reserved for numbers (Ledger rule) and long words
+    set in it overflow narrow tiles."""
     cls = f"cp-kpi {kind}".strip()
+    vcls = "val txt" if text else "val"
     lbl = html.escape(label)
     if tip:
         safe_tip = html.escape(tip)  # escapes quotes too (aria-label safe)
         lbl += (f"<span class='cp-info' tabindex='0' role='img' aria-label='{safe_tip}'>"
                 f"ⓘ<span class='cp-tipbox'>{safe_tip}</span></span>")
     return (f"<div class='{cls}'><div class='lbl'>{lbl}</div>"
-            f"<div class='val'>{value}</div><div class='sub'>{html.escape(sub)}</div></div>")
+            f"<div class='{vcls}'>{value}</div><div class='sub'>{html.escape(sub)}</div></div>")
 
 
 def badge(text: str, kind: str = "info") -> str:

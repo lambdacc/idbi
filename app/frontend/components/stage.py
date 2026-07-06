@@ -196,8 +196,10 @@ def render_detail(container, stage, entity_name: str, technical: bool,
         if stage.key == "scenario_lock_in":
             e = d["entity"]
             cols = st.columns(5)
-            cols[0].markdown(kpi("Sector", e.get("sector", "-")), unsafe_allow_html=True)
-            cols[1].markdown(kpi("Udyam category", e.get("category", "-")), unsafe_allow_html=True)
+            cols[0].markdown(kpi("Sector", html.escape(str(e.get("sector", "-"))), text=True),
+                             unsafe_allow_html=True)
+            cols[1].markdown(kpi("Udyam category", html.escape(str(e.get("category", "-"))), text=True),
+                             unsafe_allow_html=True)
             cols[2].markdown(kpi("Vintage", f"{e.get('age_years', '-')} y"), unsafe_allow_html=True)
             cols[3].markdown(kpi("Employees", str(e.get("employees", "-"))), unsafe_allow_html=True)
             cols[4].markdown(kpi("Declared turnover", fmt_inr(e.get("declared_turnover"))),
@@ -279,9 +281,9 @@ def render_detail(container, stage, entity_name: str, technical: bool,
                     st.markdown(kpi("Model PD", fmt_pd(d["pd"]), d["risk_category"] + " risk",
                                 risk_class(d["risk_category"])), unsafe_allow_html=True)
                 else:
-                    st.markdown(kpi("Estimated default risk", d["risk_category"],
+                    st.markdown(kpi("Estimated default risk", html.escape(str(d["risk_category"])),
                                 "chance of repayment difficulty",
-                                risk_class(d["risk_category"])), unsafe_allow_html=True)
+                                risk_class(d["risk_category"]), text=True), unsafe_allow_html=True)
 
         elif stage.key == "explainability":
             render_reasons(d["reasons_positive"], d["reasons_negative"])
