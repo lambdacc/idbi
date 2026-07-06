@@ -19,14 +19,16 @@ import streamlit as st
 
 from app.frontend import tracks
 from app.frontend.components import state
-from app.frontend.components.ui import brandmark
 
 
 def render() -> None:
     _tech = state.is_technical()
 
-    st.markdown(f"<h1 class='cp-logo-page'>{brandmark()}</h1>", unsafe_allow_html=True)
-    st.caption("One platform, three problem statements · IDBI Innovate 2026 · all data synthetic")
+    # The navbar already carries the wordmark, so the landing headline is the
+    # platform story itself rather than a second brandmark.
+    st.markdown("<h1 class='cp-ov-hero'>One platform, three problem statements</h1>",
+                unsafe_allow_html=True)
+    st.caption("The MSME lending lifecycle on one data spine · IDBI Innovate 2026 · all data synthetic")
 
     # NB: this string lands inside an HTML card, so emphasis must be HTML tags —
     # markdown syntax is not parsed inside an unsafe_allow_html block.

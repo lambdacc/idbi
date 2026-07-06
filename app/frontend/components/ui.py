@@ -43,14 +43,13 @@ def brandmark() -> str:
 
 def shell_setup() -> None:
     """Router-level chrome (multi-track D2), run once per rerun by `main.py`
-    BEFORE `st.navigation`. Owns everything that used to live in `page_setup`
-    except the per-page title: page config (its literal first Streamlit call),
-    the stylesheet (first-paint + persistent head copy), the sidebar brand, and
-    the single global Simple/Technical view toggle. Pages now render only their
-    own `page_header(...)` + body; they must NOT repeat any of this."""
+    BEFORE `st.navigation`: page config (its literal first Streamlit command)
+    and the stylesheet (first-paint + persistent head copy). Navigation chrome
+    — the top product navbar, masthead, page pills and the view toggle — is
+    rendered by `tracks.render_topnav` after `st.navigation` resolves the
+    current page. There is no sidebar."""
     # A single navy monogram favicon replaces the old per-page emoji icons.
-    # set_page_config MUST be the first Streamlit command of the run (wp-s Q2),
-    # so it comes ahead of the CSS/brand/toggle deltas below.
+    # set_page_config MUST be the first Streamlit command of the run (wp-s Q2).
     page_icon = str(_FAVICON) if _FAVICON.exists() else None
     st.set_page_config(page_title="CreditPulse", page_icon=page_icon, layout="wide")
     if _CSS.exists():
@@ -60,38 +59,34 @@ def shell_setup() -> None:
         # applies before any page body renders — no FOUC on nav clicks.
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
         _inject_css(css)
-    with st.sidebar:
-        st.markdown(f"<div class='cp-brand'>{brandmark()}</div>", unsafe_allow_html=True)
 
-    # Global Simple/Technical view toggle (design decision D3). Default
-    # "simple"; initialise without clobbering an existing choice, then bind the
-    # widget directly to the session key so the stored value is exactly
-    # "simple"/"technical" and persists across page switches. The toggle lives
-    # top-right on every page (rendered once by the router, above each page's
-    # title); the [5, 1.4] column pushes it right and the .cp-viewtoggle-anchor
-    # marker lets CSS compact it into a pill and pull the page title up beside it.
+
+def view_toggle() -> None:
+    """The global Simple/Technical view toggle (design decision D3), rendered
+    by the router inside the top navbar (rightmost slot). Default "simple";
+    initialise without clobbering an existing choice, then bind the widget
+    directly to the session key so the stored value is exactly
+    "simple"/"technical" and persists across page switches."""
     if "cp_view_mode" not in st.session_state:
         st.session_state["cp_view_mode"] = "simple"
-    st.markdown("<div class='cp-viewtoggle-anchor'></div>", unsafe_allow_html=True)
-    _spacer, ctrl = st.columns([5, 1.4])
-    with ctrl:
-        st.radio(
-            "View",
-            options=["simple", "technical"],
-            format_func=lambda m: m.capitalize(),
-            key="cp_view_mode",
-            horizontal=True,
-            label_visibility="collapsed",
-            help="Technical view shows the model internals (SHAP, clustering, execution trace).",
-        )
+    st.radio(
+        "View",
+        options=["simple", "technical"],
+        format_func=lambda m: m.capitalize(),
+        key="cp_view_mode",
+        horizontal=True,
+        label_visibility="collapsed",
+        help="Technical view shows the model internals (SHAP, clustering, execution trace).",
+    )
 
 
 def page_header(title: str, caption: Optional[str] = None) -> None:
-    """Page-level heading (multi-track D2). Renders the page h1 (+ optional
-    caption) directly under the router-owned view toggle, so the toggle-compaction
-    CSS pulls the title up beside the toggle exactly as before. Replaces the title
-    half of the old `page_setup`; all chrome now lives in `shell_setup`."""
-    st.title(title)
+    """Page-level heading (multi-track D2). Under the top-navbar shell the
+    product masthead ('CreditPulse | <product>') is the page's dominant heading,
+    so this renders as a quieter serif h2 (+ optional caption) rather than an
+    h1 competing with it."""
+    st.markdown(f"<h2 class='cp-pagetitle'>{html.escape(title)}</h2>",
+                unsafe_allow_html=True)
     if caption:
         st.caption(caption)
 

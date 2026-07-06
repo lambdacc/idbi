@@ -191,34 +191,91 @@ def get_page(key: str):
     return _PAGE_OBJECTS[key]
 
 
+def _key_of_page(page) -> Optional[str]:
+    """Registry key of a StreamlitPage returned by `st.navigation` this rerun
+    (identity lookup — build_navigation constructs fresh page objects on every
+    rerun, so `is` is the reliable comparison)."""
+    return next((k for k, p in _PAGE_OBJECTS.items() if p is page), None)
+
+
 def track_of_page(page) -> Optional[TrackSpec]:
-    """The TrackSpec owning a StreamlitPage returned by `st.navigation` this
-    rerun (identity lookup — build_navigation constructs fresh page objects on
-    every rerun, so `is` is the reliable comparison)."""
-    key = next((k for k, p in _PAGE_OBJECTS.items() if p is page), None)
+    """The TrackSpec owning a StreamlitPage returned by `st.navigation`."""
+    key = _key_of_page(page)
     if key is None:
         return None
     return next((t for t in TRACKS if any(sp.key == key for sp in t.pages)), None)
 
 
-def render_sidebar(current_page) -> None:
-    """Registry-driven sidebar nav for the hidden-position router.
+def _short(label: str) -> str:
+    """Product short name from a group label ('Problem Statement 3 · Financial
+    Health' -> 'Financial Health')."""
+    return label.split("·")[-1].strip()
 
-    Every installed group keeps its small-caps section header, but only the
-    ACTIVE track lists all of its pages; inactive tracks collapse to their
-    start page (the D11 deep-link target), so the rail stays short and the
-    current track reads as the expanded one. Platform and Reference groups are
-    single-page and always show."""
+
+def _nav_link(key: str, label: str, active: bool) -> None:
+    """One navbar/pill link. The active one carries a zero-height `.cp-here`
+    marker so CSS can style its column's page_link via `:has(.cp-here)` —
+    st.page_link exposes no active state of its own under the hidden router."""
+    if active:
+        st.markdown("<div class='cp-here'></div>", unsafe_allow_html=True)
+    st.page_link(_PAGE_OBJECTS[key], label=label)
+
+
+def render_topnav(current_page) -> None:
+    """Registry-driven top product navbar for the hidden-position router
+    (replaces the sidebar rail — team-lead + UX review, 06 Jul).
+
+    Two navigation levels, kept visually separate so each reads unambiguously:
+
+      * the navy bar = WHICH PRODUCT: brand wordmark, Overview, one tab per
+        installed problem-statement track, Architecture, and the global
+        Simple/Technical toggle (right);
+      * below it, on product pages only: a masthead heading the product
+        ('CreditPulse | Financial Health' + its PS badge) and one pill per
+        page of the ACTIVE track.
+
+    Columns are content-sized via CSS (flex auto), with one stretch spacer
+    pushing Architecture + the toggle to the right edge."""
+    from app.frontend.components import ui
+
     active = track_of_page(current_page)
-    with st.sidebar:
-        first = True
-        for track in TRACKS:
-            if not track.installed:
-                continue
-            cls = "cp-navhead first" if first else "cp-navhead"
-            first = False
-            st.markdown(f"<div class='{cls}'>{html.escape(track.label)}</div>",
-                        unsafe_allow_html=True)
-            expanded = track.folder is None or track is active
-            for sp in (track.pages if expanded else track.pages[:1]):
-                st.page_link(_PAGE_OBJECTS[sp.key], label=sp.title)
+    current_key = _key_of_page(current_page)
+    products = [t for t in installed_tracks() if t.badge]
+
+    with st.container(key="cp_topnav"):
+        cols = iter(st.columns(len(products) + 5, vertical_alignment="center"))
+        with next(cols):
+            st.markdown(
+                "<div class='cp-nav-brand'><span class='a'>Credit</span>"
+                "<span class='b'>Pulse</span></div>", unsafe_allow_html=True)
+        with next(cols):
+            _nav_link("platform.overview", "Overview",
+                      active is not None and active.id == "platform")
+        for track in products:
+            with next(cols):
+                _nav_link(track.start_key, _short(track.label), track is active)
+        with next(cols):
+            st.markdown("<div class='cp-nav-spacer'></div>", unsafe_allow_html=True)
+        with next(cols):
+            _nav_link("ref.architecture", "Architecture",
+                      active is not None and active.id == "ref")
+        with next(cols):
+            ui.view_toggle()
+
+    # Product masthead + page pills — product pages only; Overview is the brand
+    # landing and Reference pages carry a masthead without a badge.
+    if active is None or active.id == "platform":
+        return
+    badge = (f"<span class='cp-track-badge'>{html.escape(active.badge)}</span>"
+             if active.badge else "")
+    st.markdown(
+        f"<div class='cp-masthead'>"
+        f"<span class='cp-logo'><span class='a'>Credit</span><span class='b'>Pulse</span></span>"
+        f"<span class='prod'>{html.escape(_short(active.label))}</span>{badge}</div>",
+        unsafe_allow_html=True)
+    if len(active.pages) > 1:
+        with st.container(key="cp_pills"):
+            for col, sp in zip(st.columns(len(active.pages), vertical_alignment="center"),
+                               active.pages):
+                with col:
+                    _nav_link(sp.key, sp.title, sp.key == current_key)

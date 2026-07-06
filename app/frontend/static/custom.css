@@ -91,78 +91,93 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
 /* Streamlit captions read as quiet grotesk, not serif. */
 [data-testid="stCaptionContainer"], .stCaption, small { font-family: var(--cp-sans); color: var(--cp-muted); }
 
-/* ---- Sidebar (deep navy rail, light text, translucent active) ----------- */
-[data-testid="stSidebar"] {
-  background: linear-gradient(180deg, var(--cp-navy-deep), var(--cp-navy));
-  min-width: 16rem; max-width: 16rem;
-  /* Streamlit defaults to `transition: transform .3s, min-width .3s, max-width .3s`.
-     On every page rerun the sidebar re-mounts and animates its width to this
-     forced 16rem, sliding the main content sideways ("the page jumps right then
-     settles"). Snap width instantly; the collapse control still works. */
-  transition: none !important;
+/* ---- Top product navbar (no sidebar; hidden-position router) --------------
+   Two navigation levels, visually separated: the navy bar answers "which
+   product" (brand · Overview · one tab per track · Architecture · view
+   toggle); the masthead + pill row below it answer "which page inside it".
+   Rendered by tracks.render_topnav. Columns become content-sized flex items;
+   the `.cp-nav-spacer` column stretches to push Architecture + the toggle
+   right. The active link's column carries a `.cp-here` marker. */
+.st-key-cp_topnav {
+  background: linear-gradient(135deg, var(--cp-navy-deep), var(--cp-navy));
+  border-radius: var(--cp-radius); padding: .5rem .8rem;
+  box-shadow: var(--cp-shadow); margin-bottom: .4rem;
 }
-/* Reclaim the tall sidebar header: it reserves ~78px for an unused st.logo
-   spacer + padding, pushing the wordmark down. Collapse the spacer and trim the
-   header so the brand sits near the top; the collapse control still works. */
-[data-testid="stSidebar"] [data-testid="stSidebarHeader"] { padding-top: .5rem; padding-bottom: 0; min-height: 0; }
-[data-testid="stSidebar"] [data-testid="stLogoSpacer"] { display: none; }
-/* Collapse control not needed; the sidebar is fixed navigation. */
-[data-testid="stSidebarCollapseButton"] { display: none !important; }
-/* Brand-above-nav reorder (Streamlit 1.39 paints nav above user content). */
-[data-testid="stSidebar"] [data-testid="stSidebarContent"] { display: flex; flex-direction: column; }
-[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] { order: 1; padding-top: .35rem; margin-top: 0; }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] { order: 2; }
-[data-testid="stSidebar"] * { color: #eaf1fb; }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] { margin-top: .6rem; border-top: 1px solid rgba(255,255,255,.14); padding-top: .5rem; }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a {
-  border-radius: var(--cp-r); padding-left: .35rem; transition: background-color .15s ease;
+.st-key-cp_topnav [data-testid="stHorizontalBlock"] {
+  flex-wrap: nowrap; gap: .3rem; align-items: center;
 }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a span { color: #eaf1fb; font-family: var(--cp-sans); }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:hover { background: rgba(255,255,255,.10); }
-[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:focus-visible { outline: 2px solid #eaf1fb; outline-offset: 1px; }
-/* Active-link highlight: under st.navigation (MPA v2, pinned 1.39) nav links no
-   longer emit `aria-current="page"` (only the date-picker does) — the old
-   `a[aria-current="page"]` rule went dead. The active state is now Streamlit's
-   built-in `isActive` styling (bold label + darkened pill), which reads fine on
-   the navy rail; we reinforce it here targeting the stable NavLink testid so the
-   active pill keeps a light translucent wash consistent with the Ledger look. */
-[data-testid="stSidebar"] [data-testid="stSidebarNavLink"] span { color: #eaf1fb; font-family: var(--cp-sans); }
-/* Nav-group section headers — a net-new element under grouped st.navigation
-   (wp-s Q3). Small-caps, letter-spaced, muted-light on navy to echo `.cp-tag`. */
-[data-testid="stSidebar"] [data-testid="stNavSectionHeader"] {
-  color: #9cc2ee; font-family: var(--cp-sans); font-size: .64rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: .11em; padding: .1rem .35rem;
-  margin-top: .7rem; opacity: .9;
+.st-key-cp_topnav [data-testid="stColumn"],
+.st-key-cp_pills  [data-testid="stColumn"] {
+  flex: 0 0 auto !important; width: auto !important; min-width: 0 !important;
 }
-[data-testid="stSidebar"] [data-testid="stNavSectionHeader"]:first-of-type { margin-top: .2rem; }
-/* We render every group (expanded=True), so the "view more" toggle never shows;
-   hide it defensively in case a future rerun collapses. */
-[data-testid="stSidebar"] [data-testid="stSidebarNavViewButton"] { display: none !important; }
-[data-testid="stSidebar"] .cp-brand { font-size: 1.55rem; padding: .2rem 0 0 0; }
+.st-key-cp_topnav [data-testid="stColumn"]:has(.cp-nav-spacer) { flex: 1 1 auto !important; }
+.st-key-cp_topnav [data-testid="stVerticalBlock"],
+.st-key-cp_pills  [data-testid="stVerticalBlock"] { gap: 0 !important; }
+.cp-here, .cp-nav-spacer { height: 0; }
 
-/* ---- Custom sidebar nav (hidden-position router) --------------------------
-   The registry renders the rail itself (tracks.render_sidebar): small-caps
-   group headers + st.page_link rows; only the active track's pages expand.
-   Mirrors the retired stSidebarNav / stNavSectionHeader styling above. */
-[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] [data-testid="stVerticalBlock"] { gap: .18rem; }
-[data-testid="stSidebar"] .cp-navhead {
-  color: #9cc2ee; font-family: var(--cp-sans); font-size: .64rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: .11em; padding: .1rem .35rem;
-  margin-top: .75rem; opacity: .9;
+/* Brand wordmark, light-on-navy. */
+.cp-nav-brand {
+  font-family: var(--cp-serif); font-size: 1.34rem; font-weight: 500;
+  letter-spacing: -.022em; white-space: nowrap; padding: 0 .6rem 0 .2rem; line-height: 1;
 }
-[data-testid="stSidebar"] .cp-navhead.first {
-  margin-top: .6rem; border-top: 1px solid rgba(255,255,255,.14); padding-top: .6rem;
-}
-[data-testid="stSidebar"] [data-testid="stPageLink"] a {
-  border-radius: var(--cp-r); padding: .3rem .35rem; margin: 0;
+.cp-nav-brand .a { color: #ffffff; }
+.cp-nav-brand .b { color: #9cc2ee; font-style: italic; padding-right: .04em; }
+
+/* Product tabs: quiet light-blue text; the active tab inverts to a white pill
+   with navy text so "where am I" is answered at a glance. */
+.st-key-cp_topnav [data-testid="stPageLink"] a {
+  padding: .3rem .8rem; border-radius: var(--cp-r); background: transparent;
   transition: background-color .15s ease;
 }
-[data-testid="stSidebar"] [data-testid="stPageLink"] a:hover { background: rgba(255,255,255,.10); }
-[data-testid="stSidebar"] [data-testid="stPageLink"] a:focus-visible { outline: 2px solid #eaf1fb; outline-offset: 1px; }
-[data-testid="stSidebar"] [data-testid="stPageLink"] a span,
-[data-testid="stSidebar"] [data-testid="stPageLink"] a p {
-  color: #eaf1fb; font-family: var(--cp-sans); font-size: .92rem;
+.st-key-cp_topnav [data-testid="stPageLink"] a p,
+.st-key-cp_topnav [data-testid="stPageLink"] a span {
+  color: #d9e6f6; font-family: var(--cp-sans); font-size: .88rem; font-weight: 500;
+  white-space: nowrap;
 }
+.st-key-cp_topnav [data-testid="stPageLink"] a:hover { background: rgba(255,255,255,.12); }
+.st-key-cp_topnav [data-testid="stPageLink"] a:focus-visible { outline: 2px solid #ffffff; outline-offset: 1px; }
+.st-key-cp_topnav [data-testid="stColumn"]:has(.cp-here) [data-testid="stPageLink"] a { background: #ffffff; }
+.st-key-cp_topnav [data-testid="stColumn"]:has(.cp-here) [data-testid="stPageLink"] a p,
+.st-key-cp_topnav [data-testid="stColumn"]:has(.cp-here) [data-testid="stPageLink"] a span {
+  color: var(--cp-navy-deep); font-weight: 600;
+}
+
+/* ---- Product masthead ('CreditPulse | Financial Health' + PS badge) ------- */
+.cp-masthead { display: flex; align-items: baseline; gap: .85rem; margin: .9rem 0 .15rem; flex-wrap: wrap; }
+.cp-masthead .cp-logo { font-size: 1.8rem; line-height: 1.1; }
+.cp-masthead .prod {
+  font-family: var(--cp-serif); font-size: 1.8rem; font-weight: 560; line-height: 1.1;
+  letter-spacing: -.015em; color: var(--cp-navy);
+  border-left: 2px solid var(--cp-border-2); padding-left: .85rem;
+}
+.cp-masthead .cp-track-badge { align-self: center; }
+
+/* ---- Page pills (the active track's pages) -------------------------------- */
+.st-key-cp_pills [data-testid="stHorizontalBlock"] { flex-wrap: wrap; gap: .4rem; align-items: center; }
+.st-key-cp_pills [data-testid="stPageLink"] a {
+  padding: .24rem .8rem; border-radius: 999px; border: 1px solid var(--cp-border-2);
+  background: var(--cp-bg); transition: background-color .15s ease, border-color .15s ease;
+}
+.st-key-cp_pills [data-testid="stPageLink"] a p,
+.st-key-cp_pills [data-testid="stPageLink"] a span {
+  color: var(--cp-ink-soft); font-family: var(--cp-sans); font-size: .84rem; font-weight: 500;
+  white-space: nowrap;
+}
+.st-key-cp_pills [data-testid="stPageLink"] a:hover { background: var(--cp-panel); border-color: var(--cp-navy); }
+.st-key-cp_pills [data-testid="stColumn"]:has(.cp-here) [data-testid="stPageLink"] a {
+  background: var(--cp-navy); border-color: var(--cp-navy);
+}
+.st-key-cp_pills [data-testid="stColumn"]:has(.cp-here) [data-testid="stPageLink"] a p,
+.st-key-cp_pills [data-testid="stColumn"]:has(.cp-here) [data-testid="stPageLink"] a span {
+  color: #ffffff; font-weight: 600;
+}
+
+/* ---- Page title (quiet h2 under the masthead) ------------------------------ */
+.cp-pagetitle {
+  font-family: var(--cp-serif); font-size: 1.58rem; font-weight: 540;
+  letter-spacing: -.01em; line-height: 1.15; margin: .85rem 0 0;
+}
+h1.cp-ov-hero { font-size: 2.35rem; margin: 1.1rem 0 .1rem; }
 
 /* ---- Overview track cards: PS badge + capability list -------------------- */
 .cp-track-badge {
@@ -178,24 +193,8 @@ ul.cp-caps li { font-family: var(--cp-sans); font-size: .82rem; color: var(--cp-
 .cp-logo { font-family: var(--cp-serif); font-weight: 500; letter-spacing: -.022em; white-space: nowrap; }
 .cp-logo .a { color: var(--cp-navy-deep); }
 .cp-logo .b { color: var(--cp-blue); font-style: italic; padding-right: .04em; }
-h1.cp-logo-page { font-size: 2.7rem; line-height: 1.05; margin-top: 0; margin-bottom: .1rem; }
-/* On the navy sidebar the wordmark inverts to light-on-dark. */
-[data-testid="stSidebar"] .cp-logo .a { color: #ffffff; }
-[data-testid="stSidebar"] .cp-logo .b { color: #9cc2ee; }
 
-/* ---- Simple / Technical toggle (top-right segmented control) -------------- */
-/* Collapse the toggle row's vertical footprint so the page title rises up beside
-   it (title left, toggle right) instead of leaving a tall empty band on top.
-   Hooks are keyed to the radio's stable `.st-key-cp_view_mode` container and a
-   `:has()` on its row -- robust across reruns, unlike sibling-adjacency.
-   The negative margin makes the title block (full-width, even though its text
-   is short) geometrically overlap the toggle; `position: relative` + a z-index
-   above the title's default stacking layer keeps the toggle on top so it still
-   receives clicks instead of silently losing them to the title underneath. */
-.cp-viewtoggle-anchor { height: 0; margin: 0; }
-[data-testid="stHorizontalBlock"]:has(.st-key-cp_view_mode) {
-  margin-top: -.4rem; margin-bottom: -3.4rem; position: relative; z-index: 5;
-}
+/* ---- Simple / Technical toggle (segmented control, navbar right slot) ----- */
 .st-key-cp_view_mode [data-testid="stRadio"] > div[role="radiogroup"] {
   flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; gap: 0;
   border: 1px solid var(--cp-border-2); border-radius: var(--cp-r);
@@ -414,9 +413,17 @@ h1.cp-logo-page { font-size: 2.7rem; line-height: 1.05; margin-top: 0; margin-bo
 }
 .stButton > button[kind="secondary"]:hover { background: var(--cp-panel); color: var(--cp-ink); border-color: var(--cp-navy); }
 
-/* Page-link chrome to match the tag/button language. */
-[data-testid="stPageLink"] a { border-radius: var(--cp-r); }
-[data-testid="stPageLink"] a:hover { background: var(--cp-panel); }
+/* Page-link chrome to match the tag/button language: in-content page links
+   read as quiet outline buttons (the navbar/pill blocks override this with
+   their own chrome), so "Open <track>" and cross-page links are obviously
+   clickable rather than bare text. */
+[data-testid="stPageLink"] a {
+  border-radius: var(--cp-r); border: 1px solid var(--cp-border-2);
+  justify-content: center; padding: .4rem .9rem; background: var(--cp-bg);
+}
+[data-testid="stPageLink"] a p { font-weight: 500; }
+[data-testid="stPageLink"] a:hover { background: var(--cp-panel); border-color: var(--cp-navy); }
+.st-key-cp_topnav [data-testid="stPageLink"] a { border: none; }
 
 /* ---- Radio scenario list + inputs ---------------------------------------- */
 [data-testid="stExpander"] { border: 1px solid var(--cp-border); border-radius: var(--cp-r); background: var(--cp-bg); }
@@ -442,9 +449,14 @@ h1.cp-logo-page { font-size: 2.7rem; line-height: 1.05; margin-top: 0; margin-bo
 hr { border-color: var(--cp-border); }
 [data-testid="stMetricValue"] { color: var(--cp-ink); }
 
-/* ---- Mobile ------------------------------------------------------------- */
+/* ---- Narrow viewports ----------------------------------------------------- */
+/* Let the navbar wrap to two rows before it would overflow. */
+@media (max-width: 980px) {
+  .st-key-cp_topnav [data-testid="stHorizontalBlock"] { flex-wrap: wrap; row-gap: .15rem; }
+}
 @media (max-width: 640px) {
   .block-container { padding-left: 1rem; padding-right: 1rem; }
   .cp-hero { flex-direction: column; align-items: flex-start; gap: .8rem; text-align: left; }
   h1 { font-size: 2rem; }
+  .cp-masthead .cp-logo, .cp-masthead .prod { font-size: 1.35rem; }
 }
