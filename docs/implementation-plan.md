@@ -262,3 +262,61 @@ Four sprints against the remaining runway, each ending in working, testable soft
 | Schedule compression (model + explainability work lands in the 2-day Sprint 2) | Real risk | Flagged explicitly in §7; the protected/cut-list ordering in §7 exists precisely to absorb this risk without touching the differentiators. |
 | Real bank/core-banking integration, production-grade auth/multi-tenancy, real GST/AA API integration, HA infra | Explicitly out of scope per the brief | Not built; if any later prove necessary to reach a core objective, that would be a new open question requiring a human decision — none identified as necessary so far. |
 | Graph/GNN cross-entity linkage | Deferred, not built | No credible synthetic entity-linkage data achievable in the runway with enough rigor to defend under judge questioning; noted in §5.4 as a stage-2/future-work item, not silently dropped. |
+
+---
+
+## 10. Track 04 — Early Warning (PS4)
+
+**Design intent.** A portfolio early-warning model that fires on the *performing* book. The whole track is built around one thesis encoded in the data: the alt-data footprint (GST/UPI/EPFO/energy) is a *leading* indicator that deteriorates months before repayment behaviour does, so an alt-data model warns earlier than a repayment-only monitor. Anti-leakage discipline is therefore the first-class engineering concern, not an afterthought.
+
+**Module map** (self-contained under `app/tracks/t04_early_warning/`, reusing the platform ML kit read-only):
+
+```
+data_gen/panel.py        24-month latent-driven loan/repayment/alt-data panel; repayment
+                         responds to health_{t-Δ} (Δ~5-9mo) so DPD lags the alt-data sag
+data_gen/build.py        build/write/ensure the four panel CSVs; reuses app.data_gen.build_dataset
+                         .build_profiles so entity_ids/archetypes/latents match Track 03
+        ↓
+ml/features.py           build_snapshots(): per-(entity, as-of) causal features (FEATURE_COLS,
+                         FEATURE_DIRECTIONS monotone table); _window() RAISES LeakageError on a
+                         future-window request — the structural anti-leakage guard
+ml/model.py              EWSEngine: two MonotonicGBM models on one snapshot pipeline + one band rule
+ml/ews_metrics.py        lead-time distribution + capture@decile (entity-level holdout)
+        ↓
+service.py / ui_state.py orchestration: MonitoringRun / CaseDetail payloads (backend narrates)
+        ↓
+pages/portfolio_overview.py   book-level radar (deep link track04)
+pages/watchlist.py            ranked watchlist + per-borrower money-chart drilldown (watchlist)
+```
+
+**Key ML choices.** `EWSEngine` fits **two models through one pipeline** so the comparison is honest: **EWS** — a monotonic-constrained LightGBM (`MonotonicGBM`, with `PostHocCalibrator`/isotonic calibration wired inside it) on the full repayment + alt-data feature set against `default_within_12m`; and the **baseline** — the same pipeline restricted to repayment-only features against `default_within_3m` (the internal SAJAG-style stand-in that can only see EMIs bounce). Both share one band rule on the calibrated PD (Red ≥ 0.30, Amber ≥ 0.10). The monotone direction table (`FEATURE_DIRECTIONS`) keeps every constraint bank-defensible (score cannot improve as bounces rise). Headline metric is **lead time** (median 11.5 vs 2.0 months = 8-month gap; capture@decile 0.926 vs 0.519 on the synthetic holdout); AUC is computed but not headlined.
+
+**Leakage / citation integrity.** Enforced structurally, not by convention: (a) the train/holdout split is **entity-level** with an asserted-empty intersection, and demo archetypes are pinned into train so they never inflate holdout metrics; (b) every windowed feature routes through `_window()`, which raises `LeakageError` rather than serve any month past the snapshot; (c) no label-derived field is read in `features.py` at all — `default_month`/`ramp_start`/`lead_alt` live only in the labels file and are joined in a *separate* `_attach_labels()` step in `model.py`, which also drops all at/after-default snapshots. Generation is deterministic (identical `--n`/`--seed` → byte-identical CSVs).
+
+## 11. Track 05 — Fraud Intelligence (PS5)
+
+**Design intent.** A mule-account detection and case-assembly desk that sits *above* the network-flagging layer (RBIH MuleHunter.AI / the MHA Dec-2026 integration mandate): score accounts, then assemble explainable evidence and the surrounding ring into a reviewable case. Two design commitments drive it — an interpretable, evidence-bearing score, and a hard **citation gate** so no claim reaches a case file without a receipt.
+
+**Module map** (self-contained under `app/tracks/t05_fraud_intelligence/`; the eval labels file is read by exactly one module):
+
+```
+data_gen/typologies.py   the 8 canonical typology names + injectors; legit.py hard negatives
+data_gen/build.py        accounts.csv / transactions.csv (engine inputs) + fraud_ground_truth.csv
+                         (EVAL-ONLY)
+        ↓
+ml/features.py           per-account AccountLedger + behavioural feature matrix
+ml/typologies.py         the 8 deterministic detectors; each returns a TypologyHit carrying the
+                         concrete txn_ids/counterparties/devices that triggered it (no labels)
+ml/model.py              FraudEngine: typology leg ⊕ Isolation-Forest anomaly leg; expand_ring() BFS
+ml/eval/fraud_metrics.py the ONLY module permitted to read fraud_ground_truth.csv
+        ↓
+case_orchestrator.py     5-stage agentic case: Triage→Evidence→Network→Adjudication→Case-file,
+                         each a reused pipeline_orchestrator.Stage; owns all user-facing copy
+        ↓
+pages/fraud_desk.py           triage queue, KPIs, ring/typology distribution (track05)
+pages/case_investigation.py   the five-stage case file for one account (case_investigation)
+```
+
+**Key ML choices.** `FraudEngine` blends two independent voices into a 0–100 mule-risk score: **`mule_risk = 0.55 · typology_max_blend + 0.45 · (100 · anomaly_excess)`** — an interpretable, evidence-bearing typology leg (the top-two fired detectors, 0.75/0.25) plus an **Isolation Forest** anomaly leg scored as *excess* over the clearly-genuine cohort (badness-oriented features, "normal" anchored at the 90th percentile of the zero-badness set so only true outliers rise). Bands: Alert ≥ 65, Review ≥ 45. Ring discovery is a **pure-python BFS** over shared-device and high-value-transfer edges (no networkx), with deterministic role inference (mule / recruiter / cash-out) from observable ledger behaviour. The case orchestrator is *agentic-deterministic*: orchestrated specialist stages with a human approve/override gate and **no runtime LLM** (an LLM narrative layer is disclosed as an optional pilot step only).
+
+**Leakage / citation integrity.** The differentiator is enforced at construction: a `Ground` (a ground of suspicion) **raises `CitationError` if its `txn_ids` is empty**, so an uncited claim can never reach a case file — a detector that fires without usable evidence degrades to an explicit "insufficient evidence" note. The detector and the generator's injector **share no code path** (the detector recovers each pattern from raw rows). Ring roles are *inferred*, never read from labels; and `fraud_ground_truth.csv` is read *only* in `ml/eval/fraud_metrics.py`, never by the engine, features, typologies or orchestrator at score time. Synthetic-holdout scorecard: **6/6 rings recovered** (caught = ≥60% of members flagged), recall@alert 1.0, precision@alert 0.744 with precision_ring@alert 1.0 (the misses are ring-associated infrastructure), and 0/10 hard-negative false positives (the explainably-cleared high-velocity gig worker).

@@ -1,8 +1,9 @@
 """Architecture — concise solution overview for judges (implementation-plan §3, §5, §8).
 
-Reference page (core, not track-owned): describes the shared platform stack that
-all three tracks run on. A full three-track rewrite is WP-V's; this Wave-1 pass
-adds one line noting the tracks share one stack.
+Reference page (core, not track-owned): a platform-level diagram of the three
+tracks over the shared foundation, followed by the Track-03 assessment pipeline
+in detail. This page is technical by design (jargon-exempt in the Simple-mode
+sweep) but hides the deep engineering narrative behind the Technical toggle.
 """
 from __future__ import annotations
 
@@ -33,6 +34,44 @@ def render() -> None:
     if not state.is_technical():
         st.info("This page shows the system's internal architecture; use the **Technical** toggle at "
                 "the top right for full engineering detail.")
+
+    # --- Platform view: three tracks over one shared foundation --------------
+    _PLATFORM_DOT = """
+    digraph Platform {
+      rankdir=TB; bgcolor="transparent"; splines=ortho;
+      node [shape=box style="rounded,filled" fontname="Schibsted Grotesk" fontsize=11
+            color="#dbe2ec" fillcolor="#f4f6fa" fontcolor="#1b2733" margin="0.18,0.10"];
+      edge [color="#8ca3bd" arrowsize=0.7];
+
+      subgraph cluster_foundation {
+        label="Shared foundation (one codebase, one deploy)";
+        fontname="Schibsted Grotesk"; fontsize=11; color="#c3d0e0"; style="rounded";
+        data  [label="Synthetic data-gen\\nlatent-consistent generators + ground-truth labels" fillcolor="#eef2f8"];
+        mlc   [label="ML core\\nfeatures · scorecard + monotonic LightGBM · explainability · eval" fillcolor="#eef2f8"];
+        back  [label="Backend\\npipeline orchestration + typed contracts" fillcolor="#eef2f8"];
+        shell [label="Frontend router (main.py)\\nst.navigation · Overview · registry auto-detects installed tracks"
+               fillcolor="#e9f0fb" color="#1466b8"];
+        data -> mlc -> back -> shell;
+      }
+
+      t03 [label="Track 03 · Financial Health (PS3)\\nshared scorecard → Financial Health Card\\nunderwrite the new-to-bank MSME"
+           fillcolor="#0b3d75" fontcolor="#ffffff" color="#0b3d75"];
+      t04 [label="Track 04 · Early Warning (PS4)\\nEWSEngine → portfolio radar + watchlist\\nmonitor the book for deterioration"
+           fillcolor="#0b3d75" fontcolor="#ffffff" color="#0b3d75"];
+      t05 [label="Track 05 · Fraud Intelligence (PS5)\\nFraudEngine + citation-gated case file\\nprotect the payment rails"
+           fillcolor="#0b3d75" fontcolor="#ffffff" color="#0b3d75"];
+
+      shell -> t03; shell -> t04; shell -> t05;
+    }
+    """
+    st.graphviz_chart(_PLATFORM_DOT, use_container_width=True)
+    st.caption("Every track builds on the same synthetic data-gen, ML core, backend contract and "
+               "Streamlit shell. Tracks never import each other; the registry auto-detects installed "
+               "tracks by folder, so removing a track folder cleanly drops its group (Track 03 is the "
+               "shared core itself). Track 03's assessment pipeline is detailed below.")
+
+    st.divider()
+    st.subheader("Track 03 — assessment pipeline (detail)")
 
     _DOT = """
     digraph CreditPulse {

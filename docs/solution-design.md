@@ -87,3 +87,29 @@ Explainable-by-construction; human-in-the-loop with override + audit; India data
 ## 12. Why this approach
 
 It addresses all five evaluation dimensions at once: **innovative** (GST-vs-bank consistency + a multidimensional alt-data card), **feasible** (built on the data sources the problem statement names, on a proven stack), **scalable** (cloud-native, API-first), **business impact** (onboard credit-invisible MSMEs + protect portfolio quality — PS3's exact stated outcome), **technical implementation** (real architecture, eval harness, explainability — not slides). The core strength is what Lambdac already does in production: **explainable, auditable, GST-fluent, deployable.**
+
+---
+
+# Multi-track platform
+
+CreditPulse is now a **platform** answering three IDBI Innovate 2026 problem statements from one codebase and one shared core: PS3 above, plus two self-contained tracks — PS4 Early Warning and PS5 Fraud Intelligence — each with its own product surface but reusing the platform ML kit, staged-pipeline renderer and honesty discipline. All data in every track is synthetic; real-ledger recalibration is the pilot step in each.
+
+## 13. Track 04 — Early Warning (PS4)
+
+**The problem it answers.** PS4 asks for an early-warning system over the *performing* loan book: flag borrowers sliding toward default while there is still time to act, not after EMIs have already bounced. CreditPulse's answer reads the alt-data footprint (GST turnover, bank inflows, UPI, EPFO headcount, energy use) as a *leading* indicator that sags months before repayment behaviour — the internal signal a repayment-only monitor can only see late.
+
+**Product surface (two pages).** *Portfolio Overview* (deep link `track04`) — the book-level radar: KPI row, Green/Amber/Red distribution, this month's band migration, and a flagged-accounts table with per-borrower plain-language drivers. *Watchlist & Cases* (`watchlist`) — the ranked watchlist and a per-borrower case drilldown: the alt-data footprint rolling over the months before repayment slips, marked with three points — EWS first alert, the repayment-only baseline's first alert, and projected default.
+
+**Scoring / decision output.** A calibrated 12-month probability of default per borrower → a **Green / Amber / Red** band under one alerting policy, plus sign-aware plain-language risk drivers (e.g. "inflows lagging declared GST", "missed GST filings"). The headline is **lead time**: on the synthetic holdout the EWS turns Red a **median 11.5 months** before default versus **2.0 months** for a repayment-only baseline — an **8-month** gap — and captures **0.926** of defaulters in its top decile versus **0.519**.
+
+**Honesty stance.** The repayment-only baseline is shown *side by side* so the lead-time gap is an honest same-policy comparison, not a strawman. Lead time is the headline; AUC is reported but deliberately not headlined. All borrowers, panels and labels are synthetic; real-default backtesting and recalibration are the productionization step.
+
+## 14. Track 05 — Fraud Intelligence (PS5)
+
+**The problem it answers.** PS5 asks for detection of rented-out **mule accounts** and the rings behind them — the payment-rail fraud that MHA's December-2026 directive and RBIH's MuleHunter.AI target — with decisions a bank can *explain*. SentinelPulse sits above the flagging layer: it scores accounts, then assembles the evidence and the network into a reviewable case. It is deliberately a transaction-fraud operations desk, unrelated to the lending/scoring in the other tracks (PS5's own "unrelated to PS1–4" fence).
+
+**Product surface (two pages).** *Fraud Desk* (deep link `track05` / `fraud_desk`) — the triage queue, KPIs, suspected-ring count and typology distribution across the flagged desk. *Case Investigation* (`case_investigation`) — the five-stage agentic case file for one account: Triage → Evidence → Network → Adjudication → Case-file compiler, each stage narrated in both a technical and a jargon-free simple view.
+
+**Scoring / decision output.** A 0–100 mule-risk score (an interpretable typology leg blended with an independent anomaly leg) banded **Alert / Review / Clear**, then a case file ending in a recommendation — **Freeze + file STR draft**, **Enhanced monitoring**, or **Clear with note** — that a human analyst approves or overrides. On the synthetic holdout: **6 of 6 rings recovered** (a ring counts as caught when ≥60% of its members are flagged), recall-at-alert **1.0**, precision-at-alert **0.744** — and precision-*ring*-at-alert **1.0**, because the "misses" are themselves ring-associated infrastructure (recruiter/cash-out mules), and **0 of 10** hard-negative false positives.
+
+**Honesty stance.** Every ground of suspicion **cites at least one real transaction ID or is not asserted** — the citation gate refuses uncited claims and degrades to an explicit "insufficient evidence" note instead. Roles (mule / recruiter / cash-out) are *inferred* from observable behaviour, never read from labels; the ground-truth file is eval-only and never touched at score time. The high-velocity gig-worker hard negative is *explainably cleared*, not just un-flagged. All accounts and transactions are synthetic; recalibrating on a bank's real ledger is the pilot step.

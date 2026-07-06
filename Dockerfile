@@ -18,10 +18,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Application code.
 COPY app ./app
 
-# Generate the synthetic cohort at build time so the demo is self-contained,
-# then pre-fit + pickle the scoring engine so a Cloud Run cold start doesn't
-# pay the model-fit cost on the first request.
+# Generate the synthetic cohort(s) at build time so the demo is self-contained,
+# then pre-fit + pickle every engine so a Cloud Run cold start doesn't pay the
+# model-fit cost on the first request. Track data-gen is folder-guarded so the
+# image builds whether or not the track CSVs are committed (an installed track
+# without data is rebuilt here; a deleted track is skipped) — this keeps the
+# deploy decoupled from the track-CSV commit-vs-gitignore choice.
 RUN python -m app.data_gen.build_dataset --n 400 \
+    && if [ -d app/tracks/t04_early_warning ]; then python -m app.tracks.t04_early_warning.data_gen.build; fi \
+    && if [ -d app/tracks/t05_fraud_intelligence ]; then python -m app.tracks.t05_fraud_intelligence.data_gen.build; fi \
     && python -m app.ml.prefit
 
 # Cloud Run injects $PORT; Streamlit must bind it on 0.0.0.0.
