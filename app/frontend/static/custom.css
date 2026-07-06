@@ -142,13 +142,11 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
   color: var(--cp-navy-deep); font-weight: 600;
 }
 
-/* ---- Product masthead ('CreditPulse | Financial Health' + PS badge) ------- */
+/* ---- Product masthead (product name + PS badge; brand lives in the navbar) - */
 .cp-masthead { display: flex; align-items: baseline; gap: .85rem; margin: .9rem 0 .15rem; flex-wrap: wrap; }
-.cp-masthead .cp-logo { font-size: 1.8rem; line-height: 1.1; }
 .cp-masthead .prod {
   font-family: var(--cp-serif); font-size: 1.8rem; font-weight: 560; line-height: 1.1;
   letter-spacing: -.015em; color: var(--cp-navy);
-  border-left: 2px solid var(--cp-border-2); padding-left: .85rem;
 }
 .cp-masthead .cp-track-badge { align-self: center; }
 
@@ -458,5 +456,5 @@ hr { border-color: var(--cp-border); }
   .block-container { padding-left: 1rem; padding-right: 1rem; }
   .cp-hero { flex-direction: column; align-items: flex-start; gap: .8rem; text-align: left; }
   h1 { font-size: 2rem; }
-  .cp-masthead .cp-logo, .cp-masthead .prod { font-size: 1.35rem; }
+  .cp-masthead .prod { font-size: 1.35rem; }
 }

@@ -263,14 +263,14 @@ def render_topnav(current_page) -> None:
             ui.view_toggle()
 
     # Product masthead + page pills — product pages only; Overview is the brand
-    # landing and Reference pages carry a masthead without a badge.
+    # landing and Reference pages carry a masthead without a badge. The navbar
+    # already carries the wordmark, so the masthead is the product name alone.
     if active is None or active.id == "platform":
         return
     badge = (f"<span class='cp-track-badge'>{html.escape(active.badge)}</span>"
              if active.badge else "")
     st.markdown(
         f"<div class='cp-masthead'>"
-        f"<span class='cp-logo'><span class='a'>Credit</span><span class='b'>Pulse</span></span>"
         f"<span class='prod'>{html.escape(_short(active.label))}</span>{badge}</div>",
         unsafe_allow_html=True)
     if len(active.pages) > 1:
