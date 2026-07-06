@@ -2,10 +2,10 @@
 
 Merges the former Run Assessment + Pipeline pages (multi-track issue #5): the
 scenario picker and the staged-reveal animation now live on one page (deep link
-`track03`). The reveal is a **growing flow chart** (issue #3) — one node appears
-per stage with a hover tooltip describing what happens there — with a **minimum
-dwell per stage** (issue #4). There is no skip / instant path (issue #2): the
-assessment is precomputed in `state.run`, and the animation narrates it.
+`track03`). The reveal is the **stage rail** (Waiting → Running → Completed)
+beside the live per-stage output, with a **minimum dwell per stage** (issue #4).
+There is no skip / instant path (issue #2): the assessment is precomputed in
+`state.run`, and the animation narrates it.
 
 All computation lives in backend/ml; this page only picks an entity and renders
 `Stage` objects from the orchestrator.
@@ -29,7 +29,7 @@ import streamlit as st
 from app.backend.services.pipeline_orchestrator import list_scenarios, random_entity_id
 from app.frontend.components import state
 from app.frontend.components.stage import (console_html, render_detail,
-                                           render_stage_cell, stage_flow_dot)
+                                           render_stage_cell, stage_list_html)
 from app.frontend.components.ui import badge, fmt_inr, page_header
 
 # Minimum seconds a stage stays "running" before the next appears (issue #4).
@@ -38,7 +38,7 @@ STAGE_MIN_SECONDS = 3.0
 
 def render() -> None:
     page_header("Assessment",
-                "MSME financial health card · IDBI Innovate 2026 · PS3 · "
+                "MSME financial health card · IDBI Innovate 2026 · Problem Statement 3 · "
                 "deterministic-first, explainable by construction")
 
     st.markdown(
@@ -86,13 +86,13 @@ def render() -> None:
 
 
 def _render_pipeline(a, technical: bool) -> None:
-    """The staged-reveal itself: a growing flow chart (left) beside the live
-    per-stage output (right), with the notebook-cell record accumulating below."""
+    """The staged-reveal itself: a stage rail (left) beside the live per-stage
+    output (right), with the notebook-cell record accumulating below."""
     st.subheader("Assessment pipeline")
     st.caption(f"{a.entity['name']} · {a.entity.get('sector', '')} · "
                f"{a.entity.get('category', '')} · end-to-end alternate-data assessment")
 
-    if st.button("Replay animation", use_container_width=False):
+    if st.button("Rerun computation", use_container_width=False):
         st.session_state["cp_pipeline_played"] = False
         st.rerun()
 
@@ -103,9 +103,8 @@ def _render_pipeline(a, technical: bool) -> None:
                       key_prefix=f"cell{stage.index}_")
 
     left, right = st.columns([1, 1.4])
-    flow_ph = left.empty()
+    stage_ph = left.empty()
     progress_ph = left.empty()
-    left.caption("Hover any stage for what happens inside it.")
     right.markdown("<div class='cp-live-anchor'></div>", unsafe_allow_html=True)
     detail_ph = right.empty()
     console_ph = right.empty() if technical else None
@@ -123,9 +122,7 @@ def _render_pipeline(a, technical: bool) -> None:
                 console_ph.markdown(console_html(log_lines[-22:], short=True), unsafe_allow_html=True)
 
         for i, s in enumerate(stages, start=1):
-            # Grow the flow chart: reveal stages 1..i, with i as the running node.
-            flow_ph.graphviz_chart(stage_flow_dot(stages, revealed=i, current=i),
-                                   use_container_width=True)
+            stage_ph.markdown(stage_list_html(stages, s.index), unsafe_allow_html=True)
             bar.progress((i - 1) / len(stages), text=f"Stage {s.index}/{len(stages)} · {s.title}")
             t0 = time.time()
 
@@ -148,7 +145,7 @@ def _render_pipeline(a, technical: bool) -> None:
 
             render_detail(detail_ph, s, a.entity["name"], technical, key_prefix="live_")
             # Minimum dwell per stage (issue #4): hold the running stage on screen
-            # for at least STAGE_MIN_SECONDS before the next node appears.
+            # for at least STAGE_MIN_SECONDS before the next stage appears.
             elapsed = time.time() - t0
             if elapsed < STAGE_MIN_SECONDS:
                 time.sleep(STAGE_MIN_SECONDS - elapsed)
@@ -156,17 +153,15 @@ def _render_pipeline(a, technical: bool) -> None:
                 with cells:
                     render_stage_cell(s, technical, expanded=False, detail_fn=cell_detail)
 
-        flow_ph.graphviz_chart(stage_flow_dot(stages, revealed=len(stages), current=0),
-                               use_container_width=True)
+        stage_ph.markdown(stage_list_html(stages, len(stages) + 1), unsafe_allow_html=True)
         bar.progress(1.0, text="Assessment complete")
         detail_ph.empty()
         with cells:
             render_stage_cell(stages[-1], technical, expanded=True, detail_fn=cell_detail)
         state.mark_played()
     else:
-        # Completed / already-played: the full flow chart + 9-cell record, no sleeps.
-        flow_ph.graphviz_chart(stage_flow_dot(stages, revealed=len(stages), current=0),
-                               use_container_width=True)
+        # Completed / already-played: the full stage rail + 9-cell record, no sleeps.
+        stage_ph.markdown(stage_list_html(stages, len(stages) + 1), unsafe_allow_html=True)
         progress_ph.progress(1.0, text="Assessment complete")
         if console_ph is not None:
             all_lines = [ln for s in stages for ln in s.log]

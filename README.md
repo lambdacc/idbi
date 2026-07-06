@@ -25,14 +25,14 @@ a reviewer arriving for any one PS lands directly on that track's page.
 
 | Problem statement | Track | Codebase | Deep link | The one proof |
 |---|---|---|---|---|
-| **PS3 · Financial Health Score** | Financial Health | shared core (`app/data_gen/`, `app/ml/`, `app/backend/`) + [`app/tracks/t03_financial_health/`](app/tracks/t03_financial_health/) | `/track03` | Explainable health card + turnover-authenticity cross-check |
-| **PS4 · Early Warning Signals** | Early Warning | [`app/tracks/t04_early_warning/`](app/tracks/t04_early_warning/) (self-contained) | `/track04` | Flags stress a **median 8 months** before a repayment-only baseline |
-| **PS5 · Fraud / Mule Detection** | Fraud Intelligence | [`app/tracks/t05_fraud_intelligence/`](app/tracks/t05_fraud_intelligence/) (self-contained) | `/track05` | **6/6 mule rings** recovered; **0** false positives on hard-negative gig workers |
+| **Problem Statement 3 · Financial Health Score** | Financial Health | shared core (`app/data_gen/`, `app/ml/`, `app/backend/`) + [`app/tracks/t03_financial_health/`](app/tracks/t03_financial_health/) | `/track03` | Explainable health card + turnover-authenticity cross-check |
+| **Problem Statement 4 · Default Prediction Model** | Early Warning | [`app/tracks/t04_early_warning/`](app/tracks/t04_early_warning/) (self-contained) | `/track04` | Flags stress a **median 8 months** before a repayment-only baseline |
+| **Problem Statement 5 · Open Innovation** | Fraud Intelligence | [`app/tracks/t05_fraud_intelligence/`](app/tracks/t05_fraud_intelligence/) (self-contained) | `/track05` | **6/6 mule rings** recovered; **0** false positives on hard-negative gig workers |
 
 > **Reviewers:** open the deep link for your problem statement to land directly
-> on that track. **PS3** is the platform foundation — its scoring engine *is* the
+> on that track. **Problem Statement 3** is the platform foundation — its scoring engine *is* the
 > shared `app/ml/` core, with only its pages under `t03_financial_health/`.
-> **PS4 and PS5** are self-contained satellite tracks that build on that
+> **Problem Statement 4 and Problem Statement 5** are self-contained satellite tracks that build on that
 > foundation: each carries its own data-gen, ML engine, orchestration and pages,
 > and `rm -rf app/tracks/t04_early_warning` (or `t05_…`) leaves the rest of the
 > platform fully working — enforced by `app/tests/test_isolation.py`.
@@ -47,9 +47,9 @@ leaves an electronic trail across independently-governed systems — a tax
 authority, a regulated bank, a state electricity utility, a labour-welfare body,
 a toll network, a court registry. CreditPulse fuses these sources into signals no
 single document can fake, and applies them across the full credit lifecycle:
-**underwrite** the new-to-bank MSME (PS3), **monitor** the loan already on the
-book for early deterioration (PS4), and **protect** the payment rails from mule
-accounts and fraud rings (PS5).
+**underwrite** the new-to-bank MSME (Problem Statement 3), **monitor** the loan already on the
+book for early deterioration (Problem Statement 4), and **protect** the payment rails from mule
+accounts and fraud rings (Problem Statement 5).
 
 All data in this repository is **synthetic** (generated, clearly labelled, and
 calibrated to public India MSME statistics). Real-default backtesting and
@@ -75,13 +75,13 @@ make docker-build && make docker-run
 
 In the app you land on **Overview** — one card per installed track. From there:
 
-- **Track 03 · Financial Health** — pick a business archetype, **Run Assessment**,
+- **Problem Statement 3 · Financial Health** — pick a business archetype, **Run Assessment**,
   and watch the nine-stage pipeline build a Health Card with a lending
   recommendation and plain-language reason codes.
-- **Track 04 · Early Warning** — a portfolio deterioration radar and a watchlist
+- **Problem Statement 4 · Early Warning** — a portfolio deterioration radar and a watchlist
   showing which live borrowers are rolling over, and how many months of lead time
   the alt-data signal buys over a repayment-only view.
-- **Track 05 · Fraud Intelligence** — a fraud desk that scores accounts, expands
+- **Problem Statement 5 · Fraud Intelligence** — a fraud desk that scores accounts, expands
   a suspicious account into its ring across the transaction graph, and builds a
   **citation-gated** case file where every claim carries the transaction IDs
   behind it.
@@ -91,7 +91,7 @@ A guided five-minute walkthrough covering all three is in
 
 ## What's under the hood
 
-**Shared foundation** (used by every track; core = PS3 lives here too):
+**Shared foundation** (used by every track; core = Problem Statement 3 lives here too):
 
 | Layer | What it does |
 |---|---|

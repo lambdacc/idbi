@@ -82,8 +82,8 @@ def render() -> None:
     snap = desk_snapshot(engine)
 
     page_header("Fraud Desk",
-                "Track 05 · SentinelPulse — explainable detection of rented-out "
-                "accounts, queued for citation-gated investigation.")
+                "Problem Statement 5 (Open Innovation) · SentinelPulse — explainable detection of "
+                "rented-out accounts, queued for citation-gated investigation.")
 
     st.caption(snap["scope_note"] + "  All figures illustrative on synthetic data.")
 

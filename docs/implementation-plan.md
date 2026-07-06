@@ -1,7 +1,7 @@
 # Implementation Plan — MSME Financial Health Scoring Platform (CreditPulse MVP)
 
 **Status:** Implementation plan · **Date:** 01 Jul 2026 · **Owner:** Lambdac
-**Target:** IDBI Innovate 2026, PS3 — Financial Health Score · **Submission:** 09 Jul 2026 (stage-1 working prototype)
+**Target:** IDBI Innovate 2026, Problem Statement 3 — Financial Health Score · **Submission:** 09 Jul 2026 (stage-1 working prototype)
 **Reads with:** [`solution-design.md`](solution-design.md) (the pillars/scoring spec this plan builds on), [`appendix-a-data-source-catalog.md`](appendix-a-data-source-catalog.md), [`appendix-b-synthetic-data-plan.md`](appendix-b-synthetic-data-plan.md), [`cag-gst-feature-analysis.md`](cag-gst-feature-analysis.md), [`deployment-runbook.md`](deployment-runbook.md)
 
 **This document, together with its two appendices, is the direct build spec.** Nothing in Sprints 1-4 (§7) should require re-deriving a decision already made here.
@@ -265,7 +265,7 @@ Four sprints against the remaining runway, each ending in working, testable soft
 
 ---
 
-## 10. Track 04 — Early Warning (PS4)
+## 10. Problem Statement 4 (Default Prediction Model) — pitched as Early Warning
 
 **Design intent.** A portfolio early-warning model that fires on the *performing* book. The whole track is built around one thesis encoded in the data: the alt-data footprint (GST/UPI/EPFO/energy) is a *leading* indicator that deteriorates months before repayment behaviour does, so an alt-data model warns earlier than a repayment-only monitor. Anti-leakage discipline is therefore the first-class engineering concern, not an afterthought.
 
@@ -275,7 +275,7 @@ Four sprints against the remaining runway, each ending in working, testable soft
 data_gen/panel.py        24-month latent-driven loan/repayment/alt-data panel; repayment
                          responds to health_{t-Δ} (Δ~5-9mo) so DPD lags the alt-data sag
 data_gen/build.py        build/write/ensure the four panel CSVs; reuses app.data_gen.build_dataset
-                         .build_profiles so entity_ids/archetypes/latents match Track 03
+                         .build_profiles so entity_ids/archetypes/latents match Problem Statement 3
         ↓
 ml/features.py           build_snapshots(): per-(entity, as-of) causal features (FEATURE_COLS,
                          FEATURE_DIRECTIONS monotone table); _window() RAISES LeakageError on a
@@ -293,7 +293,7 @@ pages/watchlist.py            ranked watchlist + per-borrower money-chart drilld
 
 **Leakage / citation integrity.** Enforced structurally, not by convention: (a) the train/holdout split is **entity-level** with an asserted-empty intersection, and demo archetypes are pinned into train so they never inflate holdout metrics; (b) every windowed feature routes through `_window()`, which raises `LeakageError` rather than serve any month past the snapshot; (c) no label-derived field is read in `features.py` at all — `default_month`/`ramp_start`/`lead_alt` live only in the labels file and are joined in a *separate* `_attach_labels()` step in `model.py`, which also drops all at/after-default snapshots. Generation is deterministic (identical `--n`/`--seed` → byte-identical CSVs).
 
-## 11. Track 05 — Fraud Intelligence (PS5)
+## 11. Problem Statement 5 (Open Innovation) — pitched as Fraud Intelligence
 
 **Design intent.** A mule-account detection and case-assembly desk that sits *above* the network-flagging layer (RBIH MuleHunter.AI / the MHA Dec-2026 integration mandate): score accounts, then assemble explainable evidence and the surrounding ring into a reviewable case. Two design commitments drive it — an interpretable, evidence-bearing score, and a hard **citation gate** so no claim reaches a case file without a receipt.
 

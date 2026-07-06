@@ -1,4 +1,4 @@
-# Submission Deliverables Checklist — CreditPulse Platform (PS3 · PS4 · PS5)
+# Submission Deliverables Checklist — CreditPulse Platform (Problem Statement 3 · Problem Statement 4 · Problem Statement 5)
 
 **Status:** Multi-track WP-V · **Date:** 6 Jul 2026 · **Reads with:** [`03-criteria-mapping/`](03-criteria-mapping/) (per-track mappings) and [`../docs/deployment-runbook.md`](../docs/deployment-runbook.md)
 
@@ -12,9 +12,9 @@ Three submission entries, one codebase, one deploy. Owner/date to be filled by t
 
 | # | Problem statement | PS selected | PPT (mandatory, official template) | Deploy link (shared) | GitHub link (shared) | Deep link a reviewer lands on | Demo video (optional) | Owner / date |
 |---|---|---|---|---|---|---|---|---|
-| 1 | **PS3 · Financial Health Score** | ☐ | ☐ `deck-t03` | ☐ *same URL* | ☐ *same URL* | `…/track03` | ☐ | |
-| 2 | **PS4 · Early Warning Signals** | ☐ | ☐ `deck-t04` | ☐ *same URL* | ☐ *same URL* | `…/track04` | ☐ | |
-| 3 | **PS5 · Fraud / Mule Detection** | ☐ | ☐ `deck-t05` | ☐ *same URL* | ☐ *same URL* | `…/track05` | ☐ | |
+| 1 | **Problem Statement 3 · Financial Health Score** | ☐ | ☐ `deck-t03` | ☐ *same URL* | ☐ *same URL* | `…/track03` | ☐ | |
+| 2 | **Problem Statement 4 · Default Prediction Model** | ☐ | ☐ `deck-t04` | ☐ *same URL* | ☐ *same URL* | `…/track04` | ☐ | |
+| 3 | **Problem Statement 5 · Open Innovation** | ☐ | ☐ `deck-t05` | ☐ *same URL* | ☐ *same URL* | `…/track05` | ☐ | |
 
 Shared assets (produce once, reuse across all three entries):
 
@@ -35,10 +35,10 @@ Shared assets (produce once, reuse across all three entries):
 
 Each deck follows the same spine, swapping in that track's proof. Draw content from the per-track criteria mappings and the demo script.
 
-**Deck-T03 (PS3 · Financial Health)** — the existing PS3 outline (see `03-criteria-mapping/criteria-mapping.md` §3): Health Card, 5 pillars, GST-vs-bank consistency, eval (AUC/Gini/KS + honesty), impact, roadmap.
+**Deck-T03 (Problem Statement 3 · Financial Health)** — the existing Problem Statement 3 outline (see `03-criteria-mapping/criteria-mapping.md` §3): Health Card, 5 pillars, GST-vs-bank consistency, eval (AUC/Gini/KS + honesty), impact, roadmap.
 
-**Deck-T04 (PS4 · Early Warning)** — from `criteria-mapping-t04.md`:
-1. Title · PS4 Early Warning · team
+**Deck-T04 (Problem Statement 4, Default Prediction Model · pitched as Early Warning)** — from `criteria-mapping-t04.md`:
+1. Title · Problem Statement 4 — Default Prediction Model · "Early Warning" · team
 2. Problem — the book looks fine on repayments until it doesn't; cure window lost
 3. Solution — alt-data early-warning radar + watchlist (annotated screenshot)
 4. How it works — 24-month alt-data panel → monotonic calibrated model → per-borrower drivers
@@ -48,8 +48,8 @@ Each deck follows the same spine, swapping in that track's proof. Draw content f
 8. Impact — NPA lead-time value (illustrative) + synthetic-data honesty + recalibration plan
 9. Roadmap to pilot
 
-**Deck-T05 (PS5 · Fraud / Mule)** — from `criteria-mapping-t05.md`:
-1. Title · PS5 Fraud/Mule Detection · team
+**Deck-T05 (Problem Statement 5, Open Innovation · pitched as Fraud / Mule Detection)** — from `criteria-mapping-t05.md`:
+1. Title · Problem Statement 5 — Open Innovation · "Fraud / Mule Detection" · team
 2. Problem — mule rings drain in minutes; freeze too slow loses money, too eager freezes honest customers
 3. Solution — fraud desk → ring expansion → citation-gated case file (annotated screenshot)
 4. How it works — typology + anomaly blend → bounded-BFS ring recovery → 5-stage agentic case

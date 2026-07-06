@@ -1,0 +1,14 @@
+Problem Statement 3: Financial Health Score
+Bank’s MSME credit evaluation relies on traditional financial documents, which many New-to-Credit (NTC) and New-to- Bank (NTB) enterprises lack or maintain inadequately. Despite availability of rich alternate data (GST, UPI, AA, EPFO, etc.), absence of a unified assessment framework leads to high rejection rates, missed viable borrowers, limited portfolio diversification, and slower financial inclusion progress.
+
+Expected Outcome
+Participants should design an AI/ML- driven MSME Financial Health Card that aggregates alternate data (GST, UPI, AA, EPFO, etc.), computes a multidimensional financial health score, visualizes strengths and risks, integrates with ULI/OCEN/AA ecosystems, enables near real-time credit assessment, and expands onboarding of credit-invisible MSMEs while improving portfolio quality.
+
+Problem Statement 4: Default Prediction Model
+The current capability is limited by low prediction accuracy in the range of 16 - 22%, dependent solely on structured data and fragmented methodologies across loan types and borrower segments.
+
+Expected Outcome
+The expected outcome is to develop a robust predictive solution that estimates the probability of default to identify potential stress in loans 12 months in advance, with accuracy improving to 90%. The solution should use both structured and unstructured data, apply suitable analytical methods for different loan types and borrower profiles and provide a common interpretation framework to ensure consistent, comparable and actionable
+
+Problem Statement 5: Open Innovation
+Out-of-the-box submissions—ranging from decentralized identity systems and decentralized ledgers to next-gen security fabrics or omni-channel customer experiences.

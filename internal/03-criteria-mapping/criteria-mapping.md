@@ -1,4 +1,4 @@
-# Criteria Mapping & Demo Script — CreditPulse (PS3)
+# Criteria Mapping & Demo Script — CreditPulse (Problem Statement 3)
 
 **Status:** Phase 2 · **Date:** 28 Jun 2026 · **Reads with:** [`../02-solution-design/solution-design.md`](../02-solution-design/solution-design.md)
 Purpose: make sure every judging lever is *visibly* hit, and the demo lands.
@@ -12,7 +12,7 @@ Purpose: make sure every judging lever is *visibly* hit, and the demo lands.
 | **Innovation** | Multidimensional alt-data Health Card with the **GST-vs-bank consistency** signal + explainable reason codes — beyond a single black-box score | The Card: pillars + reasons, not just a number |
 | **Feasibility** | Built on the bank's **named data** (GST/UPI/AA/EPFO) and a proven stack; consent-first AA posture; honest synthetic→real path | Working deploy link + GitHub, not slides |
 | **Scalability** | **AWS-native**, API-first, stateless scoring, sub-minute; per-tenant isolation | Architecture slide + live API call |
-| **Business impact** | **Onboard credit-invisible NTC/NTB MSMEs + improve portfolio quality** (PS3's own words), quantified | Impact model (`../04-financials/`) |
+| **Business impact** | **Onboard credit-invisible NTC/NTB MSMEs + improve portfolio quality** (Problem Statement 3's own words), quantified | Impact model (`../04-financials/`) |
 | **Technical implementation** | Deterministic-first features, interpretable model, **eval harness** (AUC/Gini/KS, calibration, PSI), explainability, audit trail | Eval scorecard + repo + reason codes |
 
 ## 2. Avoid the bank's stated "common mistakes"
@@ -27,7 +27,7 @@ Purpose: make sure every judging lever is *visibly* hit, and the demo lands.
 
 ## 3. Differentiation vs the field (and incumbents)
 
-Most entries will ship a black-box score or a slide deck. CreditPulse's edge is the trio judges of a *bank* reward: **explainable & auditable** (deployable under RBI norms), **deployable** (AWS-native, API-first, real architecture), and **domain-deep** (GST-vs-bank consistency, alt-data breadth). Against incumbents (Perfios/CRIF/FinBox) we don't out-scale them — we match the credibility bar on a focused PS3 use case and win on transparency + a clean demo.
+Most entries will ship a black-box score or a slide deck. CreditPulse's edge is the trio judges of a *bank* reward: **explainable & auditable** (deployable under RBI norms), **deployable** (AWS-native, API-first, real architecture), and **domain-deep** (GST-vs-bank consistency, alt-data breadth). Against incumbents (Perfios/CRIF/FinBox) we don't out-scale them — we match the credibility bar on a focused Problem Statement 3 use case and win on transparency + a clean demo.
 
 ## 4. The 90-second demo (the whole pitch)
 
@@ -39,11 +39,11 @@ Most entries will ship a black-box score or a slide deck. CreditPulse's edge is 
 
 ## 5. Full demo / pitch outline (for finale, if shortlisted)
 
-Problem & PS3 alignment → data & consent model → the five pillars → live Card walkthrough (healthy / borderline / decline) → explainability & audit → architecture & integration (AA/ULI/OCEN, AWS) → eval results + synthetic-data honesty + recalibration plan → business impact → roadmap to pilot → Q&A (anticipate: imbalance/accuracy, consent/DPDP, EPFO-on-AA, how it beats their internal model).
+Problem & Problem Statement 3 alignment → data & consent model → the five pillars → live Card walkthrough (healthy / borderline / decline) → explainability & audit → architecture & integration (AA/ULI/OCEN, AWS) → eval results + synthetic-data honesty + recalibration plan → business impact → roadmap to pilot → Q&A (anticipate: imbalance/accuracy, consent/DPDP, EPFO-on-AA, how it beats their internal model).
 
 ## 6. Anticipated judge questions (prep)
 
-- *"Accuracy on imbalanced defaults?"* → we report Gini/KS/calibration not raw accuracy; synthetic now, real-default recalibration at pilot. (We know this trap — it's why we chose PS3 over PS4.)
+- *"Accuracy on imbalanced defaults?"* → we report Gini/KS/calibration not raw accuracy; synthetic now, real-default recalibration at pilot. (We know this trap — it's why we chose Problem Statement 3 over Problem Statement 4.)
 - *"EPFO data — how?"* → strong signal; not yet on AA rails (NPS is), so mock/alt now, AA-ready adapter.
 - *"How is this different from Perfios/CRIF?"* → explainable, focused on NTC/NTB onboarding, AA/ULI-native, deployable in your stack.
 - *"Consent?"* → GST/public signals for identification; AA enrichment on consent; DPDP-aware.

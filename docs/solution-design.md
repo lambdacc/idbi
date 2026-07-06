@@ -1,12 +1,12 @@
-# Solution Design — CreditPulse (IDBI PS3: Financial Health Score)
+# Solution Design — CreditPulse (IDBI Problem Statement 3: Financial Health Score)
 
 **Status:** Product & scoring specification · **Date:** 28 Jun 2026 · **Owner:** Lambdac
-**Target:** IDBI Innovate 2026, **PS3 — Financial Health Score** (MSME Financial Health Card)
+**Target:** IDBI Innovate 2026, **Problem Statement 3 — Financial Health Score** (MSME Financial Health Card)
 **Companions:** [`implementation-plan.md`](implementation-plan.md) (the build plan elaborating this spec), [`business-impact-model.md`](business-impact-model.md), [`cag-gst-feature-analysis.md`](cag-gst-feature-analysis.md)
 
 ---
 
-## 1. Objective (locked to the official PS3)
+## 1. Objective (locked to the official Problem Statement 3)
 
 Build an **AI/ML MSME Financial Health Card** that aggregates alternate data (GST, UPI/bank, AA, EPFO), computes a **multidimensional financial-health score**, **visualizes strengths and risks**, **integrates with ULI/OCEN/AA**, enables **near-real-time** assessment, and **expands onboarding of credit-invisible NTC/NTB MSMEs while improving portfolio quality.**
 
@@ -86,17 +86,17 @@ Explainable-by-construction; human-in-the-loop with override + audit; India data
 
 ## 12. Why this approach
 
-It addresses all five evaluation dimensions at once: **innovative** (GST-vs-bank consistency + a multidimensional alt-data card), **feasible** (built on the data sources the problem statement names, on a proven stack), **scalable** (cloud-native, API-first), **business impact** (onboard credit-invisible MSMEs + protect portfolio quality — PS3's exact stated outcome), **technical implementation** (real architecture, eval harness, explainability — not slides). The core strength is what Lambdac already does in production: **explainable, auditable, GST-fluent, deployable.**
+It addresses all five evaluation dimensions at once: **innovative** (GST-vs-bank consistency + a multidimensional alt-data card), **feasible** (built on the data sources the problem statement names, on a proven stack), **scalable** (cloud-native, API-first), **business impact** (onboard credit-invisible MSMEs + protect portfolio quality — Problem Statement 3's exact stated outcome), **technical implementation** (real architecture, eval harness, explainability — not slides). The core strength is what Lambdac already does in production: **explainable, auditable, GST-fluent, deployable.**
 
 ---
 
 # Multi-track platform
 
-CreditPulse is now a **platform** answering three IDBI Innovate 2026 problem statements from one codebase and one shared core: PS3 above, plus two self-contained tracks — PS4 Early Warning and PS5 Fraud Intelligence — each with its own product surface but reusing the platform ML kit, staged-pipeline renderer and honesty discipline. All data in every track is synthetic; real-ledger recalibration is the pilot step in each.
+CreditPulse is now a **platform** answering three IDBI Innovate 2026 problem statements from one codebase and one shared core: Problem Statement 3 above, plus two self-contained tracks — Problem Statement 4 Early Warning and Problem Statement 5 Fraud Intelligence — each with its own product surface but reusing the platform ML kit, staged-pipeline renderer and honesty discipline. All data in every track is synthetic; real-ledger recalibration is the pilot step in each.
 
-## 13. Track 04 — Early Warning (PS4)
+## 13. Problem Statement 4 (Default Prediction Model) — pitched as Early Warning
 
-**The problem it answers.** PS4 asks for an early-warning system over the *performing* loan book: flag borrowers sliding toward default while there is still time to act, not after EMIs have already bounced. CreditPulse's answer reads the alt-data footprint (GST turnover, bank inflows, UPI, EPFO headcount, energy use) as a *leading* indicator that sags months before repayment behaviour — the internal signal a repayment-only monitor can only see late.
+**The problem it answers.** Problem Statement 4 asks for an early-warning system over the *performing* loan book: flag borrowers sliding toward default while there is still time to act, not after EMIs have already bounced. CreditPulse's answer reads the alt-data footprint (GST turnover, bank inflows, UPI, EPFO headcount, energy use) as a *leading* indicator that sags months before repayment behaviour — the internal signal a repayment-only monitor can only see late.
 
 **Product surface (two pages).** *Portfolio Overview* (deep link `track04`) — the book-level radar: KPI row, Green/Amber/Red distribution, this month's band migration, and a flagged-accounts table with per-borrower plain-language drivers. *Watchlist & Cases* (`watchlist`) — the ranked watchlist and a per-borrower case drilldown: the alt-data footprint rolling over the months before repayment slips, marked with three points — EWS first alert, the repayment-only baseline's first alert, and projected default.
 
@@ -104,9 +104,9 @@ CreditPulse is now a **platform** answering three IDBI Innovate 2026 problem sta
 
 **Honesty stance.** The repayment-only baseline is shown *side by side* so the lead-time gap is an honest same-policy comparison, not a strawman. Lead time is the headline; AUC is reported but deliberately not headlined. All borrowers, panels and labels are synthetic; real-default backtesting and recalibration are the productionization step.
 
-## 14. Track 05 — Fraud Intelligence (PS5)
+## 14. Problem Statement 5 (Open Innovation) — pitched as Fraud Intelligence
 
-**The problem it answers.** PS5 asks for detection of rented-out **mule accounts** and the rings behind them — the payment-rail fraud that MHA's December-2026 directive and RBIH's MuleHunter.AI target — with decisions a bank can *explain*. SentinelPulse sits above the flagging layer: it scores accounts, then assembles the evidence and the network into a reviewable case. It is deliberately a transaction-fraud operations desk, unrelated to the lending/scoring in the other tracks (PS5's own "unrelated to PS1–4" fence).
+**The problem it answers.** Problem Statement 5 asks for detection of rented-out **mule accounts** and the rings behind them — the payment-rail fraud that MHA's December-2026 directive and RBIH's MuleHunter.AI target — with decisions a bank can *explain*. SentinelPulse sits above the flagging layer: it scores accounts, then assembles the evidence and the network into a reviewable case. It is deliberately a transaction-fraud operations desk, unrelated to the lending/scoring in the other tracks (Problem Statement 5's own "unrelated to Problem Statements 1–4" fence).
 
 **Product surface (two pages).** *Fraud Desk* (deep link `track05` / `fraud_desk`) — the triage queue, KPIs, suspected-ring count and typology distribution across the flagged desk. *Case Investigation* (`case_investigation`) — the five-stage agentic case file for one account: Triage → Evidence → Network → Adjudication → Case-file compiler, each stage narrated in both a technical and a jargon-free simple view.
 

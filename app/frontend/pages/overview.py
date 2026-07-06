@@ -30,9 +30,9 @@ def render() -> None:
 
     story = (
         "CreditPulse turns an MSME's scattered digital footprint into decisions a bank can act on. "
-        "One platform runs the whole lending lifecycle: **underwrite the credit-invisible** (Track 03), "
-        "then **monitor the book** for early signs of stress (Track 04), then **protect the payment "
-        "rails** from mule-account fraud (Track 05) — the same data spine, the same explainability "
+        "One platform runs the whole lending lifecycle: **underwrite the credit-invisible** (Problem Statement 3), "
+        "then **monitor the book** for early signs of stress (Problem Statement 4), then **protect the payment "
+        "rails** from mule-account fraud (Problem Statement 5) — the same data spine, the same explainability "
         "discipline, three problem statements."
     )
     st.markdown(f"<div class='cp-card'>{story}</div>", unsafe_allow_html=True)

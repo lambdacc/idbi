@@ -85,19 +85,20 @@ digraph T05 {{
 """
 
 _TRACKS = {
-    "Track 03 · Financial Health (PS3)": {
+    "Problem Statement 3 · Financial Health": {
         "dot": _T03_DOT,
         "flow": ("25 alternate-data sources → integration (canonical entity resolution) → feature "
                  "engineering → cross-source synthesis (13 composites) → segmentation, scoring and "
                  "confidence in parallel → explainability → the Financial Health Card."),
         "kind": "t03",
     },
-    "Track 04 · Early Warning (PS4)": {
+    "Problem Statement 4 · Early Warning": {
         "dot": _T04_DOT,
         "flow": ("A 24-month alt-data panel → leakage-guarded features → the EWS engine, scored against "
                  "a repayment-only baseline so the lead-time gap is apples-to-apples → the portfolio "
                  "radar and watchlist with per-borrower drivers."),
         "kind": "t04",
+        "official": "Official brief: Problem Statement 4 is Default Prediction Model, pitched here as Early Warning.",
         "stack": [
             "**Alt-data panel:** 24 monthly snapshots per borrower off the shared latent generators",
             "**Anti-leakage by construction:** entity-level split; future-window features raise; labels attached separately",
@@ -106,12 +107,13 @@ _TRACKS = {
             "**Surfaces:** Portfolio Overview radar + Watchlist with explained drivers",
         ],
     },
-    "Track 05 · Fraud Intelligence (PS5)": {
+    "Problem Statement 5 · Fraud Intelligence": {
         "dot": _T05_DOT,
         "flow": ("Transactions → typology + anomaly scoring → ring expansion across the transfer graph → "
                  "a citation-gated, 5-stage case file where every claim carries its transactions → the "
                  "fraud desk with human-in-the-loop review."),
         "kind": "t05",
+        "official": "Official brief: Problem Statement 5 is Open Innovation, entered here as Fraud Intelligence.",
         "stack": [
             "**Scoring:** typology detectors blended with an Isolation-Forest anomaly signal",
             "**Ring expansion:** bounded pure-Python BFS over the transfer graph — no graph DB, no new dependency",
@@ -134,8 +136,10 @@ def render() -> None:
         st.info("This page shows the system's internal architecture; use the **Technical** toggle at "
                 "the top right for full engineering detail.")
 
-    choice = st.radio("Track", list(_TRACKS.keys()), horizontal=True, label_visibility="collapsed")
+    choice = st.radio("Problem statement", list(_TRACKS.keys()), horizontal=True, label_visibility="collapsed")
     track = _TRACKS[choice]
+    if track.get("official"):
+        st.caption(track["official"])
 
     st.graphviz_chart(track["dot"], use_container_width=True)
     st.caption(f"Flow: {track['flow']}")

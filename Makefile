@@ -41,7 +41,7 @@ train:
 	$(PY) -m app.ml.train
 
 demo: prefit
-	$(PY) -m streamlit run app/frontend/main.py --server.port=$(PORT) --server.address=0.0.0.0
+	$(PY) -m streamlit run app/frontend/main.py --server.port=$(PORT) --server.address=0.0.0.0 --server.headless=true
 
 docker-build:
 	docker build -t creditpulse:local .

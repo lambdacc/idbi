@@ -96,7 +96,7 @@ Legend: **Live** = still a useful borrower signal · **Ratio** = obsolete as dev
 
 ## 5. Concrete features to ADD to CreditPulse (feature backlog)
 
-Grouped by our five pillars (`solution-design.md` §4); marked **[GST-only]** (computable without consent — fits PS3's low-friction identification) or **[+bank/AA]** / **[+9C]** (needs richer data, stage-2).
+Grouped by our five pillars (`solution-design.md` §4); marked **[GST-only]** (computable without consent — fits Problem Statement 3's low-friction identification) or **[+bank/AA]** / **[+9C]** (needs richer data, stage-2).
 
 **Revenue quality & GST discipline**
 - Turnover level, YoY & MoM trend, volatility, seasonality from GSTR-3B `[GST-only]`
@@ -135,7 +135,7 @@ Bundle the consistency cross-checks (GST↔bank, GSTR-1↔3B, 3B↔e-way-bill, 3
 
 ## 8. How this plugs into the build
 - Fold the §5 backlog into `solution-design.md` §4 pillars — each feature is implemented as a deterministic, auditable computation and kept only if it earns its place in the eval harness.
-- The GST-only features are computable on our **synthetic GST data at stage-1** (no consent), reinforcing PS3's low-friction identification angle.
+- The GST-only features are computable on our **synthetic GST data at stage-1** (no consent), reinforcing Problem Statement 3's low-friction identification angle.
 - The Turnover-Authenticity sub-module (§6) becomes a headline demo moment.
 
 ## 9. Sources

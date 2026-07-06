@@ -1,8 +1,9 @@
 # CreditPulse — Manual Demo Script (Platform, 5 minutes)
 
 **Purpose:** a single cohesive five-minute walkthrough of the CreditPulse **platform** — one codebase serving
-three IDBI Innovate 2026 problem statements: **PS3 Financial Health**, **PS4 Early Warning**, **PS5 Fraud
-Intelligence**. Best run by a second person unfamiliar with the internals — the "does a credit officer get it in
+three IDBI Innovate 2026 problem statements: **Problem Statement 3 (Financial Health Score)**, **Problem Statement 4
+(Default Prediction Model, pitched as Early Warning)**, **Problem Statement 5 (Open Innovation, pitched as Fraud
+Intelligence)**. Best run by a second person unfamiliar with the internals — the "does a credit officer get it in
 30 seconds?" test. Pairs with the automated smoke tests under `app/tests/`.
 
 **All data is synthetic.** State this out loud once at the start.
@@ -11,11 +12,11 @@ Intelligence**. Best run by a second person unfamiliar with the internals — th
 - Every page has a **View: Simple · Technical** toggle at the top right. It **defaults to Simple** — plain
   language, no model names — which is what a credit officer sees. Flip it to *Technical* to expose model internals
   (SHAP, execution trace, model stack). Keep it on **Simple** for the narration below; there is one scripted
-  "flip to Technical" beat in the Track 03 segment.
+  "flip to Technical" beat in the Problem Statement 3 segment.
 - Every headline number carries its **rationale** — either a one-line inference beside it or an **ⓘ info tooltip**
   (hover or keyboard-focus). Numbers are never shown bare.
 
-**Timing spine (5:00):** Overview 0:20 · Track 03 2:00 · Track 04 1:15 · Track 05 1:15 · Close 0:10.
+**Timing spine (5:00):** Overview 0:20 · Problem Statement 3 2:00 · Problem Statement 4 1:15 · Problem Statement 5 1:15 · Close 0:10.
 
 ---
 
@@ -35,14 +36,14 @@ Run `make prefit` beforehand for instant startup (the Docker image does this at 
 
 ## 1 · Overview — one codebase, three problem statements (0:20)
 
-- **Expected:** the Overview landing page with three **track cards** — Financial Health (PS3), Early Warning (PS4),
-  Fraud Intelligence (PS5).
+- **Expected:** the Overview landing page with three **track cards** — Financial Health (Problem Statement 3), Early Warning (Problem Statement 4),
+  Fraud Intelligence (Problem Statement 5).
 - **Say:** *"This is one deployment, one codebase, answering three of the Innovate 2026 problem statements. Same
   25-source data foundation, same explainability spine — three lenses on the same MSME. Everything you'll see is
   synthetic data."*
 - **Do:** point at the three cards, then click into **Financial Health**.
 
-## 2 · Track 03 · Financial Health — the 9-stage assessment (2:00)
+## 2 · Problem Statement 3 · Financial Health — the 9-stage assessment (2:00)
 
 **Pick a business.** The page offers named archetypes + "🎲 Random MSME". Leave *Staged reveal* **ON** and pick
 **Precision Auto Components** — the money shot — then click **▶ Run Assessment**.
@@ -78,12 +79,12 @@ arc fast:
   fusing independently-governed sources catches it — harder to fake than any one input."* The **reason codes** below
   give the deterministic, auditable path.
 
-## 3 · Track 04 · Early Warning — the deterioration radar (1:15)
+## 3 · Problem Statement 4 (Default Prediction Model) · Early Warning — the deterioration radar (1:15)
 
 - **Do:** back to the sidebar, open **Early Warning** (`/track04`).
 - **Expected:** a portfolio-deterioration **radar** — the whole book scored for stress, worst-first, not one
   application at a time.
-- **Say:** *"PS3 decides who to onboard. PS4 watches the book you already have — it's a deterioration radar across
+- **Say:** *"Problem Statement 3 decides who to onboard. Problem Statement 4 watches the book you already have — it's a deterioration radar across
   the live portfolio, ranked by who's sliding toward trouble."*
 - **Do:** open the **watchlist** (`/watchlist`) and click into the flagship borrower — the one whose repayments are
   still on time but who is **rolling over**: refinancing, stretching payables, alt-data (utilities, GST filing
@@ -94,7 +95,7 @@ arc fast:
   tightly at the top of the list."* (Verified on the synthetic cohort: median lead-time 11.5 vs 2.0 months;
   capture in the top decile 0.926 vs 0.519. All synthetic.)
 
-## 4 · Track 05 · Fraud Intelligence — the citation-gated case file (1:15)
+## 4 · Problem Statement 5 (Open Innovation) · Fraud Intelligence — the citation-gated case file (1:15)
 
 - **Do:** sidebar → **Fraud Intelligence** (`/track05`).
 - **Expected:** a **fraud desk** that scores accounts for fraud-ring involvement, worst-first.
@@ -120,7 +121,7 @@ the honest synthetic-data / deployment notes.
 
 ---
 
-## Appendix · Track 03 alternate archetypes (if you have extra time)
+## Appendix · Problem Statement 3 alternate archetypes (if you have extra time)
 
 The Precision Auto Components run above is the headline. Two other archetypes make good contrast runs:
 

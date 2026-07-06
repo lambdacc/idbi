@@ -7,7 +7,7 @@
 
 ## 0. Why this appendix exists
 
-IDBI Innovate 2026's second orientation session was explicit: **GST, UPI, Account Aggregator (AA), and EPFO are the starting point, not the answer.** A strong PS3 submission has to (a) name additional electronic data sources beyond the obvious four, (b) be honest about which of them are *actually* obtainable today versus merely plausible-sounding, and (c) show how combining sources produces signals that are harder to manipulate than any single input.
+IDBI Innovate 2026's second orientation session was explicit: **GST, UPI, Account Aggregator (AA), and EPFO are the starting point, not the answer.** A strong Problem Statement 3 submission has to (a) name additional electronic data sources beyond the obvious four, (b) be honest about which of them are *actually* obtainable today versus merely plausible-sounding, and (c) show how combining sources produces signals that are harder to manipulate than any single input.
 
 This appendix answers that bar directly. It evaluates **34 candidate data sources** — the 5 already-established core sources (GST, UPI, AA bank/deposit, EPFO, Credit Bureau) plus a widened 29-candidate sweep across statutory, trade/logistics, utilities/premises, licensing, commerce, and risk/legal domains — against a fixed 12-field evaluation rubric, tiers every one of them into **Retain (core)** / **Retain (enrichment)** / **Reject** (with a documented reason for every reject), and closes with a **composite-indicator catalog**: 13 cross-source signals, each naming its constituent sources, the fused signal it produces, and — the crux of the "harder to manipulate" argument — exactly which independently-governed systems a fraudster would have to compromise *simultaneously* to fake it.
 
@@ -117,7 +117,7 @@ These are electronically available today, realistically obtainable at low-to-med
 | Electronic availability | Yes — mature regulated API product. |
 | Access model | Regulated API — bureau membership required, borrower consent for the specific pull. |
 | Update frequency | Monthly (bureau refresh from member reporting). |
-| Practical availability | High for an existing formal-credit borrower; **low/zero for a genuinely NTC MSME** — precisely the segment PS3 targets. |
+| Practical availability | High for an existing formal-credit borrower; **low/zero for a genuinely NTC MSME** — precisely the segment Problem Statement 3 targets. |
 | Cost / integration complexity | Low-medium (mature bureau-API integration pattern). |
 | Fraud / authenticity indicators | Identity mismatch, enquiry-velocity spikes (loan-shopping/stacking), settled/written-off flags. |
 | Credit / risk indicators | DPD history, current exposure & utilization, vintage of oldest credit line, MSME rank. |
@@ -215,7 +215,7 @@ Valuable, complementary, and retained — but narrower in sector applicability, 
 | Fraud / authenticity indicators | ITR-vs-GST-turnover reconciliation (a strong cross-check when both are available), AIS-reported high-value transactions vs claimed profile. |
 | Credit / risk indicators | Declared income/profit trend, tax-paid history (a genuine-profitability proxy beyond GST's turnover-only view), TDS-credit trail. |
 | Manipulation resistance | Medium — statutory filing with penalties, but purely self-declared profit is easier to shape pre-filing than GST turnover (which has e-way-bill/2A-2B cross-validation). |
-| Limitations | Not on AA rails; document-based collection is exactly the friction PS3 is trying to move past; annual cadence is coarser than GST/bank. |
+| Limitations | Not on AA rails; document-based collection is exactly the friction Problem Statement 3 is trying to move past; annual cadence is coarser than GST/bank. |
 | Confidence | High. |
 
 ### Trade & logistics
@@ -594,7 +594,7 @@ Rejected sources are not silent omissions — each carries a documented reason.
 | Manipulation resistance | Medium-high where a genuine registered document exists, but coverage gap defeats it. |
 | Limitations | Coverage bias — the smallest/most informal MSMEs (the credit-invisible target segment) are least likely to have a registered lease at all. |
 | Confidence | Medium. |
-| **Why rejected** | State-fragmented with no lender API, and the MSME segment PS3 targets is exactly the segment least likely to hold a registered (rather than informal) lease. |
+| **Why rejected** | State-fragmented with no lender API, and the MSME segment Problem Statement 3 targets is exactly the segment least likely to hold a registered (rather than informal) lease. |
 
 #### 4.6 Telecom (mobile/broadband tenure & usage)
 

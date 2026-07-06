@@ -79,7 +79,7 @@ TRACKS: List[TrackSpec] = [
         ],
     ),
     TrackSpec(
-        id="t03", label="Track 03 · Financial Health", badge="PS3",
+        id="t03", label="Problem Statement 3 · Financial Health", badge="Problem Statement 3",
         folder="t03_financial_health",
         blurb="Underwrite the credit-invisible MSME from its digital exhaust.",
         capabilities=["Explainable financial health card",
@@ -100,9 +100,10 @@ TRACKS: List[TrackSpec] = [
         ],
     ),
     TrackSpec(
-        id="t04", label="Track 04 · Early Warning", badge="PS4",
+        id="t04", label="Problem Statement 4 · Early Warning", badge="Problem Statement 4",
         folder="t04_early_warning",
-        blurb="Monitor the book: alt-data early warning, months before repayment slips.",
+        blurb="Problem Statement 4's official brief is Default Prediction Model — pitched here as an early-warning "
+              "radar: monitor the book, months before repayment slips.",
         capabilities=["Portfolio deterioration radar",
                       "Lead-time vs a repayment-only baseline",
                       "Watchlist with explained drivers"],
@@ -116,9 +117,10 @@ TRACKS: List[TrackSpec] = [
         ],
     ),
     TrackSpec(
-        id="t05", label="Track 05 · Fraud Intelligence", badge="PS5",
+        id="t05", label="Problem Statement 5 · Fraud Intelligence", badge="Problem Statement 5",
         folder="t05_fraud_intelligence",
-        blurb="Protect the rails: explainable mule-account detection with citation-gated cases.",
+        blurb="Problem Statement 5's official brief is Open Innovation — entered here as explainable "
+              "mule-account detection with citation-gated cases, protecting the payment rails.",
         capabilities=["Typology + anomaly detection",
                       "Ring expansion over the transaction graph",
                       "Agentic, citation-gated case file"],

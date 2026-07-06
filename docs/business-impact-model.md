@@ -1,4 +1,4 @@
-# Business-Impact Model — CreditPulse (PS3)
+# Business-Impact Model — CreditPulse (Problem Statement 3)
 
 **Status:** Phase 2 · **Date:** 28 Jun 2026 · **Use:** the quantified "business impact" story for the pitch.
 **Health warning:** every figure here is an **illustrative planning estimate** built to size the opportunity for judges — **not an audited forecast.** Market figures come from public sources (RBI U.K. Sinha Committee 2019; SIDBI-CRISIL 2025; Sahamati AA impact reports); IDBI-specific numbers are placeholders to replace with bank data if shared.
@@ -8,7 +8,7 @@
 ## 1. The macro pain (cited)
 
 - India's MSME credit gap ≈ **₹25-30 lakh crore (~$530B)**; only **~14%** of MSMEs access formal credit.
-- The cause PS3 names: thin-file **NTC/NTB** MSMEs lack traditional financials → high rejection of *viable* borrowers, missed lending, weak diversification, slow inclusion.
+- The cause Problem Statement 3 names: thin-file **NTC/NTB** MSMEs lack traditional financials → high rejection of *viable* borrowers, missed lending, weak diversification, slow inclusion.
 - Account-Aggregator penetration in **MSME** lending is still low (~1% range vs ~10%+ for personal loans) — genuine white space, not a crowded race.
 
 ## 2. Where CreditPulse creates value (the levers)
@@ -31,7 +31,7 @@
 | TAT | days (manual) | **<1 min** score → faster decisions | throughput + experience |
 | Cost-to-serve | manual underwriting | automated first-pass | **per-case cost ↓** |
 
-*The point for judges is the shape, not the decimals: a single multidimensional, explainable card converts rejected-but-viable MSMEs into safe approvals while flagging the risky ones — growth and quality at once, exactly PS3's stated outcome.*
+*The point for judges is the shape, not the decimals: a single multidimensional, explainable card converts rejected-but-viable MSMEs into safe approvals while flagging the risky ones — growth and quality at once, exactly Problem Statement 3's stated outcome.*
 
 ## 4. Strategic value to IDBI (beyond the numbers)
 
@@ -47,7 +47,7 @@
 
 ---
 
-## Track 04 — Early Warning: impact
+## Problem Statement 4 (Default Prediction Model) — pitched as Early Warning: impact
 
 **Health warning (same as above):** the rupee/percentage figures in this section are an **illustrative planning estimate** to size the opportunity — **not an audited forecast or a measured outcome.** The only *measured* numbers here are the model-eval metrics explicitly flagged "(verified)"; everything financial is an assumption to re-run on IDBI data.
 
@@ -74,7 +74,7 @@ The mechanism is time, not a new score. An Early Warning signal that flags a det
 
 ---
 
-## Track 05 — Fraud Intelligence: impact
+## Problem Statement 5 (Open Innovation) — pitched as Fraud Intelligence: impact
 
 **Health warning (same as above):** every rupee/hour figure here is an **illustrative planning estimate** — **not an audited forecast or a measured outcome.** Only the model-eval metrics flagged "(verified)" are measured; all financial numbers are assumptions to replace with IDBI data.
 

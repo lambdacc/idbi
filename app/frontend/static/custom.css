@@ -163,9 +163,15 @@ h1.cp-logo-page { font-size: 2.7rem; line-height: 1.05; margin-top: 0; margin-bo
 /* Collapse the toggle row's vertical footprint so the page title rises up beside
    it (title left, toggle right) instead of leaving a tall empty band on top.
    Hooks are keyed to the radio's stable `.st-key-cp_view_mode` container and a
-   `:has()` on its row -- robust across reruns, unlike sibling-adjacency. */
+   `:has()` on its row -- robust across reruns, unlike sibling-adjacency.
+   The negative margin makes the title block (full-width, even though its text
+   is short) geometrically overlap the toggle; `position: relative` + a z-index
+   above the title's default stacking layer keeps the toggle on top so it still
+   receives clicks instead of silently losing them to the title underneath. */
 .cp-viewtoggle-anchor { height: 0; margin: 0; }
-[data-testid="stHorizontalBlock"]:has(.st-key-cp_view_mode) { margin-top: -.4rem; margin-bottom: -3.4rem; }
+[data-testid="stHorizontalBlock"]:has(.st-key-cp_view_mode) {
+  margin-top: -.4rem; margin-bottom: -3.4rem; position: relative; z-index: 5;
+}
 .st-key-cp_view_mode [data-testid="stRadio"] > div[role="radiogroup"] {
   flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; gap: 0;
   border: 1px solid var(--cp-border-2); border-radius: var(--cp-r);
