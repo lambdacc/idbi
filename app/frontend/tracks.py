@@ -231,13 +231,13 @@ def render_topnav(current_page) -> None:
         Simple/Technical view toggle;
       * the navy bar = WHICH PRODUCT: brand wordmark (left), then Overview,
         one tab per installed problem-statement track, and Architecture as a
-        centred link group;
+        right-aligned link group;
       * below it, on product pages only: a masthead heading the product
         (product name + its PS badge) and one pill per page of the ACTIVE
         track.
 
-    Columns are content-sized via CSS (flex max-content); the two stretch
-    spacers around the link group centre it inside the bar."""
+    Columns are content-sized via CSS (flex max-content); the stretch spacer
+    after the brand pushes the link group to the right edge."""
     from app.frontend.components import ui
 
     active = track_of_page(current_page)
@@ -248,7 +248,7 @@ def render_topnav(current_page) -> None:
         ui.view_toggle()
 
     with st.container(key="cp_topnav"):
-        cols = iter(st.columns(len(products) + 5, vertical_alignment="center"))
+        cols = iter(st.columns(len(products) + 4, vertical_alignment="center"))
         with next(cols):
             st.markdown(
                 "<div class='cp-nav-brand'><span class='a'>Credit</span>"
@@ -264,8 +264,6 @@ def render_topnav(current_page) -> None:
         with next(cols):
             _nav_link("ref.architecture", "Architecture",
                       active is not None and active.id == "ref")
-        with next(cols):
-            st.markdown("<div class='cp-nav-spacer'></div>", unsafe_allow_html=True)
 
     # Product masthead + page pills — product pages only; Overview is the brand
     # landing and Reference pages carry a masthead without a badge. The navbar
