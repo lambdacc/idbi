@@ -101,21 +101,6 @@ def render() -> None:
 
     st.divider()
 
-    left, right = st.columns([1.7, 1])
-    with left:
-        st.subheader("Accounts on the desk")
-        st.markdown(_queue_table(snap["queue"], technical), unsafe_allow_html=True)
-        if len(snap["queue"]) > 25:
-            st.caption(f"Showing the 25 highest-scoring of {len(snap['queue'])} "
-                       "flagged accounts.")
-    with right:
-        st.subheader("Pattern distribution")
-        st.plotly_chart(charts.typology_bar(snap["typology_distribution"],
-                                            plain=not technical),
-                        use_container_width=True, config=charts.CONFIG, key="t05_desk_typbar")
-
-    st.divider()
-
     # Investigation launchers — one account picker + two prominent shortcuts.
     st.subheader("Open an investigation")
     ids = [q["account"] for q in snap["queue"]]
@@ -145,6 +130,21 @@ def render() -> None:
             _open_case(snap["hard_negative"])
         st.caption("Busy, but genuine — the desk explains why it stays cleared "
                    "(the case rules can't make).")
+
+    st.divider()
+
+    left, right = st.columns([1.7, 1])
+    with left:
+        st.subheader("Accounts on the desk")
+        st.markdown(_queue_table(snap["queue"], technical), unsafe_allow_html=True)
+        if len(snap["queue"]) > 25:
+            st.caption(f"Showing the 25 highest-scoring of {len(snap['queue'])} "
+                       "flagged accounts.")
+    with right:
+        st.subheader("Pattern distribution")
+        st.plotly_chart(charts.typology_bar(snap["typology_distribution"],
+                                            plain=not technical),
+                        use_container_width=True, config=charts.CONFIG, key="t05_desk_typbar")
 
     # Glossary. Titles are the plain synonym so Simple mode never shows raw jargon;
     # the "typology" term itself is Technical-only.

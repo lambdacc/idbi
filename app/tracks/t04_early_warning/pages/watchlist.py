@@ -65,23 +65,34 @@ def render() -> None:
     # ----------------------------------------------------------- watchlist table
     st.subheader("Watchlist")
     _watchlist_css()
-    body = ["<table class='t04-wl'><thead><tr>"
-            "<th>Band</th><th>Borrower</th><th>Sector</th>"
-            "<th>Default risk (12m)</th><th>Days late</th><th>Exposure</th>"
-            "<th>Recommended action</th></tr></thead><tbody>"]
-    for r in run.watchlist:
-        body.append(
-            "<tr>"
-            f"<td>{badge(r.band, _BAND_KIND.get(r.band, 'info'))}</td>"
-            f"<td><b>{html.escape(r.name)}</b></td>"
-            f"<td class='rz'>{html.escape(r.sector)}</td>"
-            f"<td>{r.pd_pct}</td>"
-            f"<td>{r.dpd_current:.0f}</td>"
-            f"<td>{html.escape(r.exposure_str)}</td>"
-            f"<td class='rz'>{html.escape(r.action)}</td>"
-            "</tr>")
-    body.append("</tbody></table>")
-    st.markdown("".join(body), unsafe_allow_html=True)
+
+    def _table_html(rows) -> str:
+        body = ["<table class='t04-wl'><thead><tr>"
+                "<th>Band</th><th>Borrower</th><th>Sector</th>"
+                "<th>Default risk (12m)</th><th>Days late</th><th>Exposure</th>"
+                "<th>Recommended action</th></tr></thead><tbody>"]
+        for r in rows:
+            body.append(
+                "<tr>"
+                f"<td>{badge(r.band, _BAND_KIND.get(r.band, 'info'))}</td>"
+                f"<td><b>{html.escape(r.name)}</b></td>"
+                f"<td class='rz'>{html.escape(r.sector)}</td>"
+                f"<td>{r.pd_pct}</td>"
+                f"<td>{r.dpd_current:.0f}</td>"
+                f"<td>{html.escape(r.exposure_str)}</td>"
+                f"<td class='rz'>{html.escape(r.action)}</td>"
+                "</tr>")
+        body.append("</tbody></table>")
+        return "".join(body)
+
+    # Top slice only, so the case drilldown (the money shot) stays near the fold;
+    # the full queue lives one click away.
+    _TOP_N = 8
+    st.markdown(_table_html(run.watchlist[:_TOP_N]), unsafe_allow_html=True)
+    _rest = run.watchlist[_TOP_N:]
+    if _rest:
+        with st.expander(f"Show the remaining {len(_rest)} flagged borrowers"):
+            st.markdown(_table_html(_rest), unsafe_allow_html=True)
 
     st.divider()
 
