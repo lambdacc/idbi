@@ -60,9 +60,11 @@ def _goto(at: AppTest, url_path: str) -> None:
 def _drive(mode: str, url_path: str, case_account: str | None) -> AppTest:
     at = AppTest.from_file(_APP, default_timeout=120)
     at.session_state["cp_view_mode"] = mode
-    at.session_state["cp_instant"] = True
     if case_account is not None:
         at.session_state["cp_case_account"] = case_account
+        # Mark this account's investigation as already played so the render skips
+        # the real-time animation (no time.sleep) — the static case file renders.
+        at.session_state["cp_case_played"] = case_account
     at.run()                              # Overview (root)
     _goto(at, url_path)
     return at

@@ -86,15 +86,11 @@ TRACKS: List[TrackSpec] = [
                       "Turnover-authenticity cross-check",
                       "Deterministic scorecard + calibrated PD"],
         pages=[
-            PageSpec("t03.run", "Run Assessment",
-                     "app.tracks.t03_financial_health.pages.run_assessment",
+            # Consolidated 5→3 (multi-track issue #5): Run+Pipeline merged into
+            # one Assessment page; Dashboard folded into the Financial Health Card.
+            PageSpec("t03.run", "Assessment",
+                     "app.tracks.t03_financial_health.pages.assessment",
                      url_path="track03"),
-            PageSpec("t03.dashboard", "Dashboard",
-                     "app.tracks.t03_financial_health.pages.dashboard",
-                     url_path="dashboard"),
-            PageSpec("t03.pipeline", "Assessment Pipeline",
-                     "app.tracks.t03_financial_health.pages.pipeline",
-                     url_path="pipeline"),
             PageSpec("t03.health_card", "Financial Health Card",
                      "app.tracks.t03_financial_health.pages.health_card",
                      url_path="health_card"),
@@ -187,6 +183,6 @@ def build_navigation() -> Dict[str, list]:
 
 def get_page(key: str):
     """The `StreamlitPage` object for a registry key, for object-form links
-    (`st.page_link(get_page("t03.pipeline"))`). Requires build_navigation() to
+    (`st.page_link(get_page("t03.explainability"))`). Requires build_navigation() to
     have run this rerun (the router guarantees this before any page renders)."""
     return _PAGE_OBJECTS[key]

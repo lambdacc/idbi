@@ -2,8 +2,8 @@
 
 The staged agentic investigation for one flagged account, rendered with the
 existing pipeline components (stage rail left · live output right · notebook cells
-below — the same contract as the T03 pipeline; instant mode honoured via
-``cp_instant``). Below the run sits the case file: grounds of suspicion with
+below — the same contract as the T03 pipeline; the precomputed case is narrated by
+the animation, with no skip path — issue #2). Below the run sits the case file: grounds of suspicion with
 citation expanders that open the actual transactions, the suspected-ring diagram,
 the recommendation, and an Approve / Override gate that appends to a deterministic
 audit trail.
@@ -145,18 +145,13 @@ def _hit_tone(score: float) -> str:
 # --------------------------------------------------------------- staged run
 def _run_stages(cf, technical: bool) -> None:
     stages = cf.stages
-    instant = st.session_state.get("cp_instant", False)
     already = st.session_state.get(_PLAYED_KEY) == cf.account_id
 
-    top = st.columns([1, 1, 3])
-    with top[0]:
-        if st.button("Skip to result", use_container_width=True):
-            st.session_state[_PLAYED_KEY] = cf.account_id
-            already = True
-    with top[1]:
-        if st.button("Replay", use_container_width=True):
-            st.session_state[_PLAYED_KEY] = None
-            st.rerun()
+    # No skip/instant path (issue #2): the case is precomputed and the run just
+    # narrates it. Replay re-plays the animation.
+    if st.button("Replay investigation", use_container_width=False):
+        st.session_state[_PLAYED_KEY] = None
+        st.rerun()
 
     left, right = st.columns([1, 1.6])
     stage_ph = left.empty()
@@ -169,7 +164,7 @@ def _run_stages(cf, technical: bool) -> None:
     def cell_detail(container, stage) -> None:
         _stage_detail(container, stage, cf, technical)
 
-    play = not (instant or already)
+    play = not already
     if play:
         log_lines: list[str] = []
         bar = progress_ph.progress(0.0, text="Starting …")

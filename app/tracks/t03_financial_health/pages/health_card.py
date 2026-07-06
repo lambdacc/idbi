@@ -110,7 +110,6 @@ def render() -> None:
                        "the raw PD looks benign.")
 
     st.divider()
-    nav = st.columns(3)
+    nav = st.columns(2)
     nav[0].page_link(tracks.get_page("t03.explainability"), label="Why this score (explainability)")
-    nav[1].page_link(tracks.get_page("t03.dashboard"), label="Dashboard")
-    nav[2].page_link(tracks.get_page("t03.run"), label="New assessment")
+    nav[1].page_link(tracks.get_page("t03.run"), label="New assessment")

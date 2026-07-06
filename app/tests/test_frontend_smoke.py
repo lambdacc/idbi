@@ -33,9 +33,7 @@ _APP = str(_ROOT / "app" / "frontend" / "main.py")
 
 # Pages addressed by their registry url_path (wp-s Q5/Q7). "" is the Overview root.
 _OVERVIEW = ""
-_RUN = "track03"
-_DASHBOARD = "dashboard"
-_PIPELINE = "pipeline"
+_RUN = "track03"                        # Assessment (picker + staged pipeline, consolidated)
 _HEALTH_CARD = "health_card"
 _EXPLAINABILITY = "explainability"
 _ARCHITECTURE = "architecture"          # technical by design — jargon-exempt
@@ -45,7 +43,7 @@ _T05_DESK = "track05"
 _T05_CASE = "case_investigation"
 
 # Every registered page (render-only assertion for the placeholders at this stage).
-_PAGES = [_OVERVIEW, _RUN, _DASHBOARD, _PIPELINE, _HEALTH_CARD, _EXPLAINABILITY,
+_PAGES = [_OVERVIEW, _RUN, _HEALTH_CARD, _EXPLAINABILITY,
           _ARCHITECTURE, _T04_PORTFOLIO, _T04_WATCHLIST, _T05_DESK, _T05_CASE]
 
 # The named showcase entity: benign default risk but weak turnover-authenticity,
@@ -108,7 +106,7 @@ def test_page_renders(mode, url_path, assessment):
 @pytest.mark.parametrize("mode", ["simple", "technical"])
 def test_view_toggle_exactly_once(mode, assessment):
     """The router-owned Simple/Technical toggle renders exactly once, found by key."""
-    at = _drive(mode, assessment, _DASHBOARD)
+    at = _drive(mode, assessment, _HEALTH_CARD)
     toggles = [r for r in at.radio if r.key == "cp_view_mode"]
     assert len(toggles) == 1, f"expected 1 view toggle, got {len(toggles)} [{mode}]"
 
@@ -122,10 +120,9 @@ def test_health_card_shows_verdict(mode, assessment):
         f"verdict narrative missing on Health Card [{mode}]"
 
 
-@pytest.mark.parametrize("url_path", [_OVERVIEW, _DASHBOARD, _PIPELINE,
-                                      _HEALTH_CARD, _EXPLAINABILITY])
+@pytest.mark.parametrize("url_path", [_OVERVIEW, _RUN, _HEALTH_CARD, _EXPLAINABILITY])
 def test_simple_mode_jargon_clean(url_path, assessment):
-    """Simple mode surfaces none of the §G4 banned terms (Overview + pages 1–4)."""
+    """Simple mode surfaces none of the §G4 banned terms (Overview + the T03 pages)."""
     at = _drive("simple", assessment, url_path)
     body = _text_of(at).lower()
     hits = [t for t in _BANNED if t.lower() in body]

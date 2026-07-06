@@ -63,6 +63,45 @@ def stage_list_html(stages, current_index: int) -> str:
     return "".join(rows)
 
 
+def _dot(s) -> str:
+    """Sanitise a Python string for a DOT double-quoted attribute."""
+    return str(s).replace("\\", " ").replace('"', "'").replace("\n", " ").strip()
+
+
+def stage_flow_dot(stages, revealed: int, current: int) -> str:
+    """Graphviz DOT for the assessment pipeline as a top-down flow chart that
+    *grows* one node per stage (multi-track issue #3). Only the first `revealed`
+    stages are drawn, so re-rendering with an increasing `revealed` animates the
+    chart building itself. `current` is the running stage (navy, highlighted);
+    earlier stages are completed (green); pass current=0 once the run is done.
+    Every node carries a `tooltip` (the stage's plain-language caption) so hover
+    reveals what happens there — the mental-map goal."""
+    shown = [s for s in stages if s.index <= revealed]
+    lines = [
+        "digraph pipeline {",
+        '  rankdir=TB; bgcolor="transparent"; splines=true; nodesep=0.22; ranksep=0.28;',
+        '  node [shape=box style="rounded,filled" fontname="Schibsted Grotesk" '
+        'fontsize=10 margin="0.18,0.10" penwidth=1.2];',
+        '  edge [color="#8ca3bd" arrowsize=0.6 penwidth=1.1];',
+    ]
+    for s in shown:
+        done_boundary = current or (revealed + 1)
+        if current and s.index == current:
+            fill, fc, col = "#0b3d75", "#ffffff", "#0b3d75"          # running
+        elif s.index < done_boundary:
+            fill, fc, col = "#e7f3ec", "#14432a", "#8fc7a6"          # completed
+        else:
+            fill, fc, col = "#f4f6fa", "#1b2733", "#dbe2ec"          # just revealed
+        tip = _dot(getattr(s, "caption", "") or getattr(s, "headline", "") or s.title)
+        label = _dot(f"{s.index}. {s.title}")
+        lines.append(f'  s{s.index} [label="{label}" tooltip="{tip}" '
+                     f'fillcolor="{fill}" fontcolor="{fc}" color="{col}"];')
+    for a_, b_ in zip(shown, shown[1:]):
+        lines.append(f"  s{a_.index} -> s{b_.index};")
+    lines.append("}")
+    return "\n".join(lines)
+
+
 # ------------------------------------------------------- per-stage detail
 def render_source_grid(sources: List[dict], per_row: int = 6, limit: int | None = None) -> None:
     items = sources if limit is None else sources[:limit]

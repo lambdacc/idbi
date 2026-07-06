@@ -49,8 +49,8 @@ def require_assessment() -> Optional[Assessment]:
         st.markdown("<h1>No assessment yet</h1>", unsafe_allow_html=True)
         st.markdown(
             "<div class='cp-card' style='border-top:3px solid var(--cp-navy)'>"
-            "Pick a business on the <b>Run Assessment</b> page and click <b>Run assessment</b>. "
-            "The health card, pipeline and explainability views populate from that run."
+            "Pick a business on the <b>Assessment</b> page and click <b>Run assessment</b>. "
+            "The health card and explainability views populate from that run."
             "</div>", unsafe_allow_html=True)
         # Object-form link via the registry (path strings don't resolve against
         # callable-registered pages — wp-s Q4); guarded so core never hard-imports
