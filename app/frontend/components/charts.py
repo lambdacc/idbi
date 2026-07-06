@@ -18,6 +18,9 @@ _BASE = dict(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
              font=dict(family=_SANS, color=INK),
              margin=dict(l=10, r=10, t=30, b=10))
 
+# Product feel: no plotly modebar on hover (pass as config= at every call site).
+CONFIG = {"displayModeBar": False, "responsive": True}
+
 # Non-semantic categorical palette for peer tiers (cool -> warm, muted; deliberately
 # NOT the risk GREEN/AMBER/RED, which are reserved for risk semantics).
 _CLUSTER_COLORS = ["#0b3d75", "#0e7c66", "#b3541e", "#6b4fa1", "#8f5c13"]

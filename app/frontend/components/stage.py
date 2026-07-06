@@ -13,7 +13,7 @@ import streamlit as st
 
 from app.backend.services.pipeline_orchestrator import COMPOSITE_CATALOG
 from app.frontend.components import charts
-from app.frontend.components.ui import badge, band_class, fmt_inr, kpi, risk_class
+from app.frontend.components.ui import badge, band_class, fmt_inr, fmt_pd, kpi, risk_class
 from app.ml.explainability.reason_codes import _LABELS
 
 # feature/composite key -> pretty label for charts & waterfalls
@@ -262,7 +262,7 @@ def render_detail(container, stage, entity_name: str, technical: bool,
                         f" &nbsp; <span class='cp-scn'>{algo}</span>",
                         unsafe_allow_html=True)
             st.plotly_chart(charts.cluster_scatter(d["scatter"], d["entity_point"],
-                            entity_name), use_container_width=True, key=_ck("scatter"))
+                            entity_name), use_container_width=True, config=charts.CONFIG, key=_ck("scatter"))
 
         elif stage.key == "scoring":
             labels = [p["label"] for p in d["pillars"]]
@@ -270,13 +270,13 @@ def render_detail(container, stage, entity_name: str, technical: bool,
             c1, c2 = st.columns([1.3, 1])
             with c1:
                 st.plotly_chart(charts.pillar_bars(labels, vals),
-                                use_container_width=True, key=_ck("pillars"))
+                                use_container_width=True, config=charts.CONFIG, key=_ck("pillars"))
             with c2:
                 st.markdown(kpi("Composite score", f"{d['composite_score']:.0f}<small>/100</small>",
                             f"Grade {d['grade']}/10", band_class(d["onboarding_band"])),
                             unsafe_allow_html=True)
                 if technical:
-                    st.markdown(kpi("Model PD", f"{d['pd']:.1%}", d["risk_category"] + " risk",
+                    st.markdown(kpi("Model PD", fmt_pd(d["pd"]), d["risk_category"] + " risk",
                                 risk_class(d["risk_category"])), unsafe_allow_html=True)
                 else:
                     st.markdown(kpi("Estimated default risk", d["risk_category"],
@@ -288,7 +288,7 @@ def render_detail(container, stage, entity_name: str, technical: bool,
             if technical and d["shap_top"]:
                 st.markdown("**SHAP cross-check**, monotonic GBM PD path")
                 st.plotly_chart(charts.shap_waterfall(d["shap_top"], feature_label),
-                                use_container_width=True, key=_ck("shap"))
+                                use_container_width=True, config=charts.CONFIG, key=_ck("shap"))
 
         elif stage.key == "health_card":
             hc = d["health_card"]

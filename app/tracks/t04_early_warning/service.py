@@ -99,6 +99,18 @@ _HONESTY = ("All figures are computed on a synthetic loan book that encodes the 
 # --------------------------------------------------------------------------- #
 # Small formatting helpers (kept local so the backend never imports frontend).
 # --------------------------------------------------------------------------- #
+def _fmt_pd(p: float) -> str:
+    """Display cap for the 12-month default risk. The calibrated tail saturates
+    at 1.0 on the synthetic book; printing a literal 100% (or 0%) reads as a bug
+    to a credit audience, so the display clamps to an honest open interval."""
+    p = float(p or 0.0)
+    if p < 0.01:
+        return "<1%"
+    if p > 0.95:
+        return ">95%"
+    return f"{p:.0%}"
+
+
 def _fmt_inr(x: float) -> str:
     x = float(x or 0.0)
     if x >= 1e7:
@@ -349,7 +361,7 @@ def run_monitoring(engine: EWSEngine) -> MonitoringRun:
         pb = prior.get(eid)
         watchlist.append(WatchRow(
             entity_id=eid, name=_name(eid), sector=_sector(eid), product=r["product"],
-            band=band, tone=meta["tone"], pd_12m=r["pd_12m"], pd_pct=f"{r['pd_12m']:.0%}",
+            band=band, tone=meta["tone"], pd_12m=r["pd_12m"], pd_pct=_fmt_pd(r["pd_12m"]),
             exposure=r["exposure"], exposure_str=_fmt_inr(r["exposure"]),
             dpd_current=r["dpd_current"], baseline_band=r["baseline_band"],
             reasons=phrases, action=meta["action"], rationale=rationale,
@@ -486,7 +498,7 @@ def case_detail(engine: EWSEngine, entity_id: str) -> CaseDetail:
     if prow is not None:
         band = prow["band"]
         reasons = _reason_phrases(prow["reasons"])
-        pd_pct = f"{prow['pd_12m']:.0%}"
+        pd_pct = _fmt_pd(prow["pd_12m"])
         exposure_str = _fmt_inr(prow["exposure"])
         dpd_current = float(prow["dpd_current"])
         product = prow["product"]
@@ -494,7 +506,7 @@ def case_detail(engine: EWSEngine, entity_id: str) -> CaseDetail:
         # Cold fallback (entity not on the live book): band off its own PD tail.
         pd_tail = tl.get("ews_pd") or [0.0]
         band = engine.band(float(pd_tail[-1]))
-        reasons, pd_pct = [], f"{float(pd_tail[-1]):.0%}"
+        reasons, pd_pct = [], _fmt_pd(float(pd_tail[-1]))
         exposure_str, dpd_current, product = "—", 0.0, "—"
 
     meta = ACTIONS.get(band, ACTIONS["Green"])

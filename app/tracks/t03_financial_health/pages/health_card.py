@@ -22,7 +22,8 @@ from app.frontend.components import state
 from app.frontend.components.glossary import GLOSSARY
 from app.frontend.components.stage import render_reasons
 from app.frontend.components.ui import (auth_class, badge, band_class, confidence_class,
-                                        dimension_bars, fmt_inr, kpi, page_header, risk_class)
+                                        dimension_bars, fmt_inr, fmt_pd, kpi, page_header,
+                                        risk_class)
 
 
 def render() -> None:
@@ -39,7 +40,10 @@ def render() -> None:
         f"<div class='subtle'>{a.entity.get('sector','')} · {a.entity.get('category','')} · "
         f"vintage {a.entity.get('age_years','?')}y · {out['sources_connected']}</div>"
         f"<div style='margin-top:.5rem'>{badge('Grade ' + str(hc.grade) + '/10', band_class(hc.onboarding_band))} "
-        f"{badge(hc.peer_segment or '-', 'info')}</div></div></div>", unsafe_allow_html=True)
+        f"{badge('Peer group: ' + (hc.peer_segment or '-'), 'info')}</div>"
+        f"<div class='subtle' style='margin-top:.45rem'>Overall score is calibrated against the "
+        f"full business cohort - it is not an average of the five dimension scores below.</div>"
+        f"</div></div>", unsafe_allow_html=True)
 
     rk = band_class(hc.onboarding_band)
     st.markdown(
@@ -57,6 +61,8 @@ def render() -> None:
 
     st.write("")
     st.subheader("Five dimensions")
+    st.caption("Absolute scores out of 100. The overall score above ranks this business "
+               "against the whole cohort, so it can sit above or below these bars.")
     st.markdown(dimension_bars(hc.pillars, show_eng=state.is_technical()), unsafe_allow_html=True)
 
     st.divider()
@@ -77,7 +83,7 @@ def render() -> None:
                       _fraud_tone.get(hc.fraud_band, "info"),
                       tip=GLOSSARY["fraud_risk"]), unsafe_allow_html=True)
         _i = 2
-    k[_i].markdown(kpi(pd_label, f"{out['pd']:.1%}", out["risk_category"] + " risk",
+    k[_i].markdown(kpi(pd_label, fmt_pd(out["pd"]), out["risk_category"] + " risk",
                   risk_class(out["risk_category"]), tip=GLOSSARY["pd"]), unsafe_allow_html=True)
     k[_i + 1].markdown(kpi("Bureau-style score", f"{out['credit_score_300_900']}<small>/900</small>",
                   "300-900 analogue", tip=GLOSSARY["bureau_score"]), unsafe_allow_html=True)

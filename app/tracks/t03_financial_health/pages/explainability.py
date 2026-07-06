@@ -57,7 +57,7 @@ def render() -> None:
                 st.caption("Red pushes toward default, green away. Monotonic constraints keep it "
                            "bank-defensible.")
                 st.plotly_chart(charts.shap_waterfall(explain["shap_top"], feature_label),
-                                use_container_width=True)
+                                use_container_width=True, config=charts.CONFIG)
             else:
                 st.info("SHAP unavailable for this run.")
         else:

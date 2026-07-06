@@ -252,7 +252,7 @@ def _render_ring(cf, technical: bool) -> None:
                "are repeated transfers. Red marks a confirmed top-band account.")
     st.plotly_chart(charts.ring_network(cf.ring, cf.roles, net["bands"],
                                         plain=not technical),
-                    use_container_width=True, key="t05_ring")
+                    use_container_width=True, config=charts.CONFIG, key="t05_ring")
 
 
 def _render_recommendation(cf, technical: bool) -> None:

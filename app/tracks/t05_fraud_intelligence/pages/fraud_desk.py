@@ -112,7 +112,7 @@ def render() -> None:
         st.subheader("Pattern distribution")
         st.plotly_chart(charts.typology_bar(snap["typology_distribution"],
                                             plain=not technical),
-                        use_container_width=True, key="t05_desk_typbar")
+                        use_container_width=True, config=charts.CONFIG, key="t05_desk_typbar")
 
     st.divider()
 

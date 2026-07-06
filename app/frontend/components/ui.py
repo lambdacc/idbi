@@ -144,6 +144,18 @@ def card(title: Optional[str], body_html: str) -> str:
     return f"<div class='cp-card'>{head}{body_html}</div>"
 
 
+def fmt_pd(p: float) -> str:
+    """Display floor/ceiling for default probabilities. A real credit model never
+    prints a literal 0.0% or 100.0% -- both read as bugs to a credit audience --
+    so the display (not the value) is clamped to an honest open interval."""
+    p = float(p or 0.0)
+    if p < 0.001:
+        return "<0.1%"
+    if p > 0.995:
+        return ">99.5%"
+    return f"{p:.1%}"
+
+
 def fmt_inr(x: Optional[float]) -> str:
     x = float(x or 0.0)
     if x >= 1e7:

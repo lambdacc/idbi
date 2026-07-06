@@ -16,6 +16,9 @@ from typing import Dict, List
 
 import plotly.graph_objects as go
 
+# Product feel: no plotly modebar on hover (pass as config= at every call site).
+CONFIG = {"displayModeBar": False, "responsive": True}
+
 NAVY, BLUE, GREEN, AMBER, RED, GRID = "#0b3d75", "#1466b8", "#147347", "#8f5c13", "#c0392b", "#dbe2ec"
 PURPLE, SLATE, INK, MUTED = "#6b4fa1", "#647587", "#1b2733", "#647587"
 _SANS = "Schibsted Grotesk, system-ui, sans-serif"
