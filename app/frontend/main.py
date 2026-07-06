@@ -36,5 +36,9 @@ ui.shell_setup()
 
 # Grouped navigation from the registry (installed tracks only). Section order is
 # dict insertion order: Platform, Track 03/04/05, Reference (wp-s Q1).
-nav = st.navigation(tracks.build_navigation(), position="sidebar", expanded=True)
+# position="hidden": every page stays registered (deep links keep working) but
+# Streamlit's own rail is suppressed — the registry renders a custom sidebar
+# where only the ACTIVE track's pages expand (team-lead ask, 06 Jul).
+nav = st.navigation(tracks.build_navigation(), position="hidden")
+tracks.render_sidebar(nav)
 nav.run()

@@ -140,6 +140,30 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
 [data-testid="stSidebar"] [data-testid="stSidebarNavViewButton"] { display: none !important; }
 [data-testid="stSidebar"] .cp-brand { font-size: 1.55rem; padding: .2rem 0 0 0; }
 
+/* ---- Custom sidebar nav (hidden-position router) --------------------------
+   The registry renders the rail itself (tracks.render_sidebar): small-caps
+   group headers + st.page_link rows; only the active track's pages expand.
+   Mirrors the retired stSidebarNav / stNavSectionHeader styling above. */
+[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] [data-testid="stVerticalBlock"] { gap: .18rem; }
+[data-testid="stSidebar"] .cp-navhead {
+  color: #9cc2ee; font-family: var(--cp-sans); font-size: .64rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .11em; padding: .1rem .35rem;
+  margin-top: .75rem; opacity: .9;
+}
+[data-testid="stSidebar"] .cp-navhead.first {
+  margin-top: .6rem; border-top: 1px solid rgba(255,255,255,.14); padding-top: .6rem;
+}
+[data-testid="stSidebar"] [data-testid="stPageLink"] a {
+  border-radius: var(--cp-r); padding: .3rem .35rem; margin: 0;
+  transition: background-color .15s ease;
+}
+[data-testid="stSidebar"] [data-testid="stPageLink"] a:hover { background: rgba(255,255,255,.10); }
+[data-testid="stSidebar"] [data-testid="stPageLink"] a:focus-visible { outline: 2px solid #eaf1fb; outline-offset: 1px; }
+[data-testid="stSidebar"] [data-testid="stPageLink"] a span,
+[data-testid="stSidebar"] [data-testid="stPageLink"] a p {
+  color: #eaf1fb; font-family: var(--cp-sans); font-size: .92rem;
+}
+
 /* ---- Overview track cards: PS badge + capability list -------------------- */
 .cp-track-badge {
   display: inline-block; padding: .16rem .55rem; border-radius: var(--cp-r-tag);

@@ -28,11 +28,13 @@ def render() -> None:
     st.markdown(f"<h1 class='cp-logo-page'>{brandmark()}</h1>", unsafe_allow_html=True)
     st.caption("One platform, three problem statements · IDBI Innovate 2026 · all data synthetic")
 
+    # NB: this string lands inside an HTML card, so emphasis must be HTML tags —
+    # markdown syntax is not parsed inside an unsafe_allow_html block.
     story = (
         "CreditPulse turns an MSME's scattered digital footprint into decisions a bank can act on. "
-        "One platform runs the whole lending lifecycle: **underwrite the credit-invisible** (Problem Statement 3), "
-        "then **monitor the book** for early signs of stress (Problem Statement 4), then **protect the payment "
-        "rails** from mule-account fraud (Problem Statement 5) — the same data spine, the same explainability "
+        "One platform runs the whole lending lifecycle: <b>underwrite the credit-invisible</b> (Problem Statement 3), "
+        "then <b>monitor the book</b> for early signs of stress (Problem Statement 4), then <b>protect the payment "
+        "rails</b> from mule-account fraud (Problem Statement 5) — the same data spine, the same explainability "
         "discipline, three problem statements."
     )
     st.markdown(f"<div class='cp-card'>{story}</div>", unsafe_allow_html=True)
@@ -48,7 +50,7 @@ def render() -> None:
                 f"<div class='cp-card' style='height:100%'>"
                 f"<span class='cp-track-badge'>{track.badge}</span>"
                 f"<h4 style='margin-top:.5rem'>{track.label.split('·')[-1].strip()}</h4>"
-                f"<div class='cp-scn' style='margin-bottom:.6rem'>{track.blurb}</div>"
+                f"<div class='cp-scn' style='margin-bottom:.6rem;min-height:6.4em'>{track.blurb}</div>"
                 f"<ul class='cp-caps'>{caps}</ul></div>",
                 unsafe_allow_html=True)
             st.page_link(tracks.get_page(track.start_key),

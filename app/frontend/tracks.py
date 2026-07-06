@@ -22,6 +22,7 @@ anything (wp-s Q5). Every page carries an explicit, unique, flat `url_path`
 """
 from __future__ import annotations
 
+import html
 import importlib
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -188,3 +189,36 @@ def get_page(key: str):
     (`st.page_link(get_page("t03.explainability"))`). Requires build_navigation() to
     have run this rerun (the router guarantees this before any page renders)."""
     return _PAGE_OBJECTS[key]
+
+
+def track_of_page(page) -> Optional[TrackSpec]:
+    """The TrackSpec owning a StreamlitPage returned by `st.navigation` this
+    rerun (identity lookup — build_navigation constructs fresh page objects on
+    every rerun, so `is` is the reliable comparison)."""
+    key = next((k for k, p in _PAGE_OBJECTS.items() if p is page), None)
+    if key is None:
+        return None
+    return next((t for t in TRACKS if any(sp.key == key for sp in t.pages)), None)
+
+
+def render_sidebar(current_page) -> None:
+    """Registry-driven sidebar nav for the hidden-position router.
+
+    Every installed group keeps its small-caps section header, but only the
+    ACTIVE track lists all of its pages; inactive tracks collapse to their
+    start page (the D11 deep-link target), so the rail stays short and the
+    current track reads as the expanded one. Platform and Reference groups are
+    single-page and always show."""
+    active = track_of_page(current_page)
+    with st.sidebar:
+        first = True
+        for track in TRACKS:
+            if not track.installed:
+                continue
+            cls = "cp-navhead first" if first else "cp-navhead"
+            first = False
+            st.markdown(f"<div class='{cls}'>{html.escape(track.label)}</div>",
+                        unsafe_allow_html=True)
+            expanded = track.folder is None or track is active
+            for sp in (track.pages if expanded else track.pages[:1]):
+                st.page_link(_PAGE_OBJECTS[sp.key], label=sp.title)
