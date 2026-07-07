@@ -81,7 +81,7 @@ def render_composites(composites: List[dict]) -> None:
     for c in composites:
         flag = "flagship" if c.get("flagship") else ""
         srcs = " · ".join(c["sources"])
-        tag = ("<span class='cp-badge good' style='margin-right:.4rem'>flagship</span>"
+        tag = ("<span class='cp-badge good' style='margin-right:.4rem'>key signal</span>"
                if c.get("flagship") else "")
         st.markdown(
             f"<div class='cp-comp {flag}'><div class='hd'>"
@@ -97,7 +97,7 @@ def render_reasons(positives: List[dict], negatives: List[dict]) -> None:
     with col_a:
         st.markdown("**Key strengths**")
         if not positives:
-            st.caption("No material strengths above threshold.")
+            st.caption("No standout strengths to highlight.")
         for r in positives:
             st.markdown(
                 f"<div class='cp-reason pos'><span class='mk'>+</span>"
@@ -105,7 +105,7 @@ def render_reasons(positives: List[dict], negatives: List[dict]) -> None:
     with col_b:
         st.markdown("**Key risks**")
         if not negatives:
-            st.caption("No material risks above threshold.")
+            st.caption("No standout risks to highlight.")
         for r in negatives:
             st.markdown(
                 f"<div class='cp-reason neg'><span class='mk'>−</span>"

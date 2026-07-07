@@ -39,7 +39,7 @@ digraph T03 {{
   src   [label="Alternate data sources (25)\\nGST · Bank/AA · UPI · EPFO · Bureau · Udyam\\nE-way · Electricity · MCA · GeM · Courts · …" fillcolor="#eef2f8"];
   integ [label="Data integration\\ncanonical entity resolution (GSTIN↔PAN↔Udyam↔MCA)"];
   feat  [label="Feature engineering\\n5 pillars · per-source modules"];
-  synth [label="Cross-source synthesis\\n13 composites + turnover-authenticity (flagship)" {_ACCENT}];
+  synth [label="Cross-source synthesis\\n13 composites, incl. turnover-authenticity" {_ACCENT}];
   clust [label="Peer segmentation\\n(descriptive group only)"];
   score [label="Scoring\\nWOE/IV scorecard + monotonic LightGBM\\n+ deterministic pillar→composite→grade"];
   conf  [label="Confidence score\\ndata-completeness (IV × breadth)"];
@@ -87,6 +87,9 @@ digraph T05 {{
 _TRACKS = {
     "Problem Statement 3 · Financial Health Score": {
         "dot": _T03_DOT,
+        "tagline": "Turns everyday business data — GST, banking, utilities and more — into a clear "
+                   "financial-health score and grade for an MSME.",
+        "challenge": "Financial Health Score · Problem Statement 3",
         "flow": ("25 alternate-data sources → integration (canonical entity resolution) → feature "
                  "engineering → cross-source synthesis (13 composites) → segmentation, scoring and "
                  "confidence in parallel → explainability → the Financial Health Card."),
@@ -94,16 +97,18 @@ _TRACKS = {
     },
     "Problem Statement 4 · Early Warning": {
         "dot": _T04_DOT,
-        "flow": ("A 24-month alt-data panel → leakage-guarded features → the EWS engine, scored against "
-                 "a repayment-only baseline so the lead-time gap is apples-to-apples → the portfolio "
-                 "radar and watchlist with per-borrower drivers."),
+        "flow": ("A 24-month alt-data panel → leakage-guarded features → the EWS engine, compared against "
+                 "a repayment-only baseline on equal footing so the lead-time gain is a fair number → the "
+                 "portfolio radar and watchlist with per-borrower drivers."),
         "kind": "t04",
-        "official": "Official brief: Problem Statement 4 is Default Prediction Model, pitched here as Early Warning.",
+        "tagline": "Spots borrowers drifting toward default months before missed payments show it, "
+                   "so the bank can step in early.",
+        "challenge": "Default Prediction Model · Problem Statement 4",
         "stack": [
             "**Alt-data panel:** 24 monthly snapshots per borrower off the shared latent generators",
-            "**Anti-leakage by construction:** entity-level split; future-window features raise; labels attached separately",
+            "**No data leakage:** entity-level split; future-window features raise; labels attached separately",
             "**EWS engine:** monotonic LightGBM + isotonic calibration",
-            "**Headline metric:** lead-time vs a repayment-only baseline (not accuracy) — median 8-month gap",
+            "**Headline metric:** lead-time over a repayment-only baseline, not accuracy. Median 8-month gap.",
             "**Surfaces:** Portfolio Overview radar + Watchlist with explained drivers",
         ],
     },
@@ -113,7 +118,9 @@ _TRACKS = {
                  "a citation-gated, 5-stage case file where every claim carries its transactions → the "
                  "fraud desk with human-in-the-loop review."),
         "kind": "t05",
-        "official": "Official brief: Problem Statement 5 is Open Innovation, entered here as Fraud Intelligence.",
+        "tagline": "Finds suspicious patterns across transactions and accounts, and links the accounts "
+                   "involved into one reviewable case.",
+        "challenge": "Open Innovation · Problem Statement 5",
         "stack": [
             "**Scoring:** typology detectors blended with an Isolation-Forest anomaly signal",
             "**Ring expansion:** bounded pure-Python BFS over the transfer graph — no graph DB, no new dependency",
@@ -127,19 +134,23 @@ _TRACKS = {
 
 def render() -> None:
     page_header("Solution architecture",
-                "Single Cloud-Run container · Python-first · deterministic-first, explainable by construction")
+                "One platform for all three problem statements, built so every decision it makes can be traced and explained")
 
-    st.caption("One platform, three problem statements over a shared foundation (synthetic data-gen · "
-               "ML core · backend contract · Streamlit shell). Pick a track to see its architecture.")
+    st.markdown(
+        "We entered **all three problem statements** on a single platform. Each has its own "
+        "solution and its own diagram — **pick one below** to see how it works.")
+
+    st.markdown("<p class='cp-arch-pick'>Choose a problem statement</p>", unsafe_allow_html=True)
+    with st.container(key="cp_arch_tracks"):
+        choice = st.radio("Problem statement", list(_TRACKS.keys()),
+                          horizontal=True, label_visibility="collapsed")
 
     if not state.is_technical():
-        st.info("This page shows the system's internal architecture; use the **Technical** toggle at "
-                "the top right for full engineering detail.")
-
-    choice = st.radio("Problem statement", list(_TRACKS.keys()), horizontal=True, label_visibility="collapsed")
+        st.caption("Under each diagram is the flow in plain language. For full engineering detail, "
+                   "flip the **Technical** toggle at the top right.")
     track = _TRACKS[choice]
-    if track.get("official"):
-        st.caption(track["official"])
+    st.markdown(track["tagline"])
+    st.caption(f"Challenge · {track['challenge']}")
 
     st.graphviz_chart(track["dot"], use_container_width=True)
     st.caption(f"Flow: {track['flow']}")
@@ -154,26 +165,26 @@ def render() -> None:
                 groups[group].append(label)
             for group, labels in groups.items():
                 st.markdown(f"**{group}:** " + ", ".join(labels))
-            st.caption("Every source is Retain-tier from the Appendix-A rubric sweep (8 core + 17 enrichment); "
-                       "Reject-tier candidates are documented, not silently modelled.")
+            st.caption("Every source here passed the Appendix-A rubric (8 core + 17 enrichment); weaker "
+                       "candidates were documented separately and deliberately left out of the model.")
         with c2:
             st.subheader("Model and synthesis stack")
             st.markdown(
                 "- **WOE/IV logistic scorecard:** interpretable, **probability-calibrated** PD backbone\n"
-                "- **Monotonic LightGBM:** bank-defensible, **probability-calibrated** PD lift (hard constraints)\n"
+                "- **Monotonic LightGBM:** **probability-calibrated** PD lift under hard monotonic constraints, so its logic holds up to a credit review\n"
                 "- **Isolation Forest:** unsupervised fraud/anomaly cross-check (label-free)\n"
-                "- **Deterministic pillar to composite to grade:** provably monotonic\n"
+                "- **Rule-based pillar → composite → grade:** a stronger input never lowers the grade\n"
                 "- **K-Means:** descriptive peer segmentation (silhouette k)\n"
                 "- **Confidence score:** IV × source-breadth\n"
                 "- **SHAP + native reason codes:** dual explanation paths")
             st.subheader(f"Composite indicators ({len(COMPOSITE_CATALOG)})")
             st.caption(" · ".join(c["label"] for c in COMPOSITE_CATALOG))
     else:
-        st.subheader("Under the hood")
+        st.subheader("What's inside")
         st.markdown("\n".join(f"- {row}" for row in track["stack"]))
         st.caption("Built as a self-contained track under `app/tracks/` on the shared platform stack; "
                    "it imports no other track and can be removed without affecting the rest.")
 
     st.divider()
-    st.info("All data is synthetic. Real-default backtesting and live GST/AA/EPFO integration are "
-            "explicit post-hackathon productionization steps, stated honestly, not claimed here.")
+    st.info("All data here is synthetic. Backtesting on real defaults and connecting live GST / Account "
+            "Aggregator / EPFO feeds are the next steps for a pilot, not something we're claiming to have done yet.")

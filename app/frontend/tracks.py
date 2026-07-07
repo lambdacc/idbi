@@ -82,13 +82,14 @@ TRACKS: List[TrackSpec] = [
     TrackSpec(
         id="t03", label="Problem Statement 3 · Financial Health Score", badge="Problem Statement 3",
         folder="t03_financial_health",
-        blurb="Many new-to-credit and new-to-bank MSMEs lack the financial documents banks underwrite "
-              "on. CreditPulse aggregates their alternate data — GST, UPI, Account Aggregator, EPFO and "
-              "more — into a Financial Health Card: a multidimensional score of each business's strengths "
-              "and risks, so viable but credit-invisible borrowers stop being turned away by default.",
+        blurb="Many small businesses that are new to credit lack the financial documents a bank normally "
+              "underwrites on. CreditPulse pulls together the alternate data they do have — GST, UPI, "
+              "Account Aggregator, EPFO and more — into a Financial Health Card that scores each business "
+              "across several dimensions, so sound borrowers with no formal credit trail aren't turned "
+              "away by default.",
         capabilities=["Explainable financial health card",
                       "Turnover-authenticity cross-check",
-                      "Deterministic scorecard + calibrated PD"],
+                      "Rule-based scorecard + calibrated default risk"],
         pages=[
             # Consolidated 5→3 (multi-track issue #5): Run+Pipeline merged into
             # one Assessment page; Dashboard folded into the Financial Health Card.
@@ -106,12 +107,11 @@ TRACKS: List[TrackSpec] = [
     TrackSpec(
         id="t04", label="Problem Statement 4 · Early Warning", badge="Problem Statement 4",
         folder="t04_early_warning",
-        blurb="Default prediction today is held back by structured-data-only models and fragmented methods "
-              "across loan types. This monitors the whole book with structured and alternate signals "
-              "together, flagging borrowers likely to slip months before repayment does — every warning "
-              "explained the same way, so the risk read stays consistent and actionable. "
-              "(Official brief: Default Prediction Model.)",
-        capabilities=["Portfolio deterioration radar",
+        blurb="Default prediction today leans on structured data alone and works differently from one loan "
+              "type to the next. This monitors the entire loan book with structured and alternate signals "
+              "together, flagging borrowers likely to slip months before their repayments do, and explains "
+              "every warning the same way so the read on risk stays consistent.",
+        capabilities=["Portfolio stress radar",
                       "Lead-time vs a repayment-only baseline",
                       "Watchlist with explained drivers"],
         pages=[
@@ -126,13 +126,12 @@ TRACKS: List[TrackSpec] = [
     TrackSpec(
         id="t05", label="Problem Statement 5 · Fraud Intelligence", badge="Problem Statement 5",
         folder="t05_fraud_intelligence",
-        blurb="Entered under Problem Statement 5 · Open Innovation — a shield for the payment rails. It "
-              "detects mule accounts and the rings they route money through, then builds a case file where "
-              "every claim is backed by its exact transactions, so a fraud analyst gets evidence-grounded "
-              "cases to act on — not just an opaque score.",
-        capabilities=["Typology + anomaly detection",
-                      "Ring expansion over the transaction graph",
-                      "Agentic, citation-gated case file"],
+        blurb="Detects mule accounts and the rings they move money through, then builds a case file where "
+              "every claim is backed by the exact transactions behind it — so a fraud analyst reviews real "
+              "evidence, not just a score. Entered under Problem Statement 5 · Open Innovation.",
+        capabilities=["Pattern + anomaly detection",
+                      "Traces the full ring of linked accounts",
+                      "Case file citing the exact transactions"],
         pages=[
             PageSpec("t05.desk", "Fraud Desk",
                      "app.tracks.t05_fraud_intelligence.pages.fraud_desk",

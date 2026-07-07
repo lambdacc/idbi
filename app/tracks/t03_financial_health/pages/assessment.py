@@ -53,7 +53,7 @@ def _scroll_to_pipeline() -> None:
 def render() -> None:
     page_header("Assessment",
                 "MSME financial health card · IDBI Innovate 2026 · Problem Statement 3 · "
-                "deterministic-first, explainable by construction")
+                "every score traceable and explained")
 
     st.markdown(
         "<div class='cp-card'>Fuse an MSME's fragmented digital footprint (GST, banking, "

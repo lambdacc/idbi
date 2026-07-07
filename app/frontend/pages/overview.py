@@ -28,16 +28,17 @@ def render() -> None:
     # platform story itself rather than a second brandmark.
     st.markdown("<h1 class='cp-ov-hero'>One platform, three problem statements</h1>",
                 unsafe_allow_html=True)
-    st.caption("The MSME lending lifecycle on one data spine · IDBI Innovate 2026 · all data synthetic")
+    st.caption("The full MSME lending journey on one shared platform · IDBI Innovate 2026 · all data synthetic")
 
     # NB: this string lands inside an HTML card, so emphasis must be HTML tags —
     # markdown syntax is not parsed inside an unsafe_allow_html block.
     story = (
-        "CreditPulse turns an MSME's scattered digital footprint into decisions a bank can act on. "
-        "One platform runs the whole lending lifecycle: <b>underwrite the credit-invisible</b> (Problem Statement 3), "
-        "then <b>monitor the book</b> for early signs of stress (Problem Statement 4), then <b>protect the payment "
-        "rails</b> from mule-account fraud (Problem Statement 5) — the same data spine, the same explainability "
-        "discipline, three problem statements."
+        "CreditPulse turns the scattered digital records an MSME already leaves behind into decisions a "
+        "bank can act on. One platform covers the full lending journey: <b>score businesses that have no "
+        "formal credit history</b> (Problem Statement 3), <b>watch the loan book for early signs of "
+        "stress</b> (Problem Statement 4), and <b>catch mule accounts before fraud moves through the "
+        "payment system</b> (Problem Statement 5). Same data underneath, same plain-language explanations, "
+        "across all three."
     )
     st.markdown(f"<div class='cp-card'>{story}</div>", unsafe_allow_html=True)
 
@@ -74,6 +75,6 @@ def render() -> None:
     with c2:
         st.page_link(arch, label="Architecture", use_container_width=True)
 
-    st.info("All data shown across the platform is synthetic and clearly labelled. Real GST / Account "
-            "Aggregator / EPFO integration and real-outcome recalibration are the pilot steps, stated "
-            "honestly — nothing here claims live-data performance.")
+    st.info("All data shown here is synthetic and clearly labelled. Connecting real GST / Account "
+            "Aggregator / EPFO feeds and retuning on real outcomes are the next steps for a pilot — "
+            "we're not claiming live-data performance yet.")
