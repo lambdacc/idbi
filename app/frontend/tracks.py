@@ -57,6 +57,10 @@ class TrackSpec:
     folder: Optional[str] = None
     blurb: str = ""
     capabilities: List[str] = field(default_factory=list)
+    # Compact product name for the navbar tab. Defaults to the label's short
+    # form; set explicitly when the full product name is too long for the tab
+    # (e.g. a product carrying both its brand name and its official PS title).
+    nav_short: Optional[str] = None
 
     @property
     def installed(self) -> bool:
@@ -105,7 +109,8 @@ TRACKS: List[TrackSpec] = [
         ],
     ),
     TrackSpec(
-        id="t04", label="Problem Statement 4 · Early Warning", badge="Problem Statement 4",
+        id="t04", label="Problem Statement 4 · Early Warning – Default Prediction Model",
+        nav_short="Early Warning", badge="Problem Statement 4",
         folder="t04_early_warning",
         blurb="Default prediction today leans on structured data alone and works differently from one loan "
               "type to the next. This monitors the entire loan book with structured and alternate signals "
@@ -278,7 +283,8 @@ def render_topnav(current_page) -> None:
                       active is not None and active.id == "platform")
         for track in products:
             with next(cols):
-                _nav_link(track.start_key, f"{_ps_code(track)}: {_short(track.label)}",
+                _nav_link(track.start_key,
+                          f"{_ps_code(track)}: {track.nav_short or _short(track.label)}",
                           track is active)
         with next(cols):
             st.markdown("<div class='cp-nav-spacer'></div>", unsafe_allow_html=True)

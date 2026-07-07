@@ -45,7 +45,7 @@ def render() -> None:
     technical = ui_state.is_technical()
 
     page_header("Portfolio early warning",
-                "Problem Statement 4 (Default Prediction Model) · Early Warning — the book re-scored "
+                "Early Warning – Default Prediction Model · Problem Statement 4 · the book re-scored "
                 "monthly on its alt-data footprint. All data synthetic.")
 
     st.caption(run.honesty_caption)

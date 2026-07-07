@@ -53,7 +53,7 @@ def render() -> None:
     technical = ui_state.is_technical()
 
     page_header("Watchlist & cases",
-                "Problem Statement 4 (Default Prediction Model) · Early Warning — flagged borrowers "
+                "Early Warning – Default Prediction Model · Problem Statement 4 · flagged borrowers "
                 "and the alt-data story behind each flag. All data synthetic.")
     st.caption(run.honesty_caption)
 
