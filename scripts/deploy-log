@@ -1,0 +1,432 @@
+idbi > ./scripts/deploy.sh
+==> Preflight
+  ✓ gcloud authenticated as contact@reafino.app
+  ✓ Project 'idbi-hackathon' reachable
+  ✓ Config set: project=idbi-hackathon  region=asia-south1
+  ✓ Billing enabled
+==> Enabling required APIs (idempotent)
+Operation "operations/acat.p2-624680413525-007166cd-a09e-4c90-9d15-c9c316743277" finished successfully.
+  ✓ run, artifactregistry, cloudbuild enabled
+==> Ensuring Artifact Registry repo 'creditpulse' in asia-south1
+  ✓ Repo 'creditpulse' already exists
+==> Building image via Cloud Build → asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest
+  ! This builds from the current working tree (not a git ref). Commit/clean first if you want a reproducible ref.
+Creating temporary archive of 225 file(s) totalling 86.0 MiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/home/gannit/.config/gcloud/logs/2026.07.07/21.06.37.431357.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://idbi-hackathon_cloudbuild/source/1783438597.548719-4e1ba6b2554546de946afb2383f906bb.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/idbi-hackathon/locations/global/builds/7a621445-5b4b-4772-b7d3-08a122d5ecce].
+Logs are available at [ https://console.cloud.google.com/cloud-build/builds/7a621445-5b4b-4772-b7d3-08a122d5ecce?project=624680413525 ].
+Waiting for build to complete. Polling interval: 1 second(s).
+---------------------------------------------------------------------- REMOTE BUILD OUTPUT -----------------------------------------------------------------------
+starting build "7a621445-5b4b-4772-b7d3-08a122d5ecce"
+
+FETCHSOURCE
+Fetching storage object: gs://idbi-hackathon_cloudbuild/source/1783438597.548719-4e1ba6b2554546de946afb2383f906bb.tgz#1783438616935284
+Copying gs://idbi-hackathon_cloudbuild/source/1783438597.548719-4e1ba6b2554546de946afb2383f906bb.tgz#1783438616935284...
+\ [1 files][ 69.7 MiB/ 69.7 MiB]
+Operation completed over 1 objects/69.7 MiB.
+BUILD
+Already have image (with digest): gcr.io/cloud-builders/gcb-internal
+Sending build context to Docker daemon  17.83MB
+Step 1/11 : FROM python:3.12-slim
+3.12-slim: Pulling from library/python
+e95a6c7ea7d4: Already exists
+aff2d9f8dc87: Pulling fs layer
+df79d931cd67: Pulling fs layer
+b32430367bf0: Pulling fs layer
+b32430367bf0: Download complete
+aff2d9f8dc87: Verifying Checksum
+aff2d9f8dc87: Download complete
+df79d931cd67: Verifying Checksum
+df79d931cd67: Download complete
+aff2d9f8dc87: Pull complete
+df79d931cd67: Pull complete
+b32430367bf0: Pull complete
+Digest: sha256:423ed6ab25b1921a477529254bfeeabf5855151dc2c3141699a1bfc852199fbf
+Status: Downloaded newer image for python:3.12-slim
+ ---> 9cbfea842643
+Step 2/11 : ENV PYTHONUNBUFFERED=1     PYTHONDONTWRITEBYTECODE=1     PIP_NO_CACHE_DIR=1
+ ---> Running in 6a0d17bea0bd
+Removing intermediate container 6a0d17bea0bd
+ ---> 5d71e97c800b
+Step 3/11 : WORKDIR /srv
+ ---> Running in ae91d1fbdbcb
+Removing intermediate container ae91d1fbdbcb
+ ---> 911d2909a738
+Step 4/11 : RUN apt-get update && apt-get install -y --no-install-recommends libgomp1     && rm -rf /var/lib/apt/lists/*
+ ---> Running in cc5e3bd80363
+Hit:1 http://deb.debian.org/debian trixie InRelease
+Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+Get:4 http://deb.debian.org/debian trixie/main amd64 Packages [9671 kB]
+Get:5 http://deb.debian.org/debian trixie-updates/main amd64 Packages [5412 B]
+Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [224 kB]
+Fetched 9992 kB in 1s (7434 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following NEW packages will be installed:
+  libgomp1
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 137 kB of archives.
+After this operation, 377 kB of additional disk space will be used.
+Get:1 http://deb.debian.org/debian trixie/main amd64 libgomp1 amd64 14.2.0-19 [137 kB]
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8, <STDIN> line 1.)
+debconf: falling back to frontend: Teletype
+debconf: unable to initialize frontend: Teletype
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Noninteractive
+Fetched 137 kB in 0s (4823 kB/s)
+Selecting previously unselected package libgomp1:amd64.
+(Reading database ... 5645 files and directories currently installed.)
+Preparing to unpack .../libgomp1_14.2.0-19_amd64.deb ...
+Unpacking libgomp1:amd64 (14.2.0-19) ...
+Setting up libgomp1:amd64 (14.2.0-19) ...
+Processing triggers for libc-bin (2.41-12+deb13u3) ...
+Removing intermediate container cc5e3bd80363
+ ---> 3b1d5bfefa21
+Step 5/11 : COPY requirements.txt .
+ ---> 139079baca1b
+Step 6/11 : RUN pip install --no-cache-dir -r requirements.txt
+ ---> Running in 086f7fd88f7f
+Collecting numpy==2.1.3 (from -r requirements.txt (line 3))
+  Downloading numpy-2.1.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (62 kB)
+Collecting pandas==2.2.3 (from -r requirements.txt (line 4))
+  Downloading pandas-2.2.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (89 kB)
+Collecting scikit-learn==1.5.2 (from -r requirements.txt (line 5))
+  Downloading scikit_learn-1.5.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (13 kB)
+Collecting scipy==1.14.1 (from -r requirements.txt (line 6))
+  Downloading scipy-1.14.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (60 kB)
+Collecting PyYAML==6.0.2 (from -r requirements.txt (line 7))
+  Downloading PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.1 kB)
+Collecting pydantic==2.9.2 (from -r requirements.txt (line 8))
+  Downloading pydantic-2.9.2-py3-none-any.whl.metadata (149 kB)
+Collecting lightgbm==4.5.0 (from -r requirements.txt (line 11))
+  Downloading lightgbm-4.5.0-py3-none-manylinux_2_28_x86_64.whl.metadata (17 kB)
+Collecting shap==0.46.0 (from -r requirements.txt (line 12))
+  Downloading shap-0.46.0-cp312-cp312-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (24 kB)
+Collecting Faker==30.8.2 (from -r requirements.txt (line 15))
+  Downloading Faker-30.8.2-py3-none-any.whl.metadata (15 kB)
+Collecting streamlit==1.39.0 (from -r requirements.txt (line 18))
+  Downloading streamlit-1.39.0-py2.py3-none-any.whl.metadata (8.5 kB)
+Collecting plotly==5.24.1 (from -r requirements.txt (line 19))
+  Downloading plotly-5.24.1-py3-none-any.whl.metadata (7.3 kB)
+Collecting pytest==8.3.3 (from -r requirements.txt (line 22))
+  Downloading pytest-8.3.3-py3-none-any.whl.metadata (7.5 kB)
+Collecting python-dateutil>=2.8.2 (from pandas==2.2.3->-r requirements.txt (line 4))
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting pytz>=2020.1 (from pandas==2.2.3->-r requirements.txt (line 4))
+  Downloading pytz-2026.2-py2.py3-none-any.whl.metadata (22 kB)
+Collecting tzdata>=2022.7 (from pandas==2.2.3->-r requirements.txt (line 4))
+  Downloading tzdata-2026.2-py2.py3-none-any.whl.metadata (1.4 kB)
+Collecting joblib>=1.2.0 (from scikit-learn==1.5.2->-r requirements.txt (line 5))
+  Downloading joblib-1.5.3-py3-none-any.whl.metadata (5.5 kB)
+Collecting threadpoolctl>=3.1.0 (from scikit-learn==1.5.2->-r requirements.txt (line 5))
+  Downloading threadpoolctl-3.6.0-py3-none-any.whl.metadata (13 kB)
+Collecting annotated-types>=0.6.0 (from pydantic==2.9.2->-r requirements.txt (line 8))
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.23.4 (from pydantic==2.9.2->-r requirements.txt (line 8))
+  Downloading pydantic_core-2.23.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+Collecting typing-extensions>=4.6.1 (from pydantic==2.9.2->-r requirements.txt (line 8))
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting tqdm>=4.27.0 (from shap==0.46.0->-r requirements.txt (line 12))
+  Downloading tqdm-4.68.4-py3-none-any.whl.metadata (57 kB)
+Collecting packaging>20.9 (from shap==0.46.0->-r requirements.txt (line 12))
+  Downloading packaging-26.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting slicer==0.0.8 (from shap==0.46.0->-r requirements.txt (line 12))
+  Downloading slicer-0.0.8-py3-none-any.whl.metadata (4.0 kB)
+Collecting numba (from shap==0.46.0->-r requirements.txt (line 12))
+  Downloading numba-0.66.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.7 kB)
+Collecting cloudpickle (from shap==0.46.0->-r requirements.txt (line 12))
+  Downloading cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+Collecting altair<6,>=4.0 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading altair-5.5.0-py3-none-any.whl.metadata (11 kB)
+Collecting blinker<2,>=1.0.0 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+Collecting cachetools<6,>=4.0 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading cachetools-5.5.2-py3-none-any.whl.metadata (5.4 kB)
+Collecting click<9,>=7.0 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting packaging>20.9 (from shap==0.46.0->-r requirements.txt (line 12))
+  Downloading packaging-24.2-py3-none-any.whl.metadata (3.2 kB)
+Collecting pillow<11,>=7.1.0 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading pillow-10.4.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (9.2 kB)
+Collecting protobuf<6,>=3.20 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading protobuf-5.29.6-cp38-abi3-manylinux2014_x86_64.whl.metadata (592 bytes)
+Collecting pyarrow>=7.0 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading pyarrow-24.0.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (3.0 kB)
+Collecting requests<3,>=2.27 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting rich<14,>=10.14.0 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading rich-13.9.4-py3-none-any.whl.metadata (18 kB)
+Collecting tenacity<10,>=8.1.0 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading tenacity-9.1.4-py3-none-any.whl.metadata (1.2 kB)
+Collecting toml<2,>=0.10.1 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading toml-0.10.2-py2.py3-none-any.whl.metadata (7.1 kB)
+Collecting gitpython!=3.1.19,<4,>=3.0.7 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading gitpython-3.1.50-py3-none-any.whl.metadata (14 kB)
+Collecting pydeck<1,>=0.8.0b4 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading pydeck-0.9.3-py2.py3-none-any.whl.metadata (4.2 kB)
+Collecting tornado<7,>=6.0.3 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading tornado-6.5.7-cp39-abi3-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (2.8 kB)
+Collecting watchdog<6,>=2.1.5 (from streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading watchdog-5.0.3-py3-none-manylinux2014_x86_64.whl.metadata (41 kB)
+Collecting iniconfig (from pytest==8.3.3->-r requirements.txt (line 22))
+  Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting pluggy<2,>=1.5 (from pytest==8.3.3->-r requirements.txt (line 22))
+  Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting jinja2 (from altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting jsonschema>=3.0 (from altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading jsonschema-4.26.0-py3-none-any.whl.metadata (7.6 kB)
+Collecting narwhals>=1.14.2 (from altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading narwhals-2.23.0-py3-none-any.whl.metadata (15 kB)
+Collecting gitdb<5,>=4.0.1 (from gitpython!=3.1.19,<4,>=3.0.7->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading gitdb-4.0.12-py3-none-any.whl.metadata (1.2 kB)
+Collecting six>=1.5 (from python-dateutil>=2.8.2->pandas==2.2.3->-r requirements.txt (line 4))
+  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting charset_normalizer<4,>=2 (from requests<3,>=2.27->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading charset_normalizer-3.4.9-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (41 kB)
+Collecting idna<4,>=2.5 (from requests<3,>=2.27->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading idna-3.18-py3-none-any.whl.metadata (6.1 kB)
+Collecting urllib3<3,>=1.26 (from requests<3,>=2.27->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading urllib3-2.7.0-py3-none-any.whl.metadata (6.9 kB)
+Collecting certifi>=2023.5.7 (from requests<3,>=2.27->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading certifi-2026.6.17-py3-none-any.whl.metadata (2.5 kB)
+Collecting markdown-it-py>=2.2.0 (from rich<14,>=10.14.0->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich<14,>=10.14.0->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting llvmlite<0.49,>=0.48.0dev0 (from numba->shap==0.46.0->-r requirements.txt (line 12))
+  Downloading llvmlite-0.48.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.0 kB)
+Collecting smmap<6,>=3.0.1 (from gitdb<5,>=4.0.1->gitpython!=3.1.19,<4,>=3.0.7->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading smmap-5.0.3-py3-none-any.whl.metadata (4.6 kB)
+Collecting MarkupSafe>=2.0 (from jinja2->altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting attrs>=22.2.0 (from jsonschema>=3.0->altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+Collecting jsonschema-specifications>=2023.03.6 (from jsonschema>=3.0->altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)
+Collecting referencing>=0.28.4 (from jsonschema>=3.0->altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading referencing-0.37.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting rpds-py>=0.25.0 (from jsonschema>=3.0->altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading rpds_py-2026.6.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich<14,>=10.14.0->streamlit==1.39.0->-r requirements.txt (line 18))
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Downloading numpy-2.1.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.0/16.0 MB 108.2 MB/s eta 0:00:00
+Downloading pandas-2.2.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.7/12.7 MB 393.5 MB/s eta 0:00:00
+Downloading scikit_learn-1.5.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.9/12.9 MB 343.8 MB/s eta 0:00:00
+Downloading scipy-1.14.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (40.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.8/40.8 MB 202.8 MB/s eta 0:00:00
+Downloading PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (767 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 767.5/767.5 kB 448.6 MB/s eta 0:00:00
+Downloading pydantic-2.9.2-py3-none-any.whl (434 kB)
+Downloading lightgbm-4.5.0-py3-none-manylinux_2_28_x86_64.whl (3.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.6/3.6 MB 423.2 MB/s eta 0:00:00
+Downloading shap-0.46.0-cp312-cp312-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (543 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 543.9/543.9 kB 454.6 MB/s eta 0:00:00
+Downloading Faker-30.8.2-py3-none-any.whl (1.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 373.2 MB/s eta 0:00:00
+Downloading streamlit-1.39.0-py2.py3-none-any.whl (8.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.7/8.7 MB 335.0 MB/s eta 0:00:00
+Downloading plotly-5.24.1-py3-none-any.whl (19.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 19.1/19.1 MB 373.1 MB/s eta 0:00:00
+Downloading pytest-8.3.3-py3-none-any.whl (342 kB)
+Downloading pydantic_core-2.23.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 372.4 MB/s eta 0:00:00
+Downloading slicer-0.0.8-py3-none-any.whl (15 kB)
+Downloading altair-5.5.0-py3-none-any.whl (731 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 731.2/731.2 kB 301.1 MB/s eta 0:00:00
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+Downloading cachetools-5.5.2-py3-none-any.whl (10 kB)
+Downloading click-8.4.2-py3-none-any.whl (119 kB)
+Downloading gitpython-3.1.50-py3-none-any.whl (212 kB)
+Downloading joblib-1.5.3-py3-none-any.whl (309 kB)
+Downloading packaging-24.2-py3-none-any.whl (65 kB)
+Downloading pillow-10.4.0-cp312-cp312-manylinux_2_28_x86_64.whl (4.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 351.3 MB/s eta 0:00:00
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading protobuf-5.29.6-cp38-abi3-manylinux2014_x86_64.whl (320 kB)
+Downloading pyarrow-24.0.0-cp312-cp312-manylinux_2_28_x86_64.whl (48.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.9/48.9 MB 324.1 MB/s eta 0:00:00
+Downloading pydeck-0.9.3-py2.py3-none-any.whl (11.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.4/11.4 MB 372.7 MB/s eta 0:00:00
+Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Downloading pytz-2026.2-py2.py3-none-any.whl (510 kB)
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+Downloading rich-13.9.4-py3-none-any.whl (242 kB)
+Downloading tenacity-9.1.4-py3-none-any.whl (28 kB)
+Downloading threadpoolctl-3.6.0-py3-none-any.whl (18 kB)
+Downloading toml-0.10.2-py2.py3-none-any.whl (16 kB)
+Downloading tornado-6.5.7-cp39-abi3-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (449 kB)
+Downloading tqdm-4.68.4-py3-none-any.whl (676 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 676.6/676.6 kB 480.7 MB/s eta 0:00:00
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading tzdata-2026.2-py2.py3-none-any.whl (349 kB)
+Downloading watchdog-5.0.3-py3-none-manylinux2014_x86_64.whl (79 kB)
+Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Downloading numba-0.66.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.9/3.9 MB 108.4 MB/s eta 0:00:00
+Downloading certifi-2026.6.17-py3-none-any.whl (133 kB)
+Downloading charset_normalizer-3.4.9-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (224 kB)
+Downloading gitdb-4.0.12-py3-none-any.whl (62 kB)
+Downloading idna-3.18-py3-none-any.whl (65 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+Downloading llvmlite-0.48.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (59.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 59.9/59.9 MB 204.3 MB/s eta 0:00:00
+Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Downloading narwhals-2.23.0-py3-none-any.whl (458 kB)
+Downloading pygments-2.20.0-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 442.5 MB/s eta 0:00:00
+Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+Downloading urllib3-2.7.0-py3-none-any.whl (131 kB)
+Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+Downloading rpds_py-2026.6.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (366 kB)
+Downloading smmap-5.0.3-py3-none-any.whl (24 kB)
+Installing collected packages: pytz, watchdog, urllib3, tzdata, typing-extensions, tqdm, tornado, toml, threadpoolctl, tenacity, smmap, slicer, six, rpds-py, PyYAML, pygments, pyarrow, protobuf, pluggy, pillow, packaging, numpy, narwhals, mdurl, MarkupSafe, llvmlite, joblib, iniconfig, idna, cloudpickle, click, charset_normalizer, certifi, cachetools, blinker, attrs, annotated-types, scipy, requests, referencing, python-dateutil, pytest, pydantic-core, plotly, numba, markdown-it-py, jinja2, gitdb, scikit-learn, rich, pydeck, pydantic, pandas, lightgbm, jsonschema-specifications, gitpython, Faker, shap, jsonschema, altair, streamlit
+Successfully installed Faker-30.8.2 MarkupSafe-3.0.3 PyYAML-6.0.2 altair-5.5.0 annotated-types-0.7.0 attrs-26.1.0 blinker-1.9.0 cachetools-5.5.2 certifi-2026.6.17 charset_normalizer-3.4.9 click-8.4.2 cloudpickle-3.1.2 gitdb-4.0.12 gitpython-3.1.50 idna-3.18 iniconfig-2.3.0 jinja2-3.1.6 joblib-1.5.3 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 lightgbm-4.5.0 llvmlite-0.48.0 markdown-it-py-4.2.0 mdurl-0.1.2 narwhals-2.23.0 numba-0.66.0 numpy-2.1.3 packaging-24.2 pandas-2.2.3 pillow-10.4.0 plotly-5.24.1 pluggy-1.6.0 protobuf-5.29.6 pyarrow-24.0.0 pydantic-2.9.2 pydantic-core-2.23.4 pydeck-0.9.3 pygments-2.20.0 pytest-8.3.3 python-dateutil-2.9.0.post0 pytz-2026.2 referencing-0.37.0 requests-2.34.2 rich-13.9.4 rpds-py-2026.6.3 scikit-learn-1.5.2 scipy-1.14.1 shap-0.46.0 six-1.17.0 slicer-0.0.8 smmap-5.0.3 streamlit-1.39.0 tenacity-9.1.4 threadpoolctl-3.6.0 toml-0.10.2 tornado-6.5.7 tqdm-4.68.4 typing-extensions-4.16.0 tzdata-2026.2 urllib3-2.7.0 watchdog-5.0.3
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.1.2
+[notice] To update, run: pip install --upgrade pip
+Removing intermediate container 086f7fd88f7f
+ ---> 3a5eada3c7b9
+Step 7/11 : COPY app ./app
+ ---> 82cdeccb4103
+Step 8/11 : RUN python -m app.data_gen.build_dataset --n 400     && if [ -d app/tracks/t04_early_warning ]; then python -m app.tracks.t04_early_warning.data_gen.build; fi     && if [ -d app/tracks/t05_fraud_intelligence ]; then python -m app.tracks.t05_fraud_intelligence.data_gen.build; fi     && python -m app.ml.prefit
+ ---> Running in da738453083b
+Generated 406 entities (6 archetypes + 400 random)
+  bank                     7308 rows  (9 cols)
+  bureau                    406 rows  (8 cols)
+  courts                    406 rows  (4 cols)
+  dgft                      406 rows  (5 cols)
+  ecommerce                 406 rows  (5 cols)
+  electricity              4500 rows  (5 cols)
+  epfo                     4500 rows  (7 cols)
+  ewaybill                 4734 rows  (6 cols)
+  factory_licence           406 rows  (5 cols)
+  fastag                   2496 rows  (4 cols)
+  fssai                     406 rows  (4 cols)
+  gem                       406 rows  (4 cols)
+  gst                      3078 rows  (14 cols)
+  insolvency                406 rows  (4 cols)
+  insurance                 406 rows  (4 cols)
+  itr                       406 rows  (5 cols)
+  mca21                     406 rows  (7 cols)
+  msme_master               406 rows  (23 cols)
+  pan_gstin                 406 rows  (4 cols)
+  pollution                 406 rows  (4 cols)
+  procurement               406 rows  (4 cols)
+  property_tax              406 rows  (5 cols)
+  shops_establishment       406 rows  (4 cols)
+  udyam                     406 rows  (9 cols)
+  upi                      5130 rows  (7 cols)
+  vahan                     406 rows  (5 cols)
+  default rate: 0.138 | fraud rate: 0.103
+Track-04 panel written to /srv/app/tracks/t04_early_warning/data
+  loan_book               277 rows  (8 cols)
+  repayment_history      6648 rows  (8 cols)
+  altdata_monthly        6648 rows  (8 cols)
+  default_labels          277 rows  (8 cols)
+  book: 277 loans | defaulters: 40 (14.4%) | observed-in-panel: 11 | live watchlist: 29
+<frozen runpy>:128: RuntimeWarning: 'app.tracks.t05_fraud_intelligence.data_gen.build' found in sys.modules after import of package 'app.tracks.t05_fraud_intelligence.data_gen', but prior to execution of 'app.tracks.t05_fraud_intelligence.data_gen.build'; this may result in unpredictable behaviour
+Accounts:        800
+Transactions: 175656 rows  (window ending 2026-06-30, 90 days)
+Mules:            32  (rate 0.040)
+Rings:             6
+Hard negs:        10
+Written to:   /srv/app/tracks/t05_fraud_intelligence/data
+Pre-fit core engine saved: /srv/app/data/engine.pkl (406 entities, 93 features)
+Removing intermediate container da738453083b
+ ---> 99d4169b8096
+Step 9/11 : ENV PORT=8080
+ ---> Running in 4ac7770b1d83
+Removing intermediate container 4ac7770b1d83
+ ---> ae9f76188082
+Step 10/11 : EXPOSE 8080
+ ---> Running in 1653e2a1477d
+Removing intermediate container 1653e2a1477d
+ ---> 2cd456a73657
+Step 11/11 : CMD ["sh", "-c", "streamlit run app/frontend/main.py --server.port=${PORT} --server.address=0.0.0.0 --server.headless=true"]
+ ---> Running in faa9343bcf05
+Removing intermediate container faa9343bcf05
+ ---> 11f40b9ee222
+Successfully built 11f40b9ee222
+Successfully tagged asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest
+PUSH
+Pushing asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest
+The push refers to repository [asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse]
+d565d9460c7e: Preparing
+333e5dc86bfe: Preparing
+9c8237a75df8: Preparing
+b133360ccbe5: Preparing
+aeb31289abea: Preparing
+aa898a312ca0: Preparing
+96499d37fade: Preparing
+1899ce896d03: Preparing
+3edb2192497a: Preparing
+denied: Permission 'artifactregistry.repositories.uploadArtifacts' denied on resource (or it may not exist). Remediate access with this Troubleshooter URL or share it with your administrator - https://console.cloud.google.com/iam-admin/troubleshooter/summary;errorId=CiQwMTlmM2QzYy02MGQwLTc1ZTEtODRjOC1hYTE0NmFmOGU2MjcSRnByb2plY3RzL2lkYmktaGFja2F0aG9uL2xvY2F0aW9ucy9hc2lhLXNvdXRoMS9yZXBvc2l0b3JpZXMvY3JlZGl0cHVsc2U%!D(MISSING) .
+Pushing asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest
+The push refers to repository [asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse]
+d565d9460c7e: Preparing
+333e5dc86bfe: Preparing
+9c8237a75df8: Preparing
+b133360ccbe5: Preparing
+aeb31289abea: Preparing
+aa898a312ca0: Preparing
+96499d37fade: Preparing
+1899ce896d03: Preparing
+3edb2192497a: Preparing
+denied: Permission 'artifactregistry.repositories.uploadArtifacts' denied on resource (or it may not exist). Remediate access with this Troubleshooter URL or share it with your administrator - https://console.cloud.google.com/iam-admin/troubleshooter/summary;errorId=CiQwMTlmM2QzYy05MjAzLTc3ZjgtYjQ5ZS1lYjFhMjk2YTFmMzcSRnByb2plY3RzL2lkYmktaGFja2F0aG9uL2xvY2F0aW9ucy9hc2lhLXNvdXRoMS9yZXBvc2l0b3JpZXMvY3JlZGl0cHVsc2U%!D(MISSING) .
+Pushing asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest
+The push refers to repository [asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse]
+d565d9460c7e: Preparing
+333e5dc86bfe: Preparing
+9c8237a75df8: Preparing
+b133360ccbe5: Preparing
+aeb31289abea: Preparing
+aa898a312ca0: Preparing
+96499d37fade: Preparing
+1899ce896d03: Preparing
+3edb2192497a: Preparing
+denied: Permission 'artifactregistry.repositories.uploadArtifacts' denied on resource (or it may not exist). Remediate access with this Troubleshooter URL or share it with your administrator - https://console.cloud.google.com/iam-admin/troubleshooter/summary;errorId=CiQwMTlmM2QzYy1lZThiLTcxYmQtOTcyMS1kYzQwN2JlNmYxNDESRnByb2plY3RzL2lkYmktaGFja2F0aG9uL2xvY2F0aW9ucy9hc2lhLXNvdXRoMS9yZXBvc2l0b3JpZXMvY3JlZGl0cHVsc2U%!D(MISSING) .
+Pushing asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest
+The push refers to repository [asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse]
+d565d9460c7e: Preparing
+333e5dc86bfe: Preparing
+9c8237a75df8: Preparing
+b133360ccbe5: Preparing
+aeb31289abea: Preparing
+aa898a312ca0: Preparing
+96499d37fade: Preparing
+1899ce896d03: Preparing
+^CCancelling...
+Cancelled [https://cloudbuild.googleapis.com/v1/projects/idbi-hackathon/locations/global/builds/7a621445-5b4b-4772-b7d3-08a122d5ecce].
+3edb2192497a: Preparing
+denied: Permission 'artifactregistry.repositories.uploadArtifacts' denied on resource (or it may not exist). Remediate access with this Troubleshooter URL or share it with your administrator - https://console.cloud.google.com/iam-admin/troubleshooter/summary;errorId=CiQwMTlmM2QzZC0xNTNjLTcxM2ItYTVjZS1jOTIwNjdkYjhmN2ESRnByb2plY3RzL2lkYmktaGFja2F0aG9uL2xvY2F0aW9ucy9hc2lhLXNvdXRoMS9yZXBvc2l0b3JpZXMvY3JlZGl0cHVsc2U%!D(MISSING) .
+Pushing asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+INFO: The service account running this build projects/idbi-hackathon/serviceAccounts/624680413525-compute@developer.gserviceaccount.com does not have permission to write logs to Cloud Logging. To fix this, grant the Logs Writer (roles/logging.logWriter) role to the service account.
+
+1 message(s) issued.
