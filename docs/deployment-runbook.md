@@ -95,8 +95,8 @@ gcloud run deploy "$SERVICE" \
   --region "$REGION" \
   --allow-unauthenticated \
   --port 8080 \
-  --cpu 2 --memory 2Gi \
-  --min-instances 0 --max-instances 3 \
+  --cpu 1 --memory 2Gi \
+  --min-instances 0 --max-instances 1 \
   --concurrency 40 \
   --timeout 3600 \
   --session-affinity
@@ -107,9 +107,9 @@ Why each non-default flag (rationale in `implementation-plan.md` §8):
 | Flag | Why |
 |---|---|
 | `--allow-unauthenticated` | Public demo link — the submission requirement. No secrets or real data are in the app (synthetic only). |
-| `--cpu 2 --memory 2Gi` | Comfortable headroom for Streamlit + LightGBM + Plotly; scale up only if the live demo shows latency. |
-| `--min-instances 0` | Scale-to-zero between demo sessions — the lowest-cost default. |
-| `--max-instances 3` | Caps the bill; a demo never needs more. |
+| `--cpu 1 --memory 2Gi` | Right-sized for a low-concurrency demo. Memory stays at 2 GiB because SHAP/LightGBM can spike — under-provisioning risks an OOM (503) mid-demo; on Cloud Run 2 GiB also requires ≥1 vCPU, so 1 is the floor that keeps that headroom. CPU is billed only during requests, so this mainly trims per-request cost without lengthening the cold start much. |
+| `--min-instances 0` | Scale-to-zero between demo sessions — the lowest-cost default. Deliberate: the first request after idle pays a few-second container start (no model-fit delay — the engine is pre-fit into the image). |
+| `--max-instances 1` | Hard ceiling for a low-concurrency demo. Doesn't change idle cost (that's `min-instances 0`); it caps the bill so a burst or crawler can never fan out to extra billed instances. `--concurrency 40` + `--session-affinity` mean one instance comfortably holds the handful of demo sessions. |
 | `--concurrency 40` | Streamlit sessions are stateful; a modest cap keeps one instance from juggling too many live WebSocket sessions. |
 | `--timeout 3600` | Streamlit's UI runs over a persistent WebSocket; Cloud Run closes connections at the request timeout, so set it to the maximum (60 min) to avoid mid-demo disconnects. |
 | `--session-affinity` | Routes a returning client to the same instance, so a session's state survives the WebSocket reconnect dance. |

@@ -123,8 +123,8 @@ deploy() {
     --region "$REGION" \
     --allow-unauthenticated \
     --port 8080 \
-    --cpu 2 --memory 2Gi \
-    --min-instances 0 --max-instances 3 \
+    --cpu 1 --memory 2Gi \
+    --min-instances 0 --max-instances 1 \
     --concurrency 40 \
     --timeout 3600 \
     --session-affinity
