@@ -27,6 +27,7 @@
   --cp-navy:      #0b3d75;   /* primary accent */
   --cp-navy-deep: #072a52;   /* accent, deep */
   --cp-blue:      #1466b8;   /* secondary accent */
+  --cp-blue-bg:   #c7ddff;   /* soft blue fill (selected toggle segment) */
 
   /* Semantic risk (reserved for meaning only) */
   --cp-green:     #147347;   --cp-green-bg: #e6f5ec;   --cp-green-bd: #bfe6cf;
@@ -65,9 +66,15 @@ html, body, [class*="css"] {
 .block-container { padding-top: .9rem; max-width: 1440px; padding-left: 2.2rem; padding-right: 2.2rem; }
 
 /* Strip default Streamlit chrome for a product feel; keep header transparent so
-   the sidebar collapse control survives on narrow viewports. */
+   the sidebar collapse control survives on narrow viewports. `pointer-events:
+   none` is load-bearing: the header is a full-width ~60px bar fixed OVER the top
+   of the page. Transparent but not gone, it silently intercepts clicks on the
+   top slice of the navbar — so nav tabs only registered clicks BELOW their text.
+   Making the (now decorative) header click-through hands those clicks back to the
+   navbar; interactive links inside it are re-enabled just below. */
 #MainMenu, footer { visibility: hidden; }
-header[data-testid="stHeader"] { background: transparent; }
+header[data-testid="stHeader"] { background: transparent; pointer-events: none; }
+header[data-testid="stHeader"] a, header[data-testid="stHeader"] button { pointer-events: auto; }
 [data-testid="stToolbar"] { display: none; }
 /* Streamlit's default rainbow top-loading bar clashes with the palette. */
 [data-testid="stDecoration"] { display: none; }
@@ -99,7 +106,10 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
    the `.cp-nav-spacer` column stretches to push Architecture + the toggle
    right. The active link's column carries a `.cp-here` marker. */
 .st-key-cp_topnav {
-  background: linear-gradient(135deg, var(--cp-navy-deep), var(--cp-navy));
+  /* Softer navy — lifted off near-black to a richer medium navy (was
+     navy-deep→navy). Light text still clears contrast; the active white pill and
+     the subtle tab borders read cleanly on this tone. */
+  background: linear-gradient(135deg, #143f75, #1c5192);
   border-radius: var(--cp-radius); padding: .5rem .8rem;
   box-shadow: var(--cp-shadow); margin-bottom: .4rem;
 }
@@ -147,8 +157,8 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
 /* Product tabs: quiet light-blue text; the active tab inverts to a white pill
    with navy text so "where am I" is answered at a glance. */
 .st-key-cp_topnav [data-testid="stPageLink"] a {
-  padding: .3rem .8rem; border-radius: var(--cp-r); background: transparent;
-  transition: background-color .15s ease;
+  padding: .48rem .85rem; border-radius: var(--cp-r); background: transparent;
+  transition: background-color .15s ease, border-color .15s ease;
 }
 .st-key-cp_topnav [data-testid="stPageLink"] a p,
 .st-key-cp_topnav [data-testid="stPageLink"] a span {
@@ -241,9 +251,13 @@ ul.cp-caps li { font-family: var(--cp-sans); font-size: .82rem; color: var(--cp-
    the only affordance we keep. */
 .st-key-cp_view_mode div[role="radiogroup"] label > div:not(:has([data-testid="stMarkdownContainer"])) { display: none; }
 .st-key-cp_view_mode div[role="radiogroup"] label:hover { color: var(--cp-navy); }
-.st-key-cp_view_mode div[role="radiogroup"] label:has(input:checked) { background: var(--cp-navy); color: #fff; }
-.st-key-cp_view_mode div[role="radiogroup"] label:has(input:checked):hover { color: #fff; }
-.st-key-cp_view_mode div[role="radiogroup"] label:focus-within { outline: 2px solid var(--cp-navy); outline-offset: 1px; }
+.st-key-cp_view_mode div[role="radiogroup"] label:has(input:checked) {
+  background: var(--cp-blue-bg); color: var(--cp-navy);
+  box-shadow: 0 1px 2px rgba(7,42,82,.10);
+}
+.st-key-cp_view_mode div[role="radiogroup"] label:has(input:checked):hover { color: var(--cp-navy); }
+/* Lighter focus ring on the selected segment — soft blue, not the heavy navy. */
+.st-key-cp_view_mode div[role="radiogroup"] label:focus-within { outline: 2px solid var(--cp-blue); outline-offset: 1px; }
 
 /* ---- Panel / card (hairline, minimal, flat) ------------------------------ */
 .cp-card {
@@ -489,7 +503,11 @@ ul.cp-caps li { font-family: var(--cp-sans); font-size: .82rem; color: var(--cp-
 }
 [data-testid="stPageLink"] a p { font-weight: 500; }
 [data-testid="stPageLink"] a:hover { background: var(--cp-panel); border-color: var(--cp-navy); }
-.st-key-cp_topnav [data-testid="stPageLink"] a { border: none; }
+/* Subtle translucent-white hairline so each tab reads as a distinct button on
+   the navy bar (not floating text). The brand wordmark link stays borderless. */
+.st-key-cp_topnav [data-testid="stPageLink"] a { border: 1px solid rgba(255,255,255,.15); }
+.st-key-cp_topnav [data-testid="stPageLink"] a:hover { border-color: rgba(255,255,255,.35); }
+.st-key-cp_brand [data-testid="stPageLink"] a { border: none !important; }
 
 /* ---- Radio scenario list + inputs ---------------------------------------- */
 [data-testid="stExpander"] { border: 1px solid var(--cp-border); border-radius: var(--cp-r); background: var(--cp-bg); }

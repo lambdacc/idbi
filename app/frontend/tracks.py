@@ -288,8 +288,12 @@ def render_topnav(current_page) -> None:
                       active is not None and active.id == "ref")
 
     # The global level-of-detail slider sits in a slim row just below the navbar.
-    with st.container(key="cp_utilbar"):
-        ui.view_toggle()
+    # Not on the Overview landing: it's a brand/intro page with no technical
+    # surface to toggle, so the control there is just noise. It reappears on the
+    # product and Architecture pages, and the chosen mode persists across nav.
+    if current_key != "platform.overview":
+        with st.container(key="cp_utilbar"):
+            ui.view_toggle()
 
     # Product masthead + page pills — product pages only; Overview is the brand
     # landing and Reference pages carry a masthead without a badge. The navbar
