@@ -4,7 +4,7 @@ PIP ?= .venv/bin/pip
 PORT ?= 8080
 N ?= 400
 
-.PHONY: help venv install data-gen prefit test eval train demo docker-build docker-run clean
+.PHONY: help venv install data-gen prefit test eval train demo docker-build docker-run deploy clean
 
 help:
 	@echo "make install     - create venv and install pinned deps"
@@ -15,6 +15,7 @@ help:
 	@echo "make train       - fit models + print the 6-archetype demo scorecard"
 	@echo "make demo        - launch the Streamlit app on PORT=$(PORT)"
 	@echo "make docker-build / docker-run - container build + local run"
+	@echo "make deploy      - manual Cloud Run deploy to GCP (project idbi-hackathon)"
 
 venv:
 	python3 -m venv .venv
@@ -48,6 +49,12 @@ docker-build:
 
 docker-run:
 	docker run --rm -e PORT=$(PORT) -p $(PORT):$(PORT) creditpulse:local
+
+# Manual, human-initiated deploy — NOT CI/CD. Runs the full flow
+# (preflight → APIs → Artifact Registry → Cloud Build → Cloud Run → smoke).
+# Pass a subcommand with ARGS, e.g.  make deploy ARGS=warm
+deploy:
+	./scripts/deploy.sh $(ARGS)
 
 clean:
 	rm -rf app/data/*.csv app/data/*.pkl app/tracks/*/data .pytest_cache **/__pycache__

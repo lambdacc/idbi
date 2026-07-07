@@ -140,4 +140,4 @@ harness, and builds the Docker image on every push.
 
 ## Team
 
-Built by **Lambdac** for IDBI Innovate 2026.
+Built by **Lambdac Computing** for IDBI Innovate 2026.

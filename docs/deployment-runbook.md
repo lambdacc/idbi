@@ -8,6 +8,18 @@ Cloud Run URL, plus the demo-day switches, smoke test, rollback, and teardown.
 Written to be followed top-to-bottom by anyone with Owner/Editor access to a
 GCP project; no prior state assumed.
 
+> **Fast path — one script.** Everything below §1–§3 is bundled into a single
+> **manually-run** script: [`../scripts/deploy.sh`](../scripts/deploy.sh) (this is
+> **not** CI/CD — nothing deploys on a git push; you run it by hand). After the
+> one-time project creation in §0.2, just run:
+> ```bash
+> ./scripts/deploy.sh          # preflight → enable APIs → create repo → build → deploy → smoke
+> ./scripts/deploy.sh warm     # min-instances=1 before a judging window
+> ./scripts/deploy.sh cold     # back to scale-to-zero after
+> ```
+> It is idempotent and safe to re-run. The manual `gcloud` steps below remain as
+> the reference for what the script does and why each flag is set.
+
 > Flag names and defaults below were written against Cloud Run as of mid-2026 —
 > if a `gcloud` command rejects a flag, check `gcloud run deploy --help` first;
 > the concept (session affinity, min instances, request timeout) is what matters.
@@ -23,7 +35,10 @@ GCP project; no prior state assumed.
 2. **Create (or pick) a project** with billing enabled, then set the shell context
    used by every command below:
    ```bash
-   export PROJECT_ID="creditpulse-demo"        # <-- your project id
+   gcloud projects create idbi-hackathon       # skip if it already exists
+   # then link a billing account: Console → Billing → link project
+
+   export PROJECT_ID="idbi-hackathon"          # the CreditPulse GCP project
    export REGION="asia-south1"                 # Mumbai — closest to the audience
    export SERVICE="creditpulse"
    export REPO="creditpulse"                   # Artifact Registry repo name
