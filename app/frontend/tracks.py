@@ -80,9 +80,12 @@ TRACKS: List[TrackSpec] = [
         ],
     ),
     TrackSpec(
-        id="t03", label="Problem Statement 3 · Financial Health", badge="Problem Statement 3",
+        id="t03", label="Problem Statement 3 · Financial Health Score", badge="Problem Statement 3",
         folder="t03_financial_health",
-        blurb="Underwrite the credit-invisible MSME from its digital exhaust.",
+        blurb="Many new-to-credit and new-to-bank MSMEs lack the financial documents banks underwrite "
+              "on. CreditPulse aggregates their alternate data — GST, UPI, Account Aggregator, EPFO and "
+              "more — into a Financial Health Card: a multidimensional score of each business's strengths "
+              "and risks, so viable but credit-invisible borrowers stop being turned away by default.",
         capabilities=["Explainable financial health card",
                       "Turnover-authenticity cross-check",
                       "Deterministic scorecard + calibrated PD"],
@@ -103,8 +106,11 @@ TRACKS: List[TrackSpec] = [
     TrackSpec(
         id="t04", label="Problem Statement 4 · Early Warning", badge="Problem Statement 4",
         folder="t04_early_warning",
-        blurb="Problem Statement 4's official brief is Default Prediction Model — pitched here as an early-warning "
-              "radar: monitor the book, months before repayment slips.",
+        blurb="Default prediction today is held back by structured-data-only models and fragmented methods "
+              "across loan types. This monitors the whole book with structured and alternate signals "
+              "together, flagging borrowers likely to slip months before repayment does — every warning "
+              "explained the same way, so the risk read stays consistent and actionable. "
+              "(Official brief: Default Prediction Model.)",
         capabilities=["Portfolio deterioration radar",
                       "Lead-time vs a repayment-only baseline",
                       "Watchlist with explained drivers"],
@@ -120,8 +126,10 @@ TRACKS: List[TrackSpec] = [
     TrackSpec(
         id="t05", label="Problem Statement 5 · Fraud Intelligence", badge="Problem Statement 5",
         folder="t05_fraud_intelligence",
-        blurb="Problem Statement 5's official brief is Open Innovation — entered here as explainable "
-              "mule-account detection with citation-gated cases, protecting the payment rails.",
+        blurb="Entered under Problem Statement 5 · Open Innovation — a shield for the payment rails. It "
+              "detects mule accounts and the rings they route money through, then builds a case file where "
+              "every claim is backed by its exact transactions, so a fraud analyst gets evidence-grounded "
+              "cases to act on — not just an opaque score.",
         capabilities=["Typology + anomaly detection",
                       "Ring expansion over the transaction graph",
                       "Agentic, citation-gated case file"],
@@ -208,8 +216,14 @@ def track_of_page(page) -> Optional[TrackSpec]:
 
 def _short(label: str) -> str:
     """Product short name from a group label ('Problem Statement 3 · Financial
-    Health' -> 'Financial Health')."""
+    Health Score' -> 'Financial Health Score')."""
     return label.split("·")[-1].strip()
+
+
+def _ps_code(track: TrackSpec) -> str:
+    """Compact PS prefix for a navbar tab ('Problem Statement 3' -> 'PS3').
+    Reads the badge so it always tracks the real problem-statement number."""
+    return f"PS{track.badge.split()[-1]}" if track.badge else ""
 
 
 def _nav_link(key: str, label: str, active: bool) -> None:
@@ -229,30 +243,35 @@ def render_topnav(current_page) -> None:
 
       * a slim utility row above everything, right-aligned: the global
         Simple/Technical view toggle;
-      * the navy bar = WHICH PRODUCT: brand wordmark (left), then Overview,
-        one tab per installed problem-statement track, and Architecture as a
-        right-aligned link group;
+      * the navy bar = WHICH PRODUCT: brand wordmark (left); then the nav group
+        — Overview + one PS-prefixed tab per installed track — floated to the
+        centre; and Architecture pinned to the right edge;
       * below it, on product pages only: a masthead heading the product
         (product name + its PS badge) and one pill per page of the ACTIVE
         track.
 
-    Columns are content-sized via CSS (flex max-content); the stretch spacer
-    after the brand pushes the link group to the right edge."""
+    Columns are content-sized via CSS (flex max-content); two stretch spacers
+    (brand→group and group→Architecture) centre the nav group between the brand
+    on the left and Architecture on the right."""
     from app.frontend.components import ui
 
     active = track_of_page(current_page)
     current_key = _key_of_page(current_page)
     products = [t for t in installed_tracks() if t.badge]
 
-    with st.container(key="cp_utilbar"):
-        ui.view_toggle()
-
     with st.container(key="cp_topnav"):
-        cols = iter(st.columns(len(products) + 4, vertical_alignment="center"))
+        cols = iter(st.columns(len(products) + 5, vertical_alignment="center"))
         with next(cols):
-            st.markdown(
-                "<div class='cp-nav-brand'><span class='a'>Credit</span>"
-                "<span class='b'>Pulse</span></div>", unsafe_allow_html=True)
+            # The wordmark doubles as a home link. A transparent st.page_link
+            # overlays the two-tone markup (CSS) so clicking the logo navigates
+            # to Overview client-side — a full-reload <a> would drop the demo's
+            # session_state. The visible wordmark is aria-hidden; the link
+            # carries the accessible name.
+            with st.container(key="cp_brand"):
+                st.markdown(
+                    "<div class='cp-nav-brand' aria-hidden='true'><span class='a'>Credit</span>"
+                    "<span class='b'>Pulse</span></div>", unsafe_allow_html=True)
+                st.page_link(_PAGE_OBJECTS["platform.overview"], label="CreditPulse — home")
         with next(cols):
             st.markdown("<div class='cp-nav-spacer'></div>", unsafe_allow_html=True)
         with next(cols):
@@ -260,10 +279,17 @@ def render_topnav(current_page) -> None:
                       active is not None and active.id == "platform")
         for track in products:
             with next(cols):
-                _nav_link(track.start_key, _short(track.label), track is active)
+                _nav_link(track.start_key, f"{_ps_code(track)}: {_short(track.label)}",
+                          track is active)
+        with next(cols):
+            st.markdown("<div class='cp-nav-spacer'></div>", unsafe_allow_html=True)
         with next(cols):
             _nav_link("ref.architecture", "Architecture",
                       active is not None and active.id == "ref")
+
+    # The global level-of-detail slider sits in a slim row just below the navbar.
+    with st.container(key="cp_utilbar"):
+        ui.view_toggle()
 
     # Product masthead + page pills — product pages only; Overview is the brand
     # landing and Reference pages carry a masthead without a badge. The navbar

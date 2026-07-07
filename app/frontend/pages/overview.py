@@ -52,7 +52,7 @@ def render() -> None:
                 f"<div class='cp-card' style='height:100%'>"
                 f"<span class='cp-track-badge'>{track.badge}</span>"
                 f"<h4 style='margin-top:.5rem'>{track.label.split('·')[-1].strip()}</h4>"
-                f"<div class='cp-scn' style='margin-bottom:.6rem;min-height:6.4em'>{track.blurb}</div>"
+                f"<div class='cp-scn' style='margin-bottom:.6rem;min-height:9.5em'>{track.blurb}</div>"
                 f"<ul class='cp-caps'>{caps}</ul></div>",
                 unsafe_allow_html=True)
             st.page_link(tracks.get_page(track.start_key),

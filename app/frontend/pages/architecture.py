@@ -85,7 +85,7 @@ digraph T05 {{
 """
 
 _TRACKS = {
-    "Problem Statement 3 · Financial Health": {
+    "Problem Statement 3 · Financial Health Score": {
         "dot": _T03_DOT,
         "flow": ("25 alternate-data sources → integration (canonical entity resolution) → feature "
                  "engineering → cross-source synthesis (13 composites) → segmentation, scoring and "

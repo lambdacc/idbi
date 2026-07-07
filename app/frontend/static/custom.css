@@ -104,7 +104,7 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
   box-shadow: var(--cp-shadow); margin-bottom: .4rem;
 }
 .st-key-cp_topnav [data-testid="stHorizontalBlock"] {
-  flex-wrap: nowrap; gap: .3rem; align-items: center;
+  flex-wrap: nowrap; gap: .85rem; align-items: center;
 }
 /* max-content basis: a nav column can never shrink below its label, so pills
    and tabs cannot truncate or overlap at any viewport width or zoom level. */
@@ -117,8 +117,8 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
 .st-key-cp_pills  [data-testid="stVerticalBlock"] { gap: 0 !important; }
 .cp-here, .cp-nav-spacer { height: 0; }
 
-/* Utility row above the navbar: the right-aligned view toggle. */
-.st-key-cp_utilbar { margin-bottom: .45rem; }
+/* Slim row directly below the navbar: the right-aligned level-of-detail slider. */
+.st-key-cp_utilbar { margin: -.05rem 0 .55rem; }
 .st-key-cp_utilbar [data-testid="stVerticalBlock"] { gap: 0; }
 
 /* Brand wordmark, light-on-navy. */
@@ -128,6 +128,21 @@ h3 { font-weight: 500; font-size: 1.2rem; letter-spacing: -.005em; }
 }
 .cp-nav-brand .a { color: #ffffff; }
 .cp-nav-brand .b { color: #9cc2ee; font-style: italic; padding-right: .04em; }
+
+/* The wordmark is a home link: a transparent st.page_link (client-side nav, no
+   full reload) is laid over the aria-hidden two-tone wordmark. The link fills the
+   wordmark box, its own text is collapsed, and the visible glyphs show through. */
+.st-key-cp_brand { position: relative; display: inline-block; }
+.st-key-cp_brand .cp-nav-brand { cursor: pointer; transition: opacity .15s ease; }
+.st-key-cp_brand:hover .cp-nav-brand { opacity: .85; }
+.st-key-cp_brand [data-testid="stPageLink"] { position: absolute; inset: 0; margin: 0; }
+.st-key-cp_brand [data-testid="stPageLink"] a {
+  display: block; width: 100%; height: 100%; padding: 0; background: transparent !important;
+  border-radius: var(--cp-radius); cursor: pointer;
+}
+.st-key-cp_brand [data-testid="stPageLink"] a:hover { background: transparent !important; }
+.st-key-cp_brand [data-testid="stPageLink"] a p,
+.st-key-cp_brand [data-testid="stPageLink"] a span { font-size: 0 !important; color: transparent !important; }
 
 /* Product tabs: quiet light-blue text; the active tab inverts to a white pill
    with navy text so "where am I" is answered at a glance. */
@@ -198,17 +213,37 @@ ul.cp-caps li { font-family: var(--cp-sans); font-size: .82rem; color: var(--cp-
 .cp-logo .a { color: var(--cp-navy-deep); }
 .cp-logo .b { color: var(--cp-blue); font-style: italic; padding-right: .04em; }
 
-/* ---- Simple / Technical toggle (segmented control, navbar right slot) ----- */
-.st-key-cp_view_mode [data-testid="stRadio"] > div[role="radiogroup"] {
-  flex-direction: row; flex-wrap: nowrap; justify-content: flex-end; gap: 0;
-  border: 1px solid var(--cp-border-2); border-radius: var(--cp-r);
-  padding: 2px; background: var(--cp-panel); width: fit-content; margin-left: auto;
+/* ---- Level-of-detail toggle — two-position slider button, below the navbar --
+   Row = inline label ("Toggle level of detail") + the segmented slider, floated
+   right. The pill track holds two positions; the selected one fills navy (the
+   "knob"), the native radio dot is hidden so the fill is the only affordance. */
+.st-key-cp_view_mode [data-testid="stRadio"] {
+  display: flex; align-items: center; justify-content: flex-end; gap: .55rem;
 }
-.st-key-cp_view_mode [data-testid="stRadio"] label {
-  margin: 0; padding: .2rem .75rem; border-radius: 4px; font-size: .8rem; cursor: pointer; white-space: nowrap;
+.st-key-cp_view_mode [data-testid="stWidgetLabel"] { order: -1; margin: 0; padding: 0; }
+.st-key-cp_view_mode [data-testid="stWidgetLabel"] p {
+  margin: 0; font-family: var(--cp-sans); font-size: .78rem; font-weight: 600;
+  color: var(--cp-muted); white-space: nowrap;
 }
-.st-key-cp_view_mode [data-testid="stRadio"] label:hover { background: var(--cp-panel-2); }
-.st-key-cp_view_mode [data-testid="stRadio"] label:focus-within { outline: 2px solid var(--cp-navy); outline-offset: 1px; }
+.st-key-cp_view_mode div[role="radiogroup"] {
+  flex-direction: row; flex-wrap: nowrap; gap: 0;
+  border: 1px solid var(--cp-border-2); border-radius: 999px;
+  padding: 3px; background: var(--cp-panel); width: fit-content;
+}
+.st-key-cp_view_mode div[role="radiogroup"] label {
+  margin: 0; padding: .26rem 1.05rem; border-radius: 999px;
+  font-family: var(--cp-sans); font-size: .8rem; font-weight: 600;
+  color: var(--cp-muted); cursor: pointer; white-space: nowrap;
+  transition: background-color .18s ease, color .18s ease;
+}
+/* Hide the native radio dot — the one child div that holds no text (the label's
+   text lives in the sibling div that wraps stMarkdownContainer). The pill fill is
+   the only affordance we keep. */
+.st-key-cp_view_mode div[role="radiogroup"] label > div:not(:has([data-testid="stMarkdownContainer"])) { display: none; }
+.st-key-cp_view_mode div[role="radiogroup"] label:hover { color: var(--cp-navy); }
+.st-key-cp_view_mode div[role="radiogroup"] label:has(input:checked) { background: var(--cp-navy); color: #fff; }
+.st-key-cp_view_mode div[role="radiogroup"] label:has(input:checked):hover { color: #fff; }
+.st-key-cp_view_mode div[role="radiogroup"] label:focus-within { outline: 2px solid var(--cp-navy); outline-offset: 1px; }
 
 /* ---- Panel / card (hairline, minimal, flat) ------------------------------ */
 .cp-card {

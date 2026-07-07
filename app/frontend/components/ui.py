@@ -63,19 +63,20 @@ def shell_setup() -> None:
 
 def view_toggle() -> None:
     """The global Simple/Technical view toggle (design decision D3), rendered
-    by the router inside the top navbar (rightmost slot). Default "simple";
-    initialise without clobbering an existing choice, then bind the widget
-    directly to the session key so the stored value is exactly
+    by the router in a slim row directly BELOW the top navbar. Styled (CSS) as a
+    two-position slider button with the inline label "Toggle level of detail".
+    Default "simple"; initialise without clobbering an existing choice, then bind
+    the widget directly to the session key so the stored value is exactly
     "simple"/"technical" and persists across page switches."""
     if "cp_view_mode" not in st.session_state:
         st.session_state["cp_view_mode"] = "simple"
     st.radio(
-        "View",
+        "Toggle level of detail",
         options=["simple", "technical"],
         format_func=lambda m: m.capitalize(),
         key="cp_view_mode",
         horizontal=True,
-        label_visibility="collapsed",
+        label_visibility="visible",
         help="Technical view shows the model internals (SHAP, clustering, execution trace).",
     )
 
