@@ -1,3 +1,375 @@
+make install      # create .venv and install pinned dependencies
+make data-gen     # generate the synthetic cohort for the platform + all tracks
+make test         # run the full suite (platform + every installed track)
+make demo         # launch the app → http://localhost:8080 (Overview landing page)
+idbi > make install      # create .venv and install pinned dependencies
+python3 -m venv .venv
+.venv/bin/pip install --upgrade pip
+Requirement already satisfied: pip in ./.venv/lib/python3.12/site-packages (26.1.2)
+.venv/bin/pip install -r requirements.txt
+Requirement already satisfied: numpy==2.1.3 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 3)) (2.1.3)
+Requirement already satisfied: pandas==2.2.3 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 4)) (2.2.3)
+Requirement already satisfied: scikit-learn==1.5.2 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 5)) (1.5.2)
+Requirement already satisfied: scipy==1.14.1 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 6)) (1.14.1)
+Requirement already satisfied: PyYAML==6.0.2 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 7)) (6.0.2)
+Requirement already satisfied: pydantic==2.9.2 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 8)) (2.9.2)
+Requirement already satisfied: lightgbm==4.5.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 11)) (4.5.0)
+Requirement already satisfied: shap==0.46.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 12)) (0.46.0)
+Requirement already satisfied: Faker==30.8.2 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 15)) (30.8.2)
+Requirement already satisfied: streamlit==1.39.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 18)) (1.39.0)
+Requirement already satisfied: plotly==5.24.1 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 19)) (5.24.1)
+Requirement already satisfied: pytest==8.3.3 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 22)) (8.3.3)
+Requirement already satisfied: python-dateutil>=2.8.2 in ./.venv/lib/python3.12/site-packages (from pandas==2.2.3->-r requirements.txt (line 4)) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in ./.venv/lib/python3.12/site-packages (from pandas==2.2.3->-r requirements.txt (line 4)) (2026.2)
+Requirement already satisfied: tzdata>=2022.7 in ./.venv/lib/python3.12/site-packages (from pandas==2.2.3->-r requirements.txt (line 4)) (2026.2)
+Requirement already satisfied: joblib>=1.2.0 in ./.venv/lib/python3.12/site-packages (from scikit-learn==1.5.2->-r requirements.txt (line 5)) (1.5.3)
+Requirement already satisfied: threadpoolctl>=3.1.0 in ./.venv/lib/python3.12/site-packages (from scikit-learn==1.5.2->-r requirements.txt (line 5)) (3.6.0)
+Requirement already satisfied: annotated-types>=0.6.0 in ./.venv/lib/python3.12/site-packages (from pydantic==2.9.2->-r requirements.txt (line 8)) (0.7.0)
+Requirement already satisfied: pydantic-core==2.23.4 in ./.venv/lib/python3.12/site-packages (from pydantic==2.9.2->-r requirements.txt (line 8)) (2.23.4)
+Requirement already satisfied: typing-extensions>=4.6.1 in ./.venv/lib/python3.12/site-packages (from pydantic==2.9.2->-r requirements.txt (line 8)) (4.15.0)
+Requirement already satisfied: tqdm>=4.27.0 in ./.venv/lib/python3.12/site-packages (from shap==0.46.0->-r requirements.txt (line 12)) (4.68.3)
+Requirement already satisfied: packaging>20.9 in ./.venv/lib/python3.12/site-packages (from shap==0.46.0->-r requirements.txt (line 12)) (24.2)
+Requirement already satisfied: slicer==0.0.8 in ./.venv/lib/python3.12/site-packages (from shap==0.46.0->-r requirements.txt (line 12)) (0.0.8)
+Requirement already satisfied: numba in ./.venv/lib/python3.12/site-packages (from shap==0.46.0->-r requirements.txt (line 12)) (0.65.1)
+Requirement already satisfied: cloudpickle in ./.venv/lib/python3.12/site-packages (from shap==0.46.0->-r requirements.txt (line 12)) (3.1.2)
+Requirement already satisfied: altair<6,>=4.0 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (5.5.0)
+Requirement already satisfied: blinker<2,>=1.0.0 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (1.9.0)
+Requirement already satisfied: cachetools<6,>=4.0 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (5.5.2)
+Requirement already satisfied: click<9,>=7.0 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (8.4.2)
+Requirement already satisfied: pillow<11,>=7.1.0 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (10.4.0)
+Requirement already satisfied: protobuf<6,>=3.20 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (5.29.6)
+Requirement already satisfied: pyarrow>=7.0 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (24.0.0)
+Requirement already satisfied: requests<3,>=2.27 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (2.34.2)
+Requirement already satisfied: rich<14,>=10.14.0 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (13.9.4)
+Requirement already satisfied: tenacity<10,>=8.1.0 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (9.1.4)
+Requirement already satisfied: toml<2,>=0.10.1 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (0.10.2)
+Requirement already satisfied: gitpython!=3.1.19,<4,>=3.0.7 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (3.1.50)
+Requirement already satisfied: pydeck<1,>=0.8.0b4 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (0.9.2)
+Requirement already satisfied: tornado<7,>=6.0.3 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (6.5.7)
+Requirement already satisfied: watchdog<6,>=2.1.5 in ./.venv/lib/python3.12/site-packages (from streamlit==1.39.0->-r requirements.txt (line 18)) (5.0.3)
+Requirement already satisfied: iniconfig in ./.venv/lib/python3.12/site-packages (from pytest==8.3.3->-r requirements.txt (line 22)) (2.3.0)
+Requirement already satisfied: pluggy<2,>=1.5 in ./.venv/lib/python3.12/site-packages (from pytest==8.3.3->-r requirements.txt (line 22)) (1.6.0)
+Requirement already satisfied: jinja2 in ./.venv/lib/python3.12/site-packages (from altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18)) (3.1.6)
+Requirement already satisfied: jsonschema>=3.0 in ./.venv/lib/python3.12/site-packages (from altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18)) (4.26.0)
+Requirement already satisfied: narwhals>=1.14.2 in ./.venv/lib/python3.12/site-packages (from altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18)) (2.23.0)
+Requirement already satisfied: gitdb<5,>=4.0.1 in ./.venv/lib/python3.12/site-packages (from gitpython!=3.1.19,<4,>=3.0.7->streamlit==1.39.0->-r requirements.txt (line 18)) (4.0.12)
+Requirement already satisfied: smmap<6,>=3.0.1 in ./.venv/lib/python3.12/site-packages (from gitdb<5,>=4.0.1->gitpython!=3.1.19,<4,>=3.0.7->streamlit==1.39.0->-r requirements.txt (line 18)) (5.0.3)
+Requirement already satisfied: charset_normalizer<4,>=2 in ./.venv/lib/python3.12/site-packages (from requests<3,>=2.27->streamlit==1.39.0->-r requirements.txt (line 18)) (3.4.7)
+Requirement already satisfied: idna<4,>=2.5 in ./.venv/lib/python3.12/site-packages (from requests<3,>=2.27->streamlit==1.39.0->-r requirements.txt (line 18)) (3.18)
+Requirement already satisfied: urllib3<3,>=1.26 in ./.venv/lib/python3.12/site-packages (from requests<3,>=2.27->streamlit==1.39.0->-r requirements.txt (line 18)) (2.7.0)
+Requirement already satisfied: certifi>=2023.5.7 in ./.venv/lib/python3.12/site-packages (from requests<3,>=2.27->streamlit==1.39.0->-r requirements.txt (line 18)) (2026.6.17)
+Requirement already satisfied: markdown-it-py>=2.2.0 in ./.venv/lib/python3.12/site-packages (from rich<14,>=10.14.0->streamlit==1.39.0->-r requirements.txt (line 18)) (4.2.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in ./.venv/lib/python3.12/site-packages (from rich<14,>=10.14.0->streamlit==1.39.0->-r requirements.txt (line 18)) (2.20.0)
+Requirement already satisfied: MarkupSafe>=2.0 in ./.venv/lib/python3.12/site-packages (from jinja2->altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18)) (3.0.3)
+Requirement already satisfied: attrs>=22.2.0 in ./.venv/lib/python3.12/site-packages (from jsonschema>=3.0->altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18)) (26.1.0)
+Requirement already satisfied: jsonschema-specifications>=2023.03.6 in ./.venv/lib/python3.12/site-packages (from jsonschema>=3.0->altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18)) (2025.9.1)
+Requirement already satisfied: referencing>=0.28.4 in ./.venv/lib/python3.12/site-packages (from jsonschema>=3.0->altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18)) (0.37.0)
+Requirement already satisfied: rpds-py>=0.25.0 in ./.venv/lib/python3.12/site-packages (from jsonschema>=3.0->altair<6,>=4.0->streamlit==1.39.0->-r requirements.txt (line 18)) (2026.6.3)
+Requirement already satisfied: mdurl~=0.1 in ./.venv/lib/python3.12/site-packages (from markdown-it-py>=2.2.0->rich<14,>=10.14.0->streamlit==1.39.0->-r requirements.txt (line 18)) (0.1.2)
+Requirement already satisfied: six>=1.5 in ./.venv/lib/python3.12/site-packages (from python-dateutil>=2.8.2->pandas==2.2.3->-r requirements.txt (line 4)) (1.17.0)
+Requirement already satisfied: llvmlite<0.48,>=0.47.0dev0 in ./.venv/lib/python3.12/site-packages (from numba->shap==0.46.0->-r requirements.txt (line 12)) (0.47.0)
+idbi > make data-gen     # generate the synthetic cohort for the platform + all tracks
+.venv/bin/python -m app.data_gen.build_dataset --n 400
+Generated 406 entities (6 archetypes + 400 random)
+  bank                     7308 rows  (9 cols)
+  bureau                    406 rows  (8 cols)
+  courts                    406 rows  (4 cols)
+  dgft                      406 rows  (5 cols)
+  ecommerce                 406 rows  (5 cols)
+  electricity              4500 rows  (5 cols)
+  epfo                     4500 rows  (7 cols)
+  ewaybill                 4734 rows  (6 cols)
+  factory_licence           406 rows  (5 cols)
+  fastag                   2496 rows  (4 cols)
+  fssai                     406 rows  (4 cols)
+  gem                       406 rows  (4 cols)
+  gst                      3078 rows  (14 cols)
+  insolvency                406 rows  (4 cols)
+  insurance                 406 rows  (4 cols)
+  itr                       406 rows  (5 cols)
+  mca21                     406 rows  (7 cols)
+  msme_master               406 rows  (23 cols)
+  pan_gstin                 406 rows  (4 cols)
+  pollution                 406 rows  (4 cols)
+  procurement               406 rows  (4 cols)
+  property_tax              406 rows  (5 cols)
+  shops_establishment       406 rows  (4 cols)
+  udyam                     406 rows  (9 cols)
+  upi                      5130 rows  (7 cols)
+  vahan                     406 rows  (5 cols)
+  default rate: 0.138 | fraud rate: 0.103
+Track-04 panel written to /home/hdd/IdeaProjects/idbi/app/tracks/t04_early_warning/data
+  loan_book               277 rows  (8 cols)
+  repayment_history      6648 rows  (8 cols)
+  altdata_monthly        6648 rows  (8 cols)
+  default_labels          277 rows  (8 cols)
+  book: 277 loans | defaulters: 40 (14.4%) | observed-in-panel: 11 | live watchlist: 29
+<frozen runpy>:128: RuntimeWarning: 'app.tracks.t05_fraud_intelligence.data_gen.build' found in sys.modules after import of package 'app.tracks.t05_fraud_intelligence.data_gen', but prior to execution of 'app.tracks.t05_fraud_intelligence.data_gen.build'; this may result in unpredictable behaviour
+Accounts:        800
+Transactions: 175656 rows  (window ending 2026-06-30, 90 days)
+Mules:            32  (rate 0.040)
+Rings:             6
+Hard negs:        10
+Written to:   /home/hdd/IdeaProjects/idbi/app/tracks/t05_fraud_intelligence/data
+idbi > make test         # run the full suite (platform + every installed track)
+.venv/bin/python -m pytest app/tests app/tracks -q
+.......................................................................................................................................................... [ 52%]
+..............................................................................................................................................             [100%]
+======================================================================== warnings summary ========================================================================
+app/tests/test_frontend_smoke.py::test_page_renders[-simple]
+  /home/hdd/IdeaProjects/idbi/.venv/lib/python3.12/site-packages/shap/explainers/_tree.py:448: UserWarning: LightGBM binary classifier with TreeExplainer shap values output has changed to a list of ndarray
+    warnings.warn('LightGBM binary classifier with TreeExplainer shap values output has changed to a list of ndarray')
+
+app/tests/test_pipeline_orchestrator.py: 11 warnings
+app/tests/test_shap.py: 2 warnings
+  /home/hdd/IdeaProjects/idbi/.venv/lib/python3.12/site-packages/shap/explainers/_tree.py:448: UserWarning:
+
+  LightGBM binary classifier with TreeExplainer shap values output has changed to a list of ndarray
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+296 passed, 14 warnings in 154.85s (0:02:34)
+idbi > make demo         # launch the app → http://localhost:8080 (Overview landing page)
+.venv/bin/python -m app.ml.prefit
+Pre-fit core engine saved: /home/hdd/IdeaProjects/idbi/app/data/engine.pkl (406 entities, 93 features)
+.venv/bin/python -m streamlit run app/frontend/main.py --server.port=8080 --server.address=0.0.0.0 --server.headless=true
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://0.0.0.0:8080
+
+2026-07-07 19:57:13.908 st.navigation was called in an app with a pages/ directory. This may cause unusual app behavior. You may want to rename the pages/ directory.
+/home/hdd/IdeaProjects/idbi/.venv/lib/python3.12/site-packages/shap/explainers/_tree.py:448: UserWarning: LightGBM binary classifier with TreeExplainer shap values output has changed to a list of ndarray
+  warnings.warn('LightGBM binary classifier with TreeExplainer shap values output has changed to a list of ndarray')
+^C  Stopping...
+
+idbi >
+idbi > ls
+app  Dockerfile  docs  internal  Makefile  README.md  requirements.txt  scripts  skills-lock.json  START_HERE.md
+idbi >
+idbi > pwd
+/home/hdd/IdeaProjects/idbi
+idbi >
+idbi > pwd
+/home/hdd/IdeaProjects/idbi
+idbi >
+idbi > gcloud init
+Welcome! This command will take you through the configuration of gcloud.
+
+Settings from your current configuration [default] are:
+core:
+  account: contact@reafino.io
+  disable_usage_reporting: 'False'
+  project: reafino-preprod
+
+Pick configuration to use:
+ [1] Re-initialize this configuration [default] with new settings
+ [2] Create a new configuration
+Please enter your numeric choice:  1
+
+Your current configuration has been set to: [default]
+
+You can skip diagnostics next time by using the following flag:
+  gcloud init --skip-diagnostics
+
+Network diagnostic detects and fixes local network connection issues.
+Checking network connection...done.
+Reachability Check passed.
+Network diagnostic passed (1/1 checks passed).
+
+Choose the account you want to use for this configuration.
+To use a federated user account, exit this command and sign in to the gcloud CLI with your login configuration file, then run this command again.
+
+Select an account:
+ [1] aganeshn@gmail.com
+ [2] contact@reafino.io
+ [3] lambdac.dev@gmail.com
+ [4] resh.mhn@gmail.com
+ [5] vinuanilg@gmail.com
+ [6] Sign in with a new Google Account
+ [7] Skip this step
+Please enter your numeric choice:  2
+
+You are signed in as: [contact@reafino.io].
+
+Reauthentication required.
+Please enter your password:
+
+Command killed by keyboard interrupt
+
+
+idbi > gcloud init
+Welcome! This command will take you through the configuration of gcloud.
+
+Settings from your current configuration [default] are:
+core:
+  account: contact@reafino.io
+  disable_usage_reporting: 'False'
+
+Pick configuration to use:
+ [1] Re-initialize this configuration [default] with new settings
+ [2] Create a new configuration
+Please enter your numeric choice:  2
+
+Enter configuration name. Names start with a lower case letter and contain only lower case letters a-z, digits 0-9, and hyphens '-':  ^C
+
+Command killed by keyboard interrupt
+
+
+idbi > gcloud init
+Welcome! This command will take you through the configuration of gcloud.
+
+Settings from your current configuration [default] are:
+core:
+  account: contact@reafino.io
+  disable_usage_reporting: 'False'
+
+Pick configuration to use:
+ [1] Re-initialize this configuration [default] with new settings
+ [2] Create a new configuration
+Please enter your numeric choice:  1
+
+Your current configuration has been set to: [default]
+
+You can skip diagnostics next time by using the following flag:
+  gcloud init --skip-diagnostics
+
+Network diagnostic detects and fixes local network connection issues.
+Checking network connection...done.
+Reachability Check passed.
+Network diagnostic passed (1/1 checks passed).
+
+Choose the account you want to use for this configuration.
+To use a federated user account, exit this command and sign in to the gcloud CLI with your login configuration file, then run this command again.
+
+Select an account:
+ [1] aganeshn@gmail.com
+ [2] contact@reafino.io
+ [3] lambdac.dev@gmail.com
+ [4] resh.mhn@gmail.com
+ [5] vinuanilg@gmail.com
+ [6] Sign in with a new Google Account
+ [7] Skip this step
+Please enter your numeric choice:  6
+
+Your browser has been opened to visit:
+
+    https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=32555940559.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8085%2F&scope=openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fappengine.admin+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fsqlservice.login+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcompute+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Faccounts.reauth&state=5ayvMO3Rua8btVzd2MWGvJGuLWz7g3&access_type=offline&code_challenge=gDs1y5rmwQqXWktAQBIzFtpMHZcE5pdtSvYXcmTZ1RY&code_challenge_method=S256
+
+
+
+To take a quick anonymous survey, run:
+  $ gcloud survey
+
+You are signed in as: [contact@reafino.app].
+
+Pick cloud project to use:
+ [1] cs-hc-61d1bf4fdd4d465fbce25f49
+ [2] cs-host-e8fb00ed89074d17aaca35
+ [3] idbi-hackathon
+ [4] lotterywars-preprod1
+ [5] reafino-devnet
+ [6] reafino-landing
+ [7] reafino-preprod
+ [8] sys-68802452337650073948872944
+ [9] sys-84944082021890899496942361
+ [10] Enter a project ID
+ [11] Create a new project
+Please enter numeric choice or text value (must exactly match list item):  3
+
+Your current project has been set to: [idbi-hackathon].
+
+Not setting default zone/region (this feature makes it easier to use
+[gcloud compute] by setting an appropriate default value for the
+--zone and --region flag).
+See https://cloud.google.com/compute/docs/gcloud-compute section on how to set
+default compute region and zone manually. If you would like [gcloud init] to be
+able to do this for you the next time you run it, make sure the
+Compute Engine API is enabled for your project on the
+https://console.developers.google.com/apis page.
+
+The Google Cloud CLI is configured and ready to use!
+
+* Commands that require authentication will use contact@reafino.app by default
+* Commands will reference project `idbi-hackathon` by default
+Run `gcloud help config` to learn how to change individual settings
+
+This gcloud configuration is called [default]. You can create additional configurations if you work with multiple accounts and/or projects.
+Run `gcloud topic configurations` to learn more.
+
+Some things to try next:
+
+* Run `gcloud --help` to see the Cloud Platform services you can interact with. And run `gcloud help COMMAND` to get help on any gcloud command.
+* Run `gcloud topic --help` to learn about advanced features of the CLI like arg files and output formatting
+* Run `gcloud cheat-sheet` to see a roster of go-to `gcloud` commands.
+idbi > ./scripts/deploy.sh
+==> Preflight
+  ✓ gcloud authenticated as contact@reafino.app
+  ✓ Project 'idbi-hackathon' reachable
+  ✓ Config set: project=idbi-hackathon  region=asia-south1
+  ! Billing appears DISABLED on 'idbi-hackathon' — Cloud Build & Cloud Run need it. Link a billing account before continuing.
+==> Enabling required APIs (idempotent)
+ERROR: (gcloud.services.enable) FAILED_PRECONDITION: Billing account for project '624680413525' is not found. Billing must be enabled for activation of service(s) 'artifactregistry.googleapis.com,cloudbuild.googleapis.com,run.googleapis.com,containerregistry.googleapis.com' to proceed.
+Help Token: AfYMUrgDK2pyjZzZbEN2kn8eMHDLyt6Wb4n0nrDwK56rkHxqlqlLKl6G2FchzMclBam14RcmW2-c7OuYewEL_MxwNEjZKVT1gsD9ziTgijqZZN_G
+- '@type': type.googleapis.com/google.rpc.PreconditionFailure
+  violations:
+  - subject: ?error_code=390001&project=624680413525&services=artifactregistry.googleapis.com&services=cloudbuild.googleapis.com&services=run.googleapis.com&services=containerregistry.googleapis.com
+    type: googleapis.com/billing-enabled
+- '@type': type.googleapis.com/google.rpc.ErrorInfo
+  domain: serviceusage.googleapis.com/billing-enabled
+  metadata:
+    project: '624680413525'
+    services: artifactregistry.googleapis.com,cloudbuild.googleapis.com,run.googleapis.com,containerregistry.googleapis.com
+  reason: UREQ_PROJECT_BILLING_NOT_FOUND
+idbi >
+idbi > ./scripts/deploy.sh
+==> Preflight
+  ✓ gcloud authenticated as contact@reafino.app
+  ✓ Project 'idbi-hackathon' reachable
+  ✓ Config set: project=idbi-hackathon  region=asia-south1
+  ✓ Billing enabled
+==> Enabling required APIs (idempotent)
+Operation "operations/acf.p2-624680413525-dbf142d2-42d0-4902-b6d9-8482c9e52c05" finished successfully.
+  ✓ run, artifactregistry, cloudbuild enabled
+==> Ensuring Artifact Registry repo 'creditpulse' in asia-south1
+Create request issued for: [creditpulse]
+Waiting for operation [projects/idbi-hackathon/locations/asia-south1/operations/c94b2c22-111b-47af-8297-0e104e03e533] to complete...done.
+Created repository [creditpulse].
+  ✓ Repo 'creditpulse' created
+==> Building image via Cloud Build → asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest
+  ! This builds from the current working tree (not a git ref). Commit/clean first if you want a reproducible ref.
+Creating temporary archive of 225 file(s) totalling 86.0 MiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/home/gannit/.config/gcloud/logs/2026.07.07/21.00.08.600127.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://idbi-hackathon_cloudbuild/source/1783438208.773766-b2321170f87147379431017043a98e6f.tgz]
+ERROR: (gcloud.builds.submit) PERMISSION_DENIED: The caller does not have permission. This command is authenticated as contact@reafino.app which is the active account specified by the [core/account] property
+idbi >
+idbi > ./scripts/deploy.sh
+==> Preflight
+  ✓ gcloud authenticated as contact@reafino.app
+  ✓ Project 'idbi-hackathon' reachable
+  ✓ Config set: project=idbi-hackathon  region=asia-south1
+  ✓ Billing enabled
+==> Enabling required APIs (idempotent)
+Operation "operations/acat.p2-624680413525-481201de-3ba8-4040-bf4a-18180c2a3638" finished successfully.
+  ✓ run, artifactregistry, cloudbuild enabled
+==> Ensuring Artifact Registry repo 'creditpulse' in asia-south1
+  ✓ Repo 'creditpulse' already exists
+==> Building image via Cloud Build → asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest
+  ! This builds from the current working tree (not a git ref). Commit/clean first if you want a reproducible ref.
+Creating temporary archive of 225 file(s) totalling 86.0 MiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/home/gannit/.config/gcloud/logs/2026.07.07/21.03.28.030378.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://idbi-hackathon_cloudbuild/source/1783438408.158543-0b909768b84445e39c6bbd3835acea2e.tgz]
+ERROR: (gcloud.builds.submit) INVALID_ARGUMENT: could not resolve source: googleapi: Error 403: 624680413525-compute@developer.gserviceaccount.com does not have storage.objects.get access to the Google Cloud Storage object. Permission 'storage.objects.get' denied on resource '//storage.googleapis.com/projects/_/buckets/idbi-hackathon_cloudbuild/objects/source/1783438408.158543-0b909768b84445e39c6bbd3835acea2e.tgz' (or it may not exist). Remediate access with this Troubleshooter URL or share it with your administrator - https://console.cloud.google.com/iam-admin/troubleshooter/summary;errorId=CiQwMTlmM2QzNi1jYzJkLTc4MmItYWJkNS1hMjkyNWVmMWYwMWMScnByb2plY3RzL18vYnVja2V0cy9pZGJpLWhhY2thdGhvbl9jbG91ZGJ1aWxkL29iamVjdHMvc291cmNlLzE3ODM0Mzg0MDguMTU4NTQzLTBiOTA5NzY4Yjg0NDQ1ZTM5YzZiYmQzODM1YWNlYTJlLnRneg%3D%3D ., forbidden
+idbi >
 idbi > ./scripts/deploy.sh
 ==> Preflight
   ✓ gcloud authenticated as contact@reafino.app
@@ -430,3 +802,93 @@ Pushing asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest
 INFO: The service account running this build projects/idbi-hackathon/serviceAccounts/624680413525-compute@developer.gserviceaccount.com does not have permission to write logs to Cloud Logging. To fix this, grant the Logs Writer (roles/logging.logWriter) role to the service account.
 
 1 message(s) issued.
+ERROR: (gcloud.builds.submit) build 7a621445-5b4b-4772-b7d3-08a122d5ecce completed with status "CANCELLED"
+idbi >
+idbi > ./scripts/deploy_local_build.sh build
+==> Preflight
+  ✓ Docker reachable (Docker version 28.1.1)
+  ✓ gcloud authenticated as contact@reafino.app
+  ✓ Project 'idbi-hackathon' reachable
+  ✓ Config set: project=idbi-hackathon  region=asia-south1
+  ✓ Billing enabled
+==> Enabling required APIs (idempotent)
+Operation "operations/acat.p2-624680413525-73490155-f6bf-4ecf-88f1-d926d863f372" finished successfully.
+  ✓ run, artifactregistry enabled
+==> Ensuring Artifact Registry repo 'creditpulse' in asia-south1
+  ✓ Repo 'creditpulse' already exists
+==> Configuring Docker auth for asia-south1-docker.pkg.dev (idempotent)
+WARNING: Your config file at [/home/gannit/.docker/config.json] contains these credential helper entries:
+
+{
+  "credHelpers": {
+    "gcr.io": "gcloud",
+    "us.gcr.io": "gcloud",
+    "eu.gcr.io": "gcloud",
+    "asia.gcr.io": "gcloud",
+    "staging-k8s.gcr.io": "gcloud",
+    "marketplace.gcr.io": "gcloud"
+  }
+}
+Adding credentials for: asia-south1-docker.pkg.dev
+Docker configuration file updated.
+  ✓ Credential helper installed in ~/.docker/config.json
+==> Building image locally → asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest  (--platform linux/amd64)
+  ! Builds from the working tree; .dockerignore trims the context. Commit/clean first for a reproducible ref.
+[+] Building 38.9s (12/12) FINISHED                                                                                                                docker:default
+ => [internal] load build definition from Dockerfile                                                                                                         0.0s
+ => => transferring dockerfile: 1.56kB                                                                                                                       0.0s
+ => [internal] load metadata for docker.io/library/python:3.12-slim                                                                                          1.6s
+ => [internal] load .dockerignore                                                                                                                            0.0s
+ => => transferring context: 143B                                                                                                                            0.0s
+ => [1/7] FROM docker.io/library/python:3.12-slim@sha256:423ed6ab25b1921a477529254bfeeabf5855151dc2c3141699a1bfc852199fbf                                    0.0s
+ => [internal] load build context                                                                                                                            0.3s
+ => => transferring context: 45.79MB                                                                                                                         0.3s
+ => CACHED [2/7] WORKDIR /srv                                                                                                                                0.0s
+ => CACHED [3/7] RUN apt-get update && apt-get install -y --no-install-recommends libgomp1     && rm -rf /var/lib/apt/lists/*                                0.0s
+ => CACHED [4/7] COPY requirements.txt .                                                                                                                     0.0s
+ => CACHED [5/7] RUN pip install --no-cache-dir -r requirements.txt                                                                                          0.0s
+ => [6/7] COPY app ./app                                                                                                                                     0.1s
+ => [7/7] RUN python -m app.data_gen.build_dataset --n 400     && if [ -d app/tracks/t04_early_warning ]; then python -m app.tracks.t04_early_warning.data  36.5s
+ => exporting to image                                                                                                                                       0.2s
+ => => exporting layers                                                                                                                                      0.2s
+ => => writing image sha256:568abbca1ed327429a7427014996ee6244223fb6474fa6258a08b0da2add0d7a                                                                 0.0s
+ => => naming to asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest                                                                    0.0s
+  ✓ Image built
+==> Pushing asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest  (as contact@reafino.app)
+The push refers to repository [asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse]
+fddd036ecdde: Pushed
+7b837f0f22b7: Pushed
+3c6b67e066f6: Pushed
+5e9489819adf: Pushed
+8f922be84189: Pushed
+5f70bf18a086: Layer already exists
+aa898a312ca0: Pushed
+96499d37fade: Pushed
+1899ce896d03: Pushed
+3edb2192497a: Pushed
+latest: digest: sha256:2b199f21fd2c4f41e560643977e917c150b6b1aebcfc45abc275fef25e29b288 size: 2419
+  ✓ Image pushed: asia-south1-docker.pkg.dev/idbi-hackathon/creditpulse/creditpulse:latest
+idbi > ./scripts/deploy_local_build.sh deploy
+==> Preflight
+  ✓ Docker reachable (Docker version 28.1.1)
+  ✓ gcloud authenticated as contact@reafino.app
+  ✓ Project 'idbi-hackathon' reachable
+  ✓ Config set: project=idbi-hackathon  region=asia-south1
+  ✓ Billing enabled
+==> Deploying 'creditpulse' to Cloud Run (asia-south1)
+Deploying container to Cloud Run service [creditpulse] in project [idbi-hackathon] region [asia-south1]
+X Deploying new service... Done.
+  ✓ Creating Revision...
+  ✓ Routing traffic...
+    Setting IAM Policy...
+Completed with warnings:
+  Setting IAM policy failed, try "gcloud beta run services add-iam-policy-binding --region=asia-south1 --member=allUsers --role=roles/run.invoker creditpulse"
+Service [creditpulse] revision [creditpulse-00001-rfl] has been deployed and is serving 100 percent of traffic.
+Service URL: https://creditpulse-624680413525.asia-south1.run.app
+  ✓ Deployed.
+
+  Live URL: https://creditpulse-66armtf3tq-el.a.run.app
+  (this is the deploy link for the submission — same URL serves Overview + /track03 /track04 /track05)
+
+idbi >
+

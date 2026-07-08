@@ -3,7 +3,7 @@ grouped navigation (multi-track README §1a / D1 / D10 / D11).
 
 Consumed by:
   * `main.py`     — builds `st.navigation({group_label: [st.Page, ...]})`;
-  * `pages/overview.py` — renders one card per INSTALLED track;
+  * `views/overview.py` — renders one card per INSTALLED track;
   * in-app links  — every `st.page_link`/`st.switch_page` targets the
                     `StreamlitPage` OBJECT from `get_page(key)` (path strings do
                     not resolve against callable-registered pages — wp-s Q4).
@@ -80,7 +80,7 @@ TRACKS: List[TrackSpec] = [
         id="platform", label="Platform",
         pages=[
             PageSpec("platform.overview", "Overview",
-                     "app.frontend.pages.overview", url_path="", default=True),
+                     "app.frontend.views.overview", url_path="", default=True),
         ],
     ),
     TrackSpec(
@@ -150,7 +150,7 @@ TRACKS: List[TrackSpec] = [
         id="ref", label="Reference",
         pages=[
             PageSpec("ref.architecture", "Architecture",
-                     "app.frontend.pages.architecture", url_path="architecture"),
+                     "app.frontend.views.architecture", url_path="architecture"),
         ],
     ),
 ]

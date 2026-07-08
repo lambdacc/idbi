@@ -59,12 +59,12 @@ def test_submission_deep_links_present():
 
 
 def test_no_orphan_page_files():
-    """Every page module on disk (under track pages/ or frontend/pages/) is
+    """Every page module on disk (under track pages/ or frontend/views/) is
     registered — no page ships that the nav never lists."""
     registered = {importlib.import_module(p.module).__file__ for p in _INSTALLED_PAGES}
     registered = {str(Path(f).resolve()) for f in registered}
     on_disk = set()
-    for base in [_ROOT / "app" / "frontend" / "pages",
+    for base in [_ROOT / "app" / "frontend" / "views",
                  *( _ROOT / "app" / "tracks").glob("*/pages")]:
         if base.exists():
             for f in base.glob("*.py"):
