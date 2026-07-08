@@ -1,6 +1,6 @@
 # Submission Deliverables Checklist — CreditPulse Platform (Problem Statement 3 · Problem Statement 4 · Problem Statement 5)
 
-**Status:** Multi-track WP-V · **Date:** 6 Jul 2026 · **Reads with:** [`03-criteria-mapping/`](03-criteria-mapping/) (per-track mappings) and [`../docs/deployment-runbook.md`](../docs/deployment-runbook.md)
+**Status:** Multi-track WP-V · **Date:** 6 Jul 2026 · **Reads with:** [`03-criteria-mapping/`](03-criteria-mapping/) (per-track mappings) and [`deployment-runbook.md`](deployment-runbook.md)
 
 > **Portal reality (confirmed by organiser update):** IDBI Innovate 2026 now permits **one team → multiple submissions across different problem statements**. Each submission entry requires a **Challenge/PS selection** and a **PPT** (both mandatory); **Deployment Link** and **GitHub Repository Link** are optional-but-highly-recommended. Nothing requires those two URLs to be unique per entry — so we submit the **same deploy URL and same repo URL three times**, and only the PS selection and the PPT differ.
 

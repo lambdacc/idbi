@@ -1,6 +1,6 @@
 # Criteria Mapping & Demo Script — CreditPulse Problem Statement 4 (Default Prediction Model) · pitched as Early Warning
 
-**Status:** Multi-track WP-V · **Date:** 6 Jul 2026 · **Reads with:** [`criteria-mapping.md`](criteria-mapping.md) (Problem Statement 3 model) and [`../../docs/solution-design.md`](../../docs/solution-design.md)
+**Status:** Multi-track WP-V · **Date:** 6 Jul 2026 · **Reads with:** [`criteria-mapping.md`](criteria-mapping.md) (Problem Statement 3 model) and [`../solution-design.md`](../solution-design.md)
 Purpose: make every Problem Statement 4 judging lever *visibly* hit, using the shared CreditPulse platform. One codebase, one deploy; this track is reached at `/track04`.
 
 > All metrics below are measured on the **synthetic** holdout by `app/tracks/t04_early_warning/ml/ews_metrics.py`. Real-default backtesting is the productionization step, stated honestly.
@@ -14,7 +14,7 @@ Purpose: make every Problem Statement 4 judging lever *visibly* hit, using the s
 | **Innovation** | An **alt-data early-warning** signal that flags deterioration a **median 8 months** before a repayment-only baseline (11.5 vs 2.0 months), with **explained drivers** per borrower — not a lagging days-past-due tripwire | Portfolio radar + a watchlist row with its reasons; the lead-time gap on screen |
 | **Feasibility** | Runs on data the bank already has on a booked borrower (repayment history + the same GST/UPI/EPFO/e-way alt-data footprint as Problem Statement 3); monitors the **existing book**, no new consent surface | Watchlist over live synthetic borrowers; one Streamlit deploy |
 | **Scalability** | Batch portfolio scoring on a monthly panel; the engine is a pickled model loaded once (prefit baked into the image); stateless scoring | Portfolio Overview scoring the whole book; sub-second reruns |
-| **Business impact** | **NPA lead-time**: acting a median 8 months earlier opens the restructure/cure window before an account slips to NPA — quantified (illustratively) in the impact model | Impact stub in [`../../docs/business-impact-model.md`](../../docs/business-impact-model.md) |
+| **Business impact** | **NPA lead-time**: acting a median 8 months earlier opens the restructure/cure window before an account slips to NPA — quantified (illustratively) in the impact model | Impact stub in [`../business-impact-model.md`](../business-impact-model.md) |
 | **Technical implementation** | **Anti-leakage by construction** (entity-level split, future-window features raise, labels attached in a separate step), monotonic LightGBM + isotonic calibration, lead-time as the headline metric not accuracy, capture@decile **0.926 vs 0.519** | The lead-time scorecard + the isolation/leakage tests going green |
 
 ## 2. Avoid the bank's stated "common mistakes"

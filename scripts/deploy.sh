@@ -9,7 +9,7 @@
 # an existing Artifact Registry repo, or redeploying are all no-op-or-update, so
 # running it twice just ships the latest code again.
 #
-# Mirrors docs/deployment-runbook.md step-for-step; see that doc for the "why"
+# Mirrors internal/deployment-runbook.md step-for-step; see that doc for the "why"
 # behind each Cloud Run flag.
 #
 # Usage:
@@ -158,7 +158,7 @@ smoke() {
   else
     warn "Got HTTP $code from $u (a first-hit cold start can take a few seconds — retry, or check: $0 logs)"
   fi
-  echo "  ${DIM}Manual pass: open $u in incognito and run one assessment end-to-end (see docs/deployment-runbook.md §3).${RST}"
+  echo "  ${DIM}Manual pass: open $u in incognito and run one assessment end-to-end (see internal/deployment-runbook.md §3).${RST}"
 }
 
 # ---- Warm / cold (judging-window switches) ---------------------------------

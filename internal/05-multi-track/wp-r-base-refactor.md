@@ -8,7 +8,7 @@
 - `internal/05-multi-track/README.md` (all) and `wp-s-findings.md` (follow it; it supersedes assumptions here)
 - `app/frontend/Home.py`, all of `app/frontend/pages/`, `components/ui.py`, `components/state.py`, `static/custom.css`
 - `app/tests/test_frontend_smoke.py`, `app/tests/conftest.py`
-- `Makefile`, `Dockerfile`, `docs/demo-script.md` (grep for page references)
+- `Makefile`, `Dockerfile`, `internal/demo-script.md` (grep for page references)
 
 ## Tasks
 

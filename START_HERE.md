@@ -57,13 +57,13 @@ Each track's own pages live under `app/tracks/<track>/pages/` (see the repo map)
 ## Suggested reading order
 
 1. [`README.md`](README.md) — what this is and how to run it.
-2. [`docs/solution-design.md`](docs/solution-design.md) — the product spec: users,
+2. [`internal/solution-design.md`](internal/solution-design.md) — the product spec: users,
    pillars, scoring philosophy, the Health Card.
-3. [`docs/implementation-plan.md`](docs/implementation-plan.md) — how the spec became
+3. [`internal/implementation-plan.md`](internal/implementation-plan.md) — how the spec became
    this codebase: module structure (§3), ML architecture (§5), the nine-stage
    demo animation spec (§6), deployment (§8). Code comments cite this document
    by section, so it doubles as the map.
-4. [`docs/appendix-a-data-source-catalog.md`](docs/appendix-a-data-source-catalog.md) —
+4. [`internal/appendix-a-data-source-catalog.md`](internal/appendix-a-data-source-catalog.md) —
    the research backbone: which data sources made the cut, which were rejected
    and why, and the 13 composite indicators. If you read only one document about
    *why* this approach is different, read this one.
@@ -161,7 +161,7 @@ A fourth convention: the label mapping between internal pillar names
 | Sanity-check the six archetypes | `make train` — prints score/grade/band per archetype and a few narrative checks |
 | Skip model-fit on startup | `make prefit` — pickles a fitted engine next to the data (the Docker build does this automatically) |
 | Build/run the container | `make docker-build && make docker-run` |
-| Deploy | follow [`docs/deployment-runbook.md`](docs/deployment-runbook.md) |
+| Deploy | follow [`internal/deployment-runbook.md`](internal/deployment-runbook.md) |
 
 ## Things to know before changing code
 

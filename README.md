@@ -10,7 +10,7 @@ on the accounts moving the money.
 Built for **IDBI Innovate 2026**, answering **three problem statements from one
 codebase and one deployment**.
 
-**Live demo:** *deploy link goes here* (see [`docs/deployment-runbook.md`](docs/deployment-runbook.md))
+**Live demo:** *deploy link goes here* (see [`internal/deployment-runbook.md`](internal/deployment-runbook.md))
 
 ---
 
@@ -87,7 +87,7 @@ In the app you land on **Overview** — one card per installed track. From there
   behind it.
 
 A guided five-minute walkthrough covering all three is in
-[`docs/demo-script.md`](docs/demo-script.md).
+[`internal/demo-script.md`](internal/demo-script.md).
 
 ## What's under the hood
 
@@ -118,14 +118,14 @@ is shown without the transactions that justify it.
 
 Start with [`START_HERE.md`](START_HERE.md) for a guided tour of the repo, then:
 
-- [`docs/solution-design.md`](docs/solution-design.md) — the product and scoring specification (all three tracks)
-- [`docs/implementation-plan.md`](docs/implementation-plan.md) — architecture, ML design, sprint plan
-- [`docs/demo-script.md`](docs/demo-script.md) — the five-minute platform walkthrough
-- [`docs/appendix-a-data-source-catalog.md`](docs/appendix-a-data-source-catalog.md) — 34 data sources evaluated on a fixed rubric, with rejections reasoned and 13 composite indicators
-- [`docs/appendix-b-synthetic-data-plan.md`](docs/appendix-b-synthetic-data-plan.md) — the India MSME distribution profile (every figure tagged sourced/assumed) and per-source generator specs
-- [`docs/cag-gst-feature-analysis.md`](docs/cag-gst-feature-analysis.md) — borrower-health signals mined from CAG GST audit reports
-- [`docs/business-impact-model.md`](docs/business-impact-model.md) — the quantified business case
-- [`docs/deployment-runbook.md`](docs/deployment-runbook.md) — Cloud Run deployment, step by step
+- [`internal/solution-design.md`](internal/solution-design.md) — the product and scoring specification (all three tracks)
+- [`internal/implementation-plan.md`](internal/implementation-plan.md) — architecture, ML design, sprint plan
+- [`internal/demo-script.md`](internal/demo-script.md) — the five-minute platform walkthrough
+- [`internal/appendix-a-data-source-catalog.md`](internal/appendix-a-data-source-catalog.md) — 34 data sources evaluated on a fixed rubric, with rejections reasoned and 13 composite indicators
+- [`internal/appendix-b-synthetic-data-plan.md`](internal/appendix-b-synthetic-data-plan.md) — the India MSME distribution profile (every figure tagged sourced/assumed) and per-source generator specs
+- [`internal/cag-gst-feature-analysis.md`](internal/cag-gst-feature-analysis.md) — borrower-health signals mined from CAG GST audit reports
+- [`internal/business-impact-model.md`](internal/business-impact-model.md) — the quantified business case
+- [`internal/deployment-runbook.md`](internal/deployment-runbook.md) — Cloud Run deployment, step by step
 
 ## Tests & CI
 

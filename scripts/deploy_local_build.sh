@@ -189,7 +189,7 @@ smoke() {
   else
     warn "Got HTTP $code from $u (a first-hit cold start can take a few seconds — retry, or check: ./scripts/deploy.sh logs)"
   fi
-  echo "  ${DIM}Manual pass: open $u in incognito and run one assessment end-to-end (see docs/deployment-runbook.md §3).${RST}"
+  echo "  ${DIM}Manual pass: open $u in incognito and run one assessment end-to-end (see internal/deployment-runbook.md §3).${RST}"
 }
 
 # ---- Full flow -------------------------------------------------------------

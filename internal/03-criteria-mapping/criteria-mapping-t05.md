@@ -1,6 +1,6 @@
 # Criteria Mapping & Demo Script — CreditPulse Problem Statement 5 (Open Innovation) · pitched as Fraud / Mule Detection
 
-**Status:** Multi-track WP-V · **Date:** 6 Jul 2026 · **Reads with:** [`criteria-mapping.md`](criteria-mapping.md) (Problem Statement 3 model) and [`../../docs/solution-design.md`](../../docs/solution-design.md)
+**Status:** Multi-track WP-V · **Date:** 6 Jul 2026 · **Reads with:** [`criteria-mapping.md`](criteria-mapping.md) (Problem Statement 3 model) and [`../solution-design.md`](../solution-design.md)
 Purpose: make every Problem Statement 5 judging lever *visibly* hit, using the shared CreditPulse platform. One codebase, one deploy; this track is reached at `/track05`.
 
 > All metrics below are measured on the **synthetic** holdout by `app/tracks/t05_fraud_intelligence/ml/eval/fraud_metrics.py`. The labels file (`fraud_ground_truth.csv`) is **eval-only** — never read at score time.
@@ -14,7 +14,7 @@ Purpose: make every Problem Statement 5 judging lever *visibly* hit, using the s
 | **Innovation** | An **agentic, citation-gated case file**: a suspicious account is expanded into its ring across the transaction graph, and every claim in the case is constructed **only if it carries the transaction IDs behind it** — an uncited claim *raises* rather than renders | The 5-stage case investigation; each finding shows its evidence transactions |
 | **Feasibility** | Runs on **transaction data the bank already holds** (accounts + transfers); no new data source, no external graph database | Fraud Desk scoring live synthetic accounts; one Streamlit deploy |
 | **Scalability** | Typology + anomaly scoring is per-account; ring expansion is a **bounded pure-Python BFS** over the transfer graph (no heavyweight graph engine, no new dependency) | Ring diagram assembling on demand; sub-second |
-| **Business impact** | **Fraud loss averted** by catching mule rings before cash-out **plus investigator ops-hours saved** because the case file auto-assembles the evidence — quantified (illustratively) in the impact model | Impact stub in [`../../docs/business-impact-model.md`](../../docs/business-impact-model.md) |
+| **Business impact** | **Fraud loss averted** by catching mule rings before cash-out **plus investigator ops-hours saved** because the case file auto-assembles the evidence — quantified (illustratively) in the impact model | Impact stub in [`../business-impact-model.md`](../business-impact-model.md) |
 | **Technical implementation** | Typology detectors + Isolation-Forest anomaly blend; **6/6 rings recovered** (ring_recall 1.0), recall@alert **1.0**; and the differentiator — **0/10 false positives** on hard-negative legitimate gig workers (precision@alert 0.744, but precision_ring@alert **1.0**: the non-mule alerts are all ring-associated infrastructure) | The fraud scorecard + the case's citation gate |
 
 ## 2. Avoid the bank's stated "common mistakes"

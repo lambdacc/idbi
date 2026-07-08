@@ -89,7 +89,7 @@ Also `desk_snapshot(fraud_engine)`: queue rows (account, score, band, typology n
 - Smoke: both pages × both modes render 0 exceptions (seed `cp_case_account` in `_drive`-style setup); jargon sweep on Simple.
 - Audit trail: approve then override → two ordered entries.
 
-### Demo (append raw Track-05 section to `docs/demo-script.md`)
+### Demo (append raw Track-05 section to `internal/demo-script.md`)
 ~90s: Desk ("31 alerts across 6 suspected rings") → open the ring mule → agent stages stream (triage → evidence with cited txns → ring of 7 sharing one device → adjudication: Freeze + STR draft) → approve → flip to the gig-worker hard negative → agents CLEAR it with reasons → close: "explainable both ways — that's what FREE-AI requires and rules can't do."
 
 ### Acceptance

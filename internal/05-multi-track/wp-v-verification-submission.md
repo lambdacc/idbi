@@ -16,10 +16,10 @@
 ## V2 — Documentation to platform framing (public repo = judged artifact)
 - `README.md`: retitle to CreditPulse Platform; three-track table (PS3/PS4/PS5 + one-line each); quick start unchanged; per-track "what's under the hood" rows; keep the synthetic-data honesty block; update the in-app walkthrough paragraph.
 - `START_HERE.md`: extend the map (new packages: `data_gen` additions, `ml/ews`, `ml/fraud`, both orchestrators, tracks registry, new pages); reading order updated.
-- `docs/solution-design.md` + `docs/implementation-plan.md`: add concise Track-04/05 sections (design intent + module map; do not rewrite PS3 content).
-- `docs/demo-script.md`: weave the WP-4A/5A raw sections into one 5-minute platform script — order: Overview (20s) → T03 (2 min, existing script compressed) → T04 (75s) → T05 (75s) → close (10s: one codebase, one deploy, FREE-AI-grade explainability).
+- `internal/solution-design.md` + `internal/implementation-plan.md`: add concise Track-04/05 sections (design intent + module map; do not rewrite PS3 content).
+- `internal/demo-script.md`: weave the WP-4A/5A raw sections into one 5-minute platform script — order: Overview (20s) → T03 (2 min, existing script compressed) → T04 (75s) → T05 (75s) → close (10s: one codebase, one deploy, FREE-AI-grade explainability).
 - `pages/5_Architecture.py`: platform diagram (three tracks over shared data-gen/ml/backend/frontend layers), keep the honesty note; both view modes.
-- `docs/business-impact-model.md`: add per-track impact stubs (T04: NPA lead-time value; T05: fraud-loss + ops-hours) with the same "illustrative planning estimate" health warning.
+- `internal/business-impact-model.md`: add per-track impact stubs (T04: NPA lead-time value; T05: fraud-loss + ops-hours) with the same "illustrative planning estimate" health warning.
 - `internal/issues`: append `→ Done/Deferred` annotations if any items were touched.
 
 ## V3 — Submission packaging (3 tracks)

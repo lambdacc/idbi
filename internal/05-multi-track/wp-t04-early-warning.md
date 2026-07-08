@@ -36,7 +36,7 @@ Three sub-packages run in successive waves: **WP-4D** (data, Wave 1) → **WP-4M
 - Track-03 consistency: for a sampled entity, `altdata_monthly` recent-12m GST turnover within tolerance of the cross-sectional GST generator's annual figure.
 
 ### Acceptance
-`make data-gen` green incl. new CSVs; new tests + full suite green; a short "data card" section appended to `docs/appendix-b-synthetic-data-plan.md` is **deferred to WP-V** (note it in your report instead).
+`make data-gen` green incl. new CSVs; new tests + full suite green; a short "data card" section appended to `internal/appendix-b-synthetic-data-plan.md` is **deferred to WP-V** (note it in your report instead).
 
 ---
 
@@ -107,7 +107,7 @@ All copy/labels composed HERE (frontend renders only):
 - Jargon sweep covers both new pages in Simple mode.
 - `test_ews_orchestrator.py`: MonitoringRun shape; every watchlist row has ≥1 reason + an action; case_detail markers ordered (EWS alert ≤ baseline alert ≤ default) for defaulted holdout entities; all user-facing strings come from backend (spot-check: pages contain no f-string composition of narrative — code-review level, note in report).
 
-### Demo (append a Track-04 section to `docs/demo-script.md` — coordinate: WP-V owns final doc polish, you add the raw section)
+### Demo (append a Track-04 section to `internal/demo-script.md` — coordinate: WP-V owns final doc polish, you add the raw section)
 90-second flow: Portfolio Overview ("240 loans, 11 Red — median warning 10 months before default; the repayment-only baseline gives 2") → Watchlist → flagship drilldown (walk the timeline markers) → reasons in plain language → action card → close on the platform line ("same rails that onboarded them now protect the book").
 
 ### Acceptance

@@ -174,7 +174,7 @@ Files: `app/frontend/components/ui.py`, `app/frontend/static/custom.css`
    honesty note. The Simple-view banner copy "switch to **Technical** view in
    the sidebar" must be updated (it's now top-right) — grep all pages/docs
    for the phrase "in the sidebar".
-4. Update `docs/demo-script.md` if it references the sidebar toggle.
+4. Update `internal/demo-script.md` if it references the sidebar toggle.
 Tests: smoke tests updated to drive the relocated radio; jargon sweep
 unchanged; glossary test unchanged.
 Acceptance: toggle visible top-right on all 6 pages and persists across page
