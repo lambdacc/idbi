@@ -15,6 +15,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Streamlit theme + browser config. MUST be copied: it pins base="light" so
+# widget text renders dark-on-light regardless of the viewer's OS dark-mode
+# preference. Without it, Streamlit follows prefers-color-scheme and dark-theme
+# text lands invisibly on custom.css's light panels. Streamlit reads it from
+# $CWD/.streamlit/config.toml, and the app is launched from WORKDIR /srv.
+COPY .streamlit ./.streamlit
+
 # Application code.
 COPY app ./app
 
