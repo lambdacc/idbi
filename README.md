@@ -12,8 +12,6 @@ codebase and one deployment**.
 
 ## Live demo
 
-**https://creditpulse-66armtf3tq-el.a.run.app/**
-
 One deployment serves all three entries — open the deep link for your problem statement:
 
 | Problem statement | Opens on | Deep link |
