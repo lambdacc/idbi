@@ -10,7 +10,6 @@ on the accounts moving the money.
 Built for **IDBI Innovate 2026**, answering **three problem statements from one
 codebase and one deployment**.
 
-## Live demo
 
 One deployment serves all three entries — open the deep link for your problem statement:
 
