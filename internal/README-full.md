@@ -10,23 +10,7 @@ on the accounts moving the money.
 Built for **IDBI Innovate 2026**, answering **three problem statements from one
 codebase and one deployment**.
 
-## Live demo
-
-**https://creditpulse-66armtf3tq-el.a.run.app/**
-
-One deployment serves all three entries — open the deep link for your problem statement:
-
-| Problem statement | Opens on | Deep link |
-|---|---|---|
-| Overview (all three) | platform landing | [`/`](https://creditpulse-66armtf3tq-el.a.run.app/) |
-| **PS3 · Financial Health Score** | Financial Health | [`/track03`](https://creditpulse-66armtf3tq-el.a.run.app/track03) |
-| **PS4 · Default Prediction Model** | Early Warning | [`/track04`](https://creditpulse-66armtf3tq-el.a.run.app/track04) |
-| **PS5 · Open Innovation** | Fraud Intelligence | [`/track05`](https://creditpulse-66armtf3tq-el.a.run.app/track05) |
-
-> All data in this demo is **synthetic** — generated, clearly labelled on screen,
-> and calibrated to public India MSME statistics. Real-default backtesting and
-> recalibration is the pilot step, not a claim made here. Every metric below is
-> measured on that synthetic holdout by the in-repo eval harnesses.
+**Live demo:** *deploy link goes here* (see [`internal/deployment-runbook.md`](internal/deployment-runbook.md))
 
 ---
 
@@ -34,21 +18,21 @@ One deployment serves all three entries — open the deep link for your problem 
 
 IDBI Innovate 2026 permits one team to submit against multiple problem
 statements. CreditPulse is a **single deployable app** with a common Overview
-landing page and three self-contained tracks. Each track is an isolated folder
-under `app/tracks/`, with its own deep link — so the *same* repository and the
-*same* deploy URL back all three submission entries, and a reviewer arriving for
-any one problem statement lands directly on that track's page.
+landing page and three self-contained tracks in the sidebar. Each track is an
+isolated folder under `app/tracks/`, with its own deep link — so the *same*
+repository URL and the *same* deploy URL back all three submission entries, and
+a reviewer arriving for any one PS lands directly on that track's page.
 
 | Problem statement | Track | Codebase | Deep link | The one proof |
 |---|---|---|---|---|
-| **PS3 · Financial Health Score** | Financial Health | shared core (`app/data_gen/`, `app/ml/`, `app/backend/`) + [`app/tracks/t03_financial_health/`](app/tracks/t03_financial_health/) | `/track03` | Explainable health card + turnover-authenticity cross-check |
-| **PS4 · Default Prediction Model** | Early Warning | [`app/tracks/t04_early_warning/`](app/tracks/t04_early_warning/) (self-contained) | `/track04` | Flags stress a **median 8 months** before a repayment-only baseline |
-| **PS5 · Open Innovation** | Fraud Intelligence | [`app/tracks/t05_fraud_intelligence/`](app/tracks/t05_fraud_intelligence/) (self-contained) | `/track05` | **6/6 mule rings** recovered; **0** false positives on hard-negative gig workers |
+| **Problem Statement 3 · Financial Health Score** | Financial Health | shared core (`app/data_gen/`, `app/ml/`, `app/backend/`) + [`app/tracks/t03_financial_health/`](app/tracks/t03_financial_health/) | `/track03` | Explainable health card + turnover-authenticity cross-check |
+| **Problem Statement 4 · Default Prediction Model** | Early Warning | [`app/tracks/t04_early_warning/`](app/tracks/t04_early_warning/) (self-contained) | `/track04` | Flags stress a **median 8 months** before a repayment-only baseline |
+| **Problem Statement 5 · Open Innovation** | Fraud Intelligence | [`app/tracks/t05_fraud_intelligence/`](app/tracks/t05_fraud_intelligence/) (self-contained) | `/track05` | **6/6 mule rings** recovered; **0** false positives on hard-negative gig workers |
 
 > **Reviewers:** open the deep link for your problem statement to land directly
-> on that track. **PS3** is the platform foundation — its scoring engine *is* the
+> on that track. **Problem Statement 3** is the platform foundation — its scoring engine *is* the
 > shared `app/ml/` core, with only its pages under `t03_financial_health/`.
-> **PS4 and PS5** are self-contained satellite tracks that build on that
+> **Problem Statement 4 and Problem Statement 5** are self-contained satellite tracks that build on that
 > foundation: each carries its own data-gen, ML engine, orchestration and pages,
 > and `rm -rf app/tracks/t04_early_warning` (or `t05_…`) leaves the rest of the
 > platform fully working — enforced by `app/tests/test_isolation.py`.
@@ -63,9 +47,14 @@ leaves an electronic trail across independently-governed systems — a tax
 authority, a regulated bank, a state electricity utility, a labour-welfare body,
 a toll network, a court registry. CreditPulse fuses these sources into signals no
 single document can fake, and applies them across the full credit lifecycle:
-**underwrite** the new-to-bank MSME (PS3), **monitor** the loan already on the
-book for early deterioration (PS4), and **protect** the payment rails from mule
-accounts and fraud rings (PS5).
+**underwrite** the new-to-bank MSME (Problem Statement 3), **monitor** the loan already on the
+book for early deterioration (Problem Statement 4), and **protect** the payment rails from mule
+accounts and fraud rings (Problem Statement 5).
+
+All data in this repository is **synthetic** (generated, clearly labelled, and
+calibrated to public India MSME statistics). Real-default backtesting and
+recalibration is the productionization step, not a claim made here. Every metric
+quoted below is measured on that synthetic holdout by the in-repo eval harnesses.
 
 ## Quick start
 
@@ -86,20 +75,23 @@ make docker-build && make docker-run
 
 In the app you land on **Overview** — one card per installed track. From there:
 
-- **PS3 · Financial Health** — pick a business archetype, **Run Assessment**, and
-  watch the nine-stage pipeline build a Health Card with a lending recommendation
-  and plain-language reason codes.
-- **PS4 · Early Warning** — a portfolio deterioration radar and a watchlist
+- **Problem Statement 3 · Financial Health** — pick a business archetype, **Run Assessment**,
+  and watch the nine-stage pipeline build a Health Card with a lending
+  recommendation and plain-language reason codes.
+- **Problem Statement 4 · Early Warning** — a portfolio deterioration radar and a watchlist
   showing which live borrowers are rolling over, and how many months of lead time
   the alt-data signal buys over a repayment-only view.
-- **PS5 · Fraud Intelligence** — a fraud desk that scores accounts, expands a
-  suspicious account into its ring across the transaction graph, and builds a
+- **Problem Statement 5 · Fraud Intelligence** — a fraud desk that scores accounts, expands
+  a suspicious account into its ring across the transaction graph, and builds a
   **citation-gated** case file where every claim carries the transaction IDs
   behind it.
 
+A guided five-minute walkthrough covering all three is in
+[`internal/demo-script.md`](internal/demo-script.md).
+
 ## What's under the hood
 
-**Shared foundation** (used by every track; core = PS3 lives here too):
+**Shared foundation** (used by every track; core = Problem Statement 3 lives here too):
 
 | Layer | What it does |
 |---|---|
@@ -117,18 +109,23 @@ pages; t03 is the shared core plus its pages):
 | `t04_early_warning` | 24-month alt-data panel; entity-level split with future-window leakage guards; monotonic LightGBM + isotonic calibration; lead-time vs a repayment-only baseline | Median lead-time **11.5 mo vs 2.0 mo** baseline (**8-month gap**); capture@decile **0.926 vs 0.519** |
 | `t05_fraud_intelligence` | Typology detectors + anomaly scoring; ring expansion over the transaction graph; a 5-stage **agentic, citation-gated** case orchestrator (an uncited claim raises rather than renders) | **6/6 rings** recovered; recall@alert **1.0**; **0/10** hard-negative false positives |
 
-Design stance throughout: **rules first, machine learning second** — every score
+Design stance throughout: **deterministic-first, ML-second** — every score
 carries its reasons, every feature is auditable, the model never improves a score
 as a risk factor worsens (monotonicity enforced and tested), and no fraud finding
 is shown without the transactions that justify it.
 
-## Submission decks
+## Documentation
 
-One deck per problem statement, under [`docs/deck/`](docs/deck/):
+Start with [`START_HERE.md`](START_HERE.md) for a guided tour of the repo, then:
 
-- [PS3 — Financial Health Score](docs/deck/CreditPulse-PS3-Financial-Health-Score.pptx)
-- [PS4 — Default Prediction Model (Early Warning)](docs/deck/CreditPulse-PS4-Default-Prediction-Early-Warning.pptx)
-- [PS5 — Open Innovation (Fraud Intelligence)](docs/deck/CreditPulse-PS5-Open-Innovation-Fraud-Intelligence.pptx)
+- [`internal/solution-design.md`](internal/solution-design.md) — the product and scoring specification (all three tracks)
+- [`internal/implementation-plan.md`](internal/implementation-plan.md) — architecture, ML design, sprint plan
+- [`internal/demo-script.md`](internal/demo-script.md) — the five-minute platform walkthrough
+- [`internal/appendix-a-data-source-catalog.md`](internal/appendix-a-data-source-catalog.md) — 34 data sources evaluated on a fixed rubric, with rejections reasoned and 13 composite indicators
+- [`internal/appendix-b-synthetic-data-plan.md`](internal/appendix-b-synthetic-data-plan.md) — the India MSME distribution profile (every figure tagged sourced/assumed) and per-source generator specs
+- [`internal/cag-gst-feature-analysis.md`](internal/cag-gst-feature-analysis.md) — borrower-health signals mined from CAG GST audit reports
+- [`internal/business-impact-model.md`](internal/business-impact-model.md) — the quantified business case
+- [`internal/deployment-runbook.md`](internal/deployment-runbook.md) — Cloud Run deployment, step by step
 
 ## Tests & CI
 
